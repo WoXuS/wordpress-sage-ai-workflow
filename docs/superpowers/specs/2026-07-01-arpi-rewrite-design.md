@@ -70,6 +70,32 @@ Headless odrzucony jako przerost formy nad treścią dla strony-wizytówki, przy
 - **Klucze CPT i nazwy pól MUSZĄ być identyczne** ze starymi, żeby migrowany post meta (WXR) trafił we właściwe pola.
 - Typy do odtworzenia: `dbip-chapters` (+ `chapter-name`), `oferty`, `uslugi`, `service` — do weryfikacji które są żywe.
 
+### Sekcje sterowane ACF (treści konfigurowalne)
+
+Część podstron — **zwłaszcza strona główna** — będzie miała sekcje generowane z **grup pól ACF**
+(np. grupa „Homepage" z polami textarea itd.). Klient wypełnia pola w adminie, a treść renderuje się w sekcji.
+
+- **Stan początkowy:** sekcje budujemy z **zahardkodowaną treścią** — nie ma jeszcze informacji, które sekcje
+  mają być konfigurowalne.
+- **Wymóg architektoniczny (od pierwszego dnia):** każda sekcja Blade dostaje dane przez **view composer**.
+  Nawet gdy composer zwraca teraz treść zahardkodowaną, przełączenie na `get_field()` będzie zmianą jednej linii,
+  **bez przebudowy szablonu**. Dzięki temu „które sekcje konfigurowalne" można doprecyzować później bez kosztu.
+- **i18n treści ACF:** pola konfigurowalne trzymamy **na stronie (post per język)**, a **nie** w globalnym
+  ACF Options Page — opcje globalne nie są per-post i komplikują wielojęzyczność (patrz niżej).
+
+### Wielojęzyczność (i18n) — Polylang (Pro)
+
+Wybór: **Polylang (Pro)**. Budujemy od zera, tłumaczeń nie migrujemy → wybór otwarty; Polylang wygrywa dla tego
+profilu (wizytówka + sekcje na ACF, Sage): model „osobny post per język = osobne wartości pól ACF" jest czysty
+i naturalny, lekki, idiomatyczny ze standardowymi funkcjami WP + `pll_` API, tańszy. Polylang Pro dokłada
+duplikację/sync struktury (szybsze stawianie wersji EN).
+
+- **Ścieżka eskalacji → WPML + ACFML:** jeśli grupy pól ACF urosną i będą miały dużo pól nietekstowych
+  (obrazy, linki, liczby), których nie chcemy wpisywać dwa razy — WPML+ACFML daje kontrolę per pole
+  („translate / copy / copy-once") i jeden edytor tłumaczeń. Drożej i ciężej — tylko jeśli zajdzie potrzeba.
+- **TranslatePress odrzucony** — tłumaczenie po renderze słabo pasuje do strukturalnych sekcji ACF.
+- Stringi w szablonach owinięte w `__()`/`_e()`; przełącznik przez `pll_the_languages()`; hreflang przez Yoast+Polylang.
+
 ## 3. Migracja danych
 
 Zasada: definicje (pola, typy) piszemy od nowa; migrujemy **wartości i wpisy**.
@@ -143,5 +169,7 @@ Alternatywa odrzucona: VPS (Hetzner) — tańszy i elastyczniejszy, ale przenosi
   (Zrzut bazy MailPoet będzie dostarczony jako plik.)
 - **Dostęp edytora do Figmy** dla `dev@example.test` (MCP wymaga edit access, nie tylko view).
 - **`custom-post-type-ui` vs `post-type-manager`** — potwierdzić czy redundancja i które typy są żywe.
+- **Które sekcje** (homepage i podstrony) mają być **konfigurowalne przez ACF** vs zahardkodowane — do doprecyzowania
+  z klientem. Do tego czasu sekcje budowane przez view composer (podmiana na `get_field()` bez przebudowy).
 - **Ewentualny content freeze** treści na czas cutoveru.
 - **Compliance sygnalisty** — czy formularz/whistleblowing ma wymogi prawne (dyrektywa o ochronie sygnalistów).

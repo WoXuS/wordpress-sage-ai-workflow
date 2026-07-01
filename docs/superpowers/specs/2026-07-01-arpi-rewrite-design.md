@@ -54,13 +54,17 @@ Headless odrzucony jako przerost formy nad treścią dla strony-wizytówki, przy
 
 ### Stos
 
-- **Bedrock (Roots)** — WordPress zarządzany Composerem, `.env` per środowisko (parytet dev/staging/prod),
-  wtyczki jako zależności, całość w Git.
-  - *Warunek:* hosting musi pozwolić na docroot = `web/` (potwierdzone dla cyberFolks, patrz §5).
-  - *Fallback:* jeśli docroot na wybranym planie okaże się problematyczny — standardowy layout WP
-    + Composer do wtyczek + `.env` + Sage. Bedrock jest nice-to-have, nie fundamentem.
-- **Sage 10 (Roots)** na froncie: Blade + Acorn (view composers) + **Bud.js (HMR)** + Tailwind + PostCSS.
-- **ACF PRO** legalny (klucz w `.env`, instalacja przez Composer z repo Roots/ACF).
+- **Standardowy layout WordPress (`public_html`), BEZ Bedrocka.** Uzasadnienie: klient
+  edytuje i instaluje/aktualizuje wtyczki w wp-adminie — composer-managed wtyczki Bedrocka by to
+  cofały przy deployu; do tego docroot `web/` + Composer na shared hostingu cyberFolks = zbędne tarcie.
+  Benefity Bedrocka bierzemy selektywnie (niżej).
+- **Sekrety przez `.env`** (nie w `wp-config.php`): root-owy `composer.json` z `vlucas/phpdotenv`,
+  plik `.env` **nad** `public_html` (poza docrootem → niedostępny z sieci), `wp-config.php` czyta z niego
+  DB, salty, `WP_HOME/WP_SITEURL`, klucze (ACF, SMTP).
+- **Czysty git:** w repo tylko motyw (+ ew. mu-plugin); core WP, wtyczki, `uploads` w `.gitignore`.
+- **Sage (Roots)** na froncie: Blade + Acorn (view composers) + **Vite (HMR, port 5173, default startera Sage)**
+  + Tailwind + PostCSS.
+- **ACF PRO** legalny (klucz w `.env`; instalacja przez Composer w motywie lub przez wp-admin).
 
 ### Model treści
 
@@ -119,31 +123,34 @@ Zasada: definicje (pola, typy) piszemy od nowa; migrujemy **wartości i wpisy**.
 
 | Środowisko | Setup |
 |---|---|
-| **Dev (lokalny)** | DDEV (Docker, wersje PHP/MySQL zgodne z prod) + `bud dev` = **HMR**. Import zanonimizowanej kopii danych. |
+| **Dev (lokalny)** | **docker-compose + Makefile** (własny stack: php-fpm + nginx + wp-cli, MariaDB 10.11, wersje zgodne z prod) + **Vite (HMR, 5173)**. Import zanonimizowanej kopii danych przez `make import-db`. |
 | **Staging** | cyberFolks (osobne konto/subdomena + osobna baza), aktywny nowy motyw, **HTTP Basic Auth + `noindex`**. Klient ogląda postęp. Odświeżany danymi z prod. |
 | **Prod (docelowy)** | cyberFolks. Migrowany na końcu; **stary prod na nazwa.pl działa aż do cutoveru**. |
 
-- **Git flow (solo):** `main` → prod, `staging` → staging. Kod/motyw w Git; zbudowanego `public/` nie commitujemy.
-- **Deploy:** **GitHub Actions** → `bud build` → **rsync/SSH** na cyberFolks (ew. PHP Deployer albo bare repo + `post-receive` hook). CI/CD nie jest wbudowane w hosting — dopisujemy sami (trywialne).
+- **Git flow (solo, trunk-based):** jeden long-lived branch **`main`** = źródło prawdy. Feature work na krótkich `feat/*` → merge do `main`. Merge do `main` → CI build → **auto-deploy na staging**. **Prod = bramkowany**: deploy odpalany **tagiem `v*`** lub ręcznym `workflow_dispatch` z GitHub Environment approval (realizuje „prod żyje do ostatniej chwili"). **Bez osobnych branchy `staging`/`dev`** — to środowiska, nie gałęzie; dev = lokalny Docker.
+- **Deploy:** motyw budowany lokalnie/w **GitHub Actions** (`vite build`) → **rsync/SSH** na cyberFolks (ew. bare repo + `post-receive` hook). Deployujemy **tylko motyw** (+ ew. mu-plugin) — `wp-content/plugins` i core zostają nietknięte (klient zarządza wtyczkami w adminie). CI/CD nie jest wbudowane w hosting — dopisujemy sami (trywialne).
 - **Klon prod → staging/dev bez WP-CLI na starym prodzie:** `all-in-one-wp-migration` (export/import) lub dostarczony zrzut bazy + `rsync` uploads.
 
 ## 5. Hosting — cyberFolks (zweryfikowane)
 
-- **Docroot pod Bedrock (`web/`):** ✅ możliwy — domenę/subdomenę można wskazać na dowolny katalog konta
-  (DirectAdmin: „Przypisz katalog domeny"; Server_Panel: „Lista adresów www"). **TBD:** potwierdzić dla konkretnego wybranego planu.
+- **Standardowy layout (`public_html`):** docroot = standardowy katalog konta, **bez specjalnej konfiguracji**
+  (odpadła kwestia docroot `web/` po rezygnacji z Bedrocka). `.env` i `vendor/` trzymamy **nad** `public_html`
+  (poza docrootem → niedostępne z sieci).
 - **SSH / Composer / WP-CLI:** ✅ dostępne (WP-CLI na wszystkich planach, wymaga SSH).
 - **Git-synced CI/CD out-of-the-box:** ❌ brak wbudowanej integracji GitHub/webhooków/UI auto-deploy;
-  jest ręczny git przez SSH. CD dopisujemy przez GitHub Actions + rsync/SSH.
+  jest ręczny git przez SSH. CD dopisujemy przez GitHub Actions + rsync/SSH (deploy tylko motywu).
 - **Wydajność:** LiteSpeed + LSCache. **Managed** (brak administracji serwerem — pasuje do solo).
 - **Domena + poczta zostają na nazwa.pl** (ta sama grupa cyber_Folks → przeniesienie hostingu bezproblemowe).
 
-Alternatywa odrzucona: VPS (Hetzner) — tańszy i elastyczniejszy, ale przenosi na dev cały narzut sysadmina
-(patche, LEMP, backupy, uptime) — niepożądane przy pracy solo.
+Alternatywy odrzucone: **Coolify na VPS** (znany z innych projektów — git-deploy + staging + parytet z lokalnym
+Dockerem, ale niepotrzebny narzut sysadmina i przerost dla wizytówki; klient woli managed) oraz **Bedrock**
+(composer-managed wtyczki kolidują z edycją wtyczek w wp-adminie przez klienta).
 
 ## 6. Fazy realizacji (wysoki poziom)
 
-1. **Setup:** Bedrock + Sage + DDEV; ACF PRO legalny; CPT/pola w ACF Local JSON; tokeny z Figmy → Tailwind config.
-2. **Infra:** konta cyberFolks (staging + prod), docroot, SSH; pipeline GitHub Actions + rsync; Basic Auth na staging.
+1. **Setup:** lokalny stack (docker-compose + Makefile: php-fpm+nginx+wp-cli, MariaDB 10.11), standard WP `public_html`,
+   `.env` (phpdotenv) + env-aware `wp-config.php`, Sage + Vite (HMR); ACF PRO legalny; CPT/pola w ACF Local JSON; tokeny z Figmy → Tailwind config.
+2. **Infra:** konta cyberFolks (staging + prod), SSH; pipeline GitHub Actions + rsync (deploy motywu); Basic Auth na staging.
 3. **Budowa szablonów z Figmy:** front, blog (lista/single), dbip (archiwum/single/taksonomia), oferty/usługi,
    kontakt, sygnalista; przełącznik i obsługa PL/EN (Polylang, stringi w `__()`/`_e()`).
 4. **Migracja na staging:** WXR (blog + dbip + media) + MailPoet (tabele) + formularze + redirecty; weryfikacja.
@@ -158,13 +165,14 @@ Alternatywa odrzucona: VPS (Hetzner) — tańszy i elastyczniejszy, ale przenosi
 - **Treść z hardcodowanym markupem starego motywu** (zwł. dbip) rozjeżdża się w nowych stylach.
   *Mit.:* przegląd treści pod kątem inline HTML/klas przed migracją.
 - **MailPoet — rozjazd wersji / prefiksu tabel** przy imporcie. *Mit.:* zrównać wersję MailPoet, zweryfikować prefiks, przenieść ustawienia wysyłki.
-- **Docroot Bedrock niedostępny na wybranym planie cyberFolks.** *Mit.:* fallback do standardowego layoutu WP + Composer.
+- **Rozjazd wtyczek** (klient instaluje/aktualizuje wtyczki w adminie, repo o tym nie wie). *Mit.:* deploy dotyka **tylko motywu**, nigdy `wp-content/plugins`; okresowo zrzucamy listę wtyczek (`wp plugin list`) do repo dla odtwarzalności.
+- **`.env`/`wp-config` env-aware na shared hostingu** (ścieżka do `.env` nad `public_html`, autoload `vendor`). *Mit.:* zweryfikować układ katalogów na cyberFolks przy pierwszym deployu stagingu.
 - **Ukryte żywe trasy/Page Templates** przeoczone w audycie. *Mit.:* pełna inwentaryzacja z panelu prod (po uzyskaniu dostępu).
 - **Content drift** (klient edytuje prod w trakcie). *Mit.:* finalny sync przy cutoverze; ustalić ewentualny content freeze.
 
 ## 8. Punkty otwarte (TBD)
 
-- **Docroot `web/`** na konkretnym wybranym planie cyberFolks — potwierdzić u supportu.
+- **Układ katalogów na cyberFolks** — potwierdzić, że da się trzymać `.env`/`vendor` nad `public_html` i że SSH/rsync działa na wybranym planie.
 - **Dostęp do hostingu nazwa.pl** (klient miał odpowiedzieć) — potrzebny do finalnego eksportu WXR + zrzutu MailPoet.
   (Zrzut bazy MailPoet będzie dostarczony jako plik.)
 - **Dostęp edytora do Figmy** dla `dev@example.test` (MCP wymaga edit access, nie tylko view).

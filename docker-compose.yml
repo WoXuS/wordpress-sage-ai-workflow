@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mariadb:10.11
+    command: --max_allowed_packet=256M
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${DB_NAME:-arpi}
+      MARIADB_USER: ${DB_USER:-arpi}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-arpi}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/var/app
+    working_dir: /var/app/public_html
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./:/var/app:ro
+      - ./etc/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+    depends_on:
+      - php
+
+volumes:
+  db_data:

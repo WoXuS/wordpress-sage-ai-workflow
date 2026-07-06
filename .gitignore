@@ -1,0 +1,8 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+
+# Legacy theme reference: real brand assets, kept on disk but not tracked
+/reference/legacy-theme/assets/images/
+/reference/legacy-theme/assets/font/

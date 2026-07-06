@@ -3,6 +3,25 @@
 Thumbs.db
 .idea/
 
+# deps / secrets
+/vendor/
+/.env
+/certs/
+
+# WordPress: trzymamy tylko wp-config.php i motyw arpi
+/public_html/*
+!/public_html/wp-config.php
+!/public_html/wp-content/
+/public_html/wp-content/*
+!/public_html/wp-content/themes/
+/public_html/wp-content/themes/*
+!/public_html/wp-content/themes/arpi/
+
+# artefakty buildu motywu
+/public_html/wp-content/themes/arpi/node_modules/
+/public_html/wp-content/themes/arpi/vendor/
+/public_html/wp-content/themes/arpi/public/
+
 # Legacy theme reference: real brand assets, kept on disk but not tracked
 /reference/legacy-theme/assets/images/
 /reference/legacy-theme/assets/font/

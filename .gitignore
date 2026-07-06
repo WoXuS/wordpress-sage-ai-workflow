@@ -6,3 +6,6 @@ Thumbs.db
 # Legacy theme reference: real brand assets, kept on disk but not tracked
 /reference/legacy-theme/assets/images/
 /reference/legacy-theme/assets/font/
+
+# Production DB dump: contains subscriber PII, kept local only
+/docs/baza.sql

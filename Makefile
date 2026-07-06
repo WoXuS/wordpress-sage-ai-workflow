@@ -1,6 +1,7 @@
-DC    = docker compose
-PHP   = $(DC) exec php
-THEME = wp-content/themes/arpi
+DC         = docker compose
+PHP        = $(DC) exec php
+THEME      = wp-content/themes/arpi
+THEME_HOST = public_html/$(THEME)
 
 .DEFAULT_GOAL := help
 
@@ -35,13 +36,13 @@ composer: ## Composer w motywie, np. make composer ARGS="require x"
 
 theme-install: ## Zależności motywu (composer w kontenerze + yarn na hoście)
 	$(PHP) sh -c "cd $(THEME) && composer install"
-	cd $(THEME) && yarn install
+	cd $(THEME_HOST) && yarn install
 
 dev: ## Vite dev server + HMR (host)
-	cd $(THEME) && yarn dev
+	cd $(THEME_HOST) && yarn dev
 
 build-assets: ## Build assetów motywu (host)
-	cd $(THEME) && yarn build
+	cd $(THEME_HOST) && yarn build
 
 import-db: ## Import zrzutu: make import-db FILE=dump.sql.gz
 	gzip -cd $(FILE) | $(DC) exec -T db sh -c 'exec mariadb -u root -p"$$MARIADB_ROOT_PASSWORD" "$$MARIADB_DATABASE"'

@@ -258,6 +258,13 @@ Usage:
 <x-button variant="ghost">More <x-icon-arrow-right class="size-6" /></x-button>
 ```
 
+> **Provisional — solid-button hover legibility (deferred 2026-07-07):** the `--solid` hover
+> (`color-mix(red 30%, transparent)` bg + white text) is 1:1 with Figma's "DARK" frame, but on a
+> white background that's ~1.4:1 text contrast (illegible). Kept Figma-faithful for now; **decide
+> legibility once the real page layouts show what background the solid button actually sits on**
+> (dark/colored section → fine as-is; on white → change hover to keep white text readable, e.g.
+> an opaque/darker red bg).
+
 ---
 
 ## 6. Component: Container — `resources/css/components/wrap.css` + `views/components/container.blade.php`
@@ -324,6 +331,7 @@ task the user will do.
 @import "./components/wrap.css";
 
 @source "../../app/**/*.php";
+@source "../../config/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";
 ```

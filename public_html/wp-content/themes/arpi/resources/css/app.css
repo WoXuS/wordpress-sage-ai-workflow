@@ -6,5 +6,6 @@
 @import "./components/wrap.css";
 
 @source "../../app/**/*.php";
+@source "../../config/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";

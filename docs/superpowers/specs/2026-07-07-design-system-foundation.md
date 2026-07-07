@@ -81,7 +81,11 @@ Clear Tailwind's default color palette (brand-locked site → short, unambiguous
 only ARPI tokens plus the CSS keyword colors we still need.
 
 ```css
-@theme {
+@theme static {
+  /* `static` = emit every token as a real :root custom property even when no
+     scanned template references it yet. Without it, Tailwind v4 tree-shakes
+     unused theme vars, so our hand-authored var(--color-red)/color-mix() in
+     component CSS (and the generated theme.json) would be missing the tokens. */
   /* wipe Tailwind's default palette so bg-red etc. mean *our* red */
   --color-*: initial;
   --color-transparent: transparent;
@@ -324,8 +328,10 @@ task the user will do.
 @source "../**/*.js";
 ```
 
-Drop the scaffold's `theme(static)` flag so theme values are emitted as real CSS custom properties
-(our `var(--color-red)` / `color-mix()` references and runtime tokens depend on it).
+Replace the scaffold's `@import "tailwindcss" theme(static);` with a plain `@import "tailwindcss";`
+— the emit-everything behaviour we need is now expressed on the `@theme static` block in `theme.css`
+(§2), which guarantees every token lands in `:root` for our `var(--color-red)` / `color-mix()`
+references and the generated `theme.json`.
 
 `editor.css`:
 

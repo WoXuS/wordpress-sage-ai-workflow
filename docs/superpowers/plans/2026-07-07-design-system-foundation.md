@@ -65,7 +65,10 @@ THEME/composer.json            # MODIFY — via `composer require`
 - [ ] **Step 1: Create `theme.css` with all tokens**
 
 ```css
-@theme {
+@theme static {
+  /* `static` emits every token to :root even if no scanned template references it yet —
+     required so our var()/color-mix() component CSS and the generated theme.json see the
+     tokens (Tailwind v4 tree-shakes unreferenced @theme vars without it). */
   /* wipe Tailwind's default palette so bg-red etc. mean *our* red */
   --color-*: initial;
   --color-transparent: transparent;
@@ -103,7 +106,7 @@ THEME/composer.json            # MODIFY — via `composer require`
 @source "../**/*.js";
 ```
 
-(Base/component partials get added by later tasks. Note: the scaffold's `theme(static)` flag is dropped so theme values emit as real CSS custom properties.)
+(Base/component partials get added by later tasks. Note: the scaffold's `@import "tailwindcss" theme(static);` becomes a plain `@import "tailwindcss";` — the emit-everything behaviour now lives on the `@theme static` block in `theme.css`.)
 
 - [ ] **Step 3: Replace `editor.css`**
 

@@ -1,4 +1,7 @@
 @theme static {
+  /* `static` = emit every token to :root even when no scanned template references it yet.
+     Tailwind v4 tree-shakes unreferenced @theme vars; our hand-authored var(--color-red)/
+     color-mix() component CSS and the generated theme.json depend on the tokens being present. */
   /* wipe Tailwind's default palette so bg-red etc. mean *our* red */
   --color-*: initial;
   --color-transparent: transparent;

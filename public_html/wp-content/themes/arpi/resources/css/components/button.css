@@ -60,4 +60,14 @@
     }
   }
 
+  .c-btn--white {
+    background-color: var(--color-white);
+    border-color: var(--color-white);
+    color: var(--color-red);
+
+    &:hover {
+      opacity: 0.9; /* provisional — no hover in Figma */
+    }
+  }
+
 }

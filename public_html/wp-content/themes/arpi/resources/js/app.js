@@ -1,4 +1,6 @@
 /**
- * Theme entry. Import feature modules here as they are added, e.g.:
- *   import './modules/navigation';
+ * Theme entry.
  */
+import initMenu from './modules/menu';
+
+initMenu();

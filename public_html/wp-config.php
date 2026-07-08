@@ -31,6 +31,12 @@ define('WP_DEBUG_DISPLAY', false);
 define('WP_ENVIRONMENT_TYPE', arpi_env('WP_ENV', 'production'));
 define('DISALLOW_FILE_EDIT', true);
 
+// Write plugin/theme/core updates directly to disk. WP's auto-detection falls
+// back to an FTP prompt when the runtime user (php-fpm: www-data) differs from
+// the owner of core files — true both in this container and on per-user PHP
+// hosting like cyberFolks. Overridable via .env if a host ever needs otherwise.
+define('FS_METHOD', arpi_env('FS_METHOD', 'direct'));
+
 if (!defined('ABSPATH')) {
     define('ABSPATH', __DIR__ . '/');
 }

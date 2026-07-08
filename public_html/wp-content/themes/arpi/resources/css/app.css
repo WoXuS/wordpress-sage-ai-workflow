@@ -1,4 +1,11 @@
-@import "tailwindcss" theme(static);
+@import "tailwindcss";
+@import "./theme.css";
+@import "./base/fonts.css";
+@import "./base/typography.css";
+@import "./components/button.css";
+@import "./components/wrap.css";
+
 @source "../../app/**/*.php";
+@source "../../config/**/*.php";
 @source "../**/*.blade.php";
 @source "../**/*.js";

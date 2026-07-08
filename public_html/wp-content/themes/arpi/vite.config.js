@@ -40,6 +40,11 @@ export default defineConfig({
       disableTailwindBorderRadius: false,
     }),
   ],
+  css: {
+    // Emit CSS source maps in dev so DevTools attributes each rule to its
+    // partial (button.css, wrap.css, …) instead of one flattened stylesheet.
+    devSourcemap: true,
+  },
   resolve: {
     alias: {
       '@scripts': '/resources/js',

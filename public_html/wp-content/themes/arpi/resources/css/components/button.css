@@ -3,51 +3,61 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;                            /* label ↔ icon (only visible with an icon) */
-    padding-block: 16px;                 /* Figma py-16 → composes 48px height */
-    padding-inline: 12px;                /* Figma px-12 (pill's own padding) */
+    gap: 16px;
+
+    padding: 14px 24px;
     border: 2px solid transparent;
-    border-radius: 9999px;               /* pill */
-    font-size: var(--text-body-sm);      /* 16px, fixed */
+    border-radius: 30px;
+
+    font-size: var(--text-body-sm); /* 16px, fixed */
     line-height: 1;
     letter-spacing: 0.5px;
     white-space: nowrap;
+
     cursor: pointer;
     transition: background-color .2s, border-color .2s, color .2s, opacity .2s;
+
+    &:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
   }
 
   .c-btn--solid {
     background-color: var(--color-red);
     border-color: var(--color-white);
     color: var(--color-white);
-  }
-  .c-btn--solid:hover {
-    background-color: color-mix(in oklab, var(--color-red) 30%, transparent);
-    border-color: var(--color-red);
-    opacity: 0.91;
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--color-red) 30%, transparent);
+      border-color: var(--color-red);
+      opacity: 0.91;
+    }
   }
 
   .c-btn--outline {
     background-color: var(--color-white);
     border-color: var(--color-red);
     color: var(--color-red);
-  }
-  .c-btn--outline:hover {
-    background-color: var(--color-red);
-    color: var(--color-white);
-    opacity: 0.91;
+
+    &:hover {
+      background-color: var(--color-red);
+      color: var(--color-white);
+      opacity: 0.91;
+    }
   }
 
-  /* ghost / text link — no box, larger label. Icon is OPTIONAL (Blade slot), never in CSS. */
   .c-btn--ghost {
     padding: 0;
-    gap: 16px;
     border-color: transparent;
     background-color: transparent;
     color: var(--color-red);
-    font-size: 1.25rem;                  /* 20px, Button Big */
+    font-size: 1.25rem; /* 20px, Button Big */
+
+    &:hover {
+      color: color-mix(in oklab, var(--color-red) 30%, transparent);
+    }
   }
-  .c-btn--ghost:hover {
-    color: color-mix(in oklab, var(--color-red) 30%, transparent);
-  }
+
 }

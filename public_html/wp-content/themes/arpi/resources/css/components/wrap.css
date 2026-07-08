@@ -3,8 +3,9 @@
     width: 100%;
     max-width: 1280px;
     margin-inline: auto;
-    padding-inline: var(--wrap-padding-inline);    /* 30→80px, from theme.css */
+    padding-inline: var(--wrap-padding-inline);    /* 30→80px */
   }
+
   .o-wrap--header {
     --wrap-padding-inline: clamp(16px, -10.5px + 7.07vw, 80px);  /* 16→80px */
   }

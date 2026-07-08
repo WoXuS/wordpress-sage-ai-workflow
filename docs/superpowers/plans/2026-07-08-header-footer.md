@@ -154,6 +154,10 @@ use Roots\Acorn\View\Composer;
 
 class Footer extends Composer
 {
+    // NOTE (post-impl): Acorn 6.2 wraps zero-arg composer methods in
+    // InvokableComponentVariable, which breaks $company['name'] array access in
+    // Blade. Add a with() override returning ['company'=>$this->company(), …] for
+    // all five keys so the arrays reach the view as plain arrays.
     /**
      * Views served by this composer.
      *

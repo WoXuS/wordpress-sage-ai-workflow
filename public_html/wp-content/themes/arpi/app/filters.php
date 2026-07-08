@@ -16,22 +16,15 @@ add_filter('excerpt_more', function () {
 });
 
 /**
- * Utility classes for primary-navigation links. `arpi_variant` (a custom
- * wp_nav_menu arg) picks the colour set: red on the white desktop bar,
- * white in the mobile overlay.
+ * Utility classes for primary-navigation links. The menu is rendered once and
+ * restyled by breakpoint: white on the mobile overlay (red bg), red on the
+ * desktop bar (white bg).
  */
 add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
     if (($args->theme_location ?? '') !== 'primary_navigation') {
         return $atts;
     }
-    $base = 'uppercase tracking-wide text-body-sm transition-opacity hover:opacity-70';
-    $colour = (($args->arpi_variant ?? 'desktop') === 'mobile') ? 'text-white' : 'text-red';
-    $atts['class'] = trim(($atts['class'] ?? '') . " {$base} {$colour}");
+    $atts['class'] = trim(($atts['class'] ?? '')
+        . ' uppercase tracking-wide text-body-sm text-white lg:text-red transition-opacity hover:opacity-70');
     return $atts;
 }, 10, 3);
-
-/**
- * Suppress default per-<li> menu-item IDs. The primary menu renders twice
- * (desktop bar + mobile overlay), which would duplicate every id on the page.
- */
-add_filter('nav_menu_item_id', '__return_empty_string');

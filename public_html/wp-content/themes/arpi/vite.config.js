@@ -15,6 +15,12 @@ export default defineConfig({
     port: 5174,
     strictPort: true,
     origin: 'http://localhost:5174',
+    // WP runs on a different origin (localhost:8080) and loads dev assets
+    // (JS, fonts, @vite/client) cross-origin. Vite 8 restricts CORS to its own
+    // origin by default, which blocks them — allow local WP origins.
+    cors: {
+      origin: /^https?:\/\/(localhost|127\.0\.0\.1)(?::\d+)?$/,
+    },
   },
   plugins: [
     tailwindcss(),

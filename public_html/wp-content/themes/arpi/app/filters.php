@@ -29,3 +29,9 @@ add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
     $atts['class'] = trim(($atts['class'] ?? '') . " {$base} {$colour}");
     return $atts;
 }, 10, 3);
+
+/**
+ * Suppress default per-<li> menu-item IDs. The primary menu renders twice
+ * (desktop bar + mobile overlay), which would duplicate every id on the page.
+ */
+add_filter('nav_menu_item_id', '__return_empty_string');

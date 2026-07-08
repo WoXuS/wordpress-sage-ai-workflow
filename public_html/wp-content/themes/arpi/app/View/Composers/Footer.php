@@ -40,7 +40,7 @@ class Footer extends Composer
      * Company registration details.
      * TODO: swap to get_field(..., 'option') in the ACF phase.
      */
-    public function company(): array
+    protected function company(): array
     {
         return [
             'name' => 'ARPI & Partners Sp. z o.o.',
@@ -53,7 +53,7 @@ class Footer extends Composer
     /**
      * Office locations.
      */
-    public function offices(): array
+    protected function offices(): array
     {
         return [
             [
@@ -76,7 +76,7 @@ class Footer extends Composer
     /**
      * Newsletter block copy (markup-only form; MailPoet wired later).
      */
-    public function newsletter(): array
+    protected function newsletter(): array
     {
         return [
             'heading' => 'Newsletter',
@@ -89,7 +89,7 @@ class Footer extends Composer
     /**
      * Social links (URLs are placeholders).
      */
-    public function socials(): array
+    protected function socials(): array
     {
         return [
             ['network' => 'Facebook', 'url' => '#', 'icon' => 'facebook'],
@@ -100,7 +100,7 @@ class Footer extends Composer
     /**
      * Forbes badges.
      */
-    public function badges(): array
+    protected function badges(): array
     {
         return [
             ['src' => Vite::asset('resources/images/forbes-diament.png'), 'alt' => 'Diamenty Forbes 2026'],

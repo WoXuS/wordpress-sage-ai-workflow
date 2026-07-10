@@ -21,5 +21,8 @@
     "laravel-vite-plugin": "^3.0.0",
     "tailwindcss": "^4.0.0",
     "vite": "^8.0.0"
+  },
+  "dependencies": {
+    "fluid-tailwindcss": "^1.1.7"
   }
 }

@@ -25,6 +25,6 @@ add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
         return $atts;
     }
     $atts['class'] = trim(($atts['class'] ?? '')
-        . ' uppercase tracking-wide text-body-sm text-white lg:text-red transition-opacity hover:opacity-70');
+        . ' c-btn c-btn--ghost uppercase max-lg:text-white max-lg:hover:text-white/70');
     return $atts;
 }, 10, 3);

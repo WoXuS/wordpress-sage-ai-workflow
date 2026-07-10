@@ -1,5 +1,5 @@
 @props(['links' => []])
-<ul class="flex items-center gap-3">
+<ul class="flex items-center gap-3 w-full">
   @foreach ($links as $link)
     <li>
       <a href="{{ $link['url'] }}" aria-label="{{ $link['network'] }}"

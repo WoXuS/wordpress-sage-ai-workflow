@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@plugin "fluid-tailwindcss" {
+  minViewport: 375;
+  maxViewport: 1280;
+}
 @import "./theme.css";
 @import "./base/fonts.css";
 @import "./base/typography.css";

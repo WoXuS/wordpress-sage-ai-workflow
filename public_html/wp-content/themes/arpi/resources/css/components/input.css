@@ -1,0 +1,31 @@
+@layer components {
+  .c-input {
+    display: block;
+    width: 100%;
+    padding: 14px 24px;
+    border: 2px solid var(--color-black);
+    border-radius: 30px;
+    background-color: transparent;
+    color: var(--color-black);
+    font-size: var(--text-body-sm);
+    line-height: 1;
+
+    &::placeholder {
+      color: color-mix(in oklab, currentColor 55%, transparent);
+    }
+    &:focus {
+      outline: none;
+      border-color: var(--color-red);
+    }
+  }
+
+  /* On the red footer: white outline + white text. */
+  .c-input--on-red {
+    border-color: var(--color-white);
+    color: var(--color-white);
+
+    &:focus {
+      border-color: var(--color-white);
+    }
+  }
+}

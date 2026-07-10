@@ -1,0 +1,8 @@
+/* Pin a fixed/sticky top-of-screen element below the WordPress admin bar.
+   WP sets --wp-admin--admin-bar--height (32px, 46px at ≤782px) on <html> only
+   when the bar is shown (logged in); the 0px fallback covers logged-out
+   visitors. Use on the sticky header, mobile overlays, and any future
+   top-pinned fixed/sticky element instead of `top-0`. */
+@utility top-admin-safe {
+  top: var(--wp-admin--admin-bar--height, 0px);
+}

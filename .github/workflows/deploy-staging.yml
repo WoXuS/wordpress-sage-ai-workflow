@@ -25,6 +25,10 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     environment: staging
+    # Deploy stays dormant until staging exists: set repo variable
+    # STAGING_ENABLED=true once the cyberFolks secrets are in place. Until then the
+    # job is skipped (no failing runs on main).
+    if: vars.STAGING_ENABLED == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v4

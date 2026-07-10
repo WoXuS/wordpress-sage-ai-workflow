@@ -51,6 +51,7 @@ Repo → Settings → **Environments → `staging`** (or Secrets/variables → A
 | secret | `SSH_USER`        | staging SSH username                                        |
 | secret | `DEPLOY_PATH`     | absolute path to the staging `public_html`                  |
 | var    | `SSH_PORT`        | SSH port (e.g. `22`) — omit if 22                           |
+| var    | `STAGING_ENABLED` | `true` — **flips the deploy on.** Until set, the job is skipped |
 
 The private key lives only in `certs/` locally (gitignored) and in this secret.
 

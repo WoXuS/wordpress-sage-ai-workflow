@@ -1,0 +1,101 @@
+@layer components {
+  .c-hex {
+    /* pointy-top hexagon; Figma comps measure ~214x190 (desktop) / ~103x92 (mobile) => 9:8 */
+    aspect-ratio: 9 / 8;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+    display: grid;
+    place-items: center;
+  }
+
+  .c-hex--solid {
+    background-color: var(--color-red);
+    color: var(--color-white);
+  }
+
+  .c-hex--outline {
+    background-color: var(--color-red); /* border effect via padded inner mask */
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  }
+
+  .c-hex--outline .c-hex__inner {
+    background-color: var(--color-white);
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  }
+
+  .c-hex__inner {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 10%;
+    text-align: center;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  /* Honeycomb: mobile 2-1-2 cluster (top pair / center / bottom pair),
+     desktop single row with alternating vertical offset. Hex sizing is
+     intrinsic (width + aspect-ratio) — no hardcoded section/row heights. */
+  .c-honeycomb > li {
+    list-style: none;
+  }
+
+  /* mobile / tablet: 2-1-2 cluster (top pair, center, bottom pair) */
+  @media (width < 64rem) {
+    .c-honeycomb {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-areas:
+        "top-l top-r"
+        "mid   mid"
+        "bot-l bot-r";
+      justify-items: center;
+      width: 100%;
+      max-width: 360px;
+      margin-inline: auto;
+    }
+
+    .c-honeycomb > li {
+      --hex-w: clamp(130px, 38vw, 168px);
+      width: var(--hex-w);
+    }
+
+    .c-honeycomb > li:nth-child(1) { grid-area: bot-l; margin-top: calc(var(--hex-w) * -0.42); }
+    .c-honeycomb > li:nth-child(2) { grid-area: top-l; }
+    .c-honeycomb > li:nth-child(3) {
+      grid-area: mid;
+      margin-top: calc(var(--hex-w) * -0.42);
+      position: relative;
+      z-index: 1; /* center hex paints above the corner hexes it overlaps */
+    }
+    .c-honeycomb > li:nth-child(4) { grid-area: top-r; }
+    .c-honeycomb > li:nth-child(5) { grid-area: bot-r; margin-top: calc(var(--hex-w) * -0.42); }
+  }
+
+  /* desktop: single row, 2nd & 4th hexes raised by ~half hex height */
+  @media (width >= 64rem) {
+    .c-honeycomb {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: flex-end;
+      width: auto;
+      max-width: none;
+      /* reserve space for the raised (even) items above the row baseline —
+         negative margin-top on flex items isn't included when the browser
+         sizes/positions the flex container, so without this the raised
+         hexes overlap the block above. */
+      padding-top: calc(clamp(160px, 16vw, 214px) * 0.444);
+    }
+
+    .c-honeycomb > li {
+      --hex-w: clamp(160px, 16vw, 214px);
+      margin-inline: calc(var(--hex-w) * -0.055);
+    }
+
+    .c-honeycomb > li:nth-child(even) {
+      margin-top: calc(var(--hex-w) * -0.444); /* raise 2nd & 4th by ~half hex height */
+    }
+  }
+}

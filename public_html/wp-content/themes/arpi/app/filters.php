@@ -28,3 +28,15 @@ add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
         . ' c-btn c-btn--ghost uppercase max-lg:text-white max-lg:hover:text-white/70');
     return $atts;
 }, 10, 3);
+
+/**
+ * Keep non-production environments (e.g. the cyberFolks staging subdomain) out of
+ * search indexes. Gated on WP_ENV via wp_get_environment_type(); production is
+ * untouched. Basic Auth on staging is handled at the hosting level.
+ */
+add_filter('wp_robots', function ($robots) {
+    if (wp_get_environment_type() !== 'production') {
+        return wp_robots_no_robots($robots);
+    }
+    return $robots;
+});

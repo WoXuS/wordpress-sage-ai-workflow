@@ -1,0 +1,95 @@
+name: Deploy to staging
+
+# Trunk-based: a merge to `main` that touches the theme builds it and rsyncs the
+# built theme to the cyberFolks staging subdomain over SSH. Only the theme ships —
+# WordPress core and wp-content/plugins on staging are never touched.
+# Manual re-runs via the "Run workflow" button (workflow_dispatch).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public_html/wp-content/themes/arpi/**'
+      - '.github/workflows/deploy-staging.yml'
+  workflow_dispatch:
+
+# Never let two deploys race; a newer push supersedes an in-flight one.
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+env:
+  THEME_DIR: public_html/wp-content/themes/arpi
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+          cache-dependency-path: ${{ env.THEME_DIR }}/yarn.lock
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+
+      - name: Install theme JS deps
+        working-directory: ${{ env.THEME_DIR }}
+        run: yarn install --frozen-lockfile
+
+      - name: Build theme assets
+        working-directory: ${{ env.THEME_DIR }}
+        run: yarn build
+
+      - name: Install theme PHP deps (runtime, no dev)
+        working-directory: ${{ env.THEME_DIR }}
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Load deploy SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Trust staging host
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${SSH_PORT:-22}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
+
+      - name: Deploy theme (rsync)
+        run: |
+          rsync -az --delete \
+            --exclude='node_modules/' \
+            --exclude='.git/' \
+            --exclude='resources/css/' \
+            --exclude='resources/js/' \
+            -e "ssh -p ${SSH_PORT:-22}" \
+            "${THEME_DIR}/" \
+            "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/wp-content/themes/arpi/"
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+
+      - name: Clear Acorn/Blade caches (best-effort)
+        continue-on-error: true
+        run: |
+          ssh -p "${SSH_PORT:-22}" "${SSH_USER}@${SSH_HOST}" \
+            "cd '${DEPLOY_PATH}' && wp acorn optimize:clear && wp acorn view:cache"
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ vars.SSH_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}

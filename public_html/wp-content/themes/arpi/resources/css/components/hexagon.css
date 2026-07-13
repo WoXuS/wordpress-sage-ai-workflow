@@ -60,36 +60,37 @@
     list-style: none;
   }
 
-  /* mobile / tablet: 2-1-2 cluster (top pair, center, bottom pair) */
+  /* mobile / tablet: 2-1-2 quincunx (top pair, centered middle, bottom pair) with
+     GAPS between hexes (Figma) — not a tight tessellation. */
   @media (width < 64rem) {
     .c-honeycomb {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(2, min-content);
       grid-template-areas:
         "top-l top-r"
         "mid   mid"
         "bot-l bot-r";
+      justify-content: center;
       justify-items: center;
+      column-gap: clamp(18px, 7vw, 44px);
       width: 100%;
-      max-width: 360px;
       margin-inline: auto;
     }
 
     .c-honeycomb > li {
-      --hex-w: clamp(130px, 38vw, 168px);
+      --hex-w: clamp(118px, 33vw, 150px);
       width: var(--hex-w);
     }
 
-    .c-honeycomb > li:nth-child(1) { grid-area: bot-l; margin-top: calc(var(--hex-w) * -0.42); }
+    .c-honeycomb > li:nth-child(1) { grid-area: bot-l; margin-top: calc(var(--hex-w) * -0.16); }
     .c-honeycomb > li:nth-child(2) { grid-area: top-l; }
     .c-honeycomb > li:nth-child(3) {
       grid-area: mid;
-      margin-top: calc(var(--hex-w) * -0.42);
+      margin-top: calc(var(--hex-w) * -0.16);
       position: relative;
-      z-index: 1; /* center hex paints above the corner hexes it overlaps */
     }
     .c-honeycomb > li:nth-child(4) { grid-area: top-r; }
-    .c-honeycomb > li:nth-child(5) { grid-area: bot-r; margin-top: calc(var(--hex-w) * -0.42); }
+    .c-honeycomb > li:nth-child(5) { grid-area: bot-r; margin-top: calc(var(--hex-w) * -0.16); }
   }
 
   /* desktop: single offset row of separated hexes (Figma: gaps between them,

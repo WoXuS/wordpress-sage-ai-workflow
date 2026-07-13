@@ -1,7 +1,8 @@
 @props(['post'])
 @php $id = $post->ID; @endphp
-{{-- Whole card links to the post: branded ARPI thumbnail (red fallback block) + title + excerpt. --}}
-<a href="{{ get_permalink($id) }}" class="group/card flex flex-col fl-gap-4/6">
+{{-- Whole card links to the post: branded ARPI thumbnail (title baked into the graphic,
+     red fallback block) + plain title + "Więcej →" cue (Figma 399:2228). --}}
+<a href="{{ get_permalink($id) }}" class="group/card flex flex-col gap-4">
   <div class="aspect-[412/400] w-full overflow-hidden rounded-2xl bg-red">
     @if (has_post_thumbnail($id))
       {!! get_the_post_thumbnail($id, 'large', [
@@ -10,8 +11,6 @@
       ]) !!}
     @endif
   </div>
-  <div class="flex flex-col gap-2">
-    <h3 class="transition-colors group-hover/card:text-red">{{ get_the_title($id) }}</h3>
-    <p class="text-body-sm opacity-80">{{ get_the_excerpt($id) }}</p>
-  </div>
+  <h3 class="transition-colors group-hover/card:text-red">{{ get_the_title($id) }}</h3>
+  <span class="c-btn c-btn--ghost self-start">Więcej @svg('icon-arrow-right', 'size-5')</span>
 </a>

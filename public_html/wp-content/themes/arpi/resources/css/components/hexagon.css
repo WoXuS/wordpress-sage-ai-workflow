@@ -1,35 +1,43 @@
 @layer components {
   .c-hex {
-    /* pointy-top hexagon; Figma comps measure ~214x190 (desktop) / ~103x92 (mobile) => 9:8 */
+    /* pointy-top hexagon; Figma comps ~214x190 (desktop) / ~103x92 (mobile) => 9:8.
+       Shape drawn by the child SVG (.c-hex__shape) so corners can be rounded. */
+    position: relative;
     aspect-ratio: 9 / 8;
-    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
     display: grid;
     place-items: center;
   }
 
+  .c-hex__shape {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
   .c-hex--solid {
-    background-color: var(--color-red);
     color: var(--color-white);
   }
 
-  .c-hex--outline {
-    background-color: var(--color-red); /* border effect via padded inner mask */
-    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  .c-hex--solid .c-hex__shape > path {
+    fill: var(--color-red);
   }
 
-  .c-hex--outline .c-hex__inner {
-    background-color: var(--color-white);
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  .c-hex--outline .c-hex__shape > path {
+    fill: none;
+    stroke: var(--color-red);
+    stroke-width: 2px;
+    vector-effect: non-scaling-stroke; /* constant ~2px border at any hex size */
   }
 
   .c-hex__inner {
+    position: relative; /* paint above the SVG shape */
     display: grid;
     place-items: center;
     width: 100%;
     height: 100%;
-    padding: 10%;
+    padding: 14%;
     text-align: center;
     text-wrap: balance;
     overflow-wrap: break-word;

@@ -24,11 +24,21 @@
     fill: var(--color-red);
   }
 
+  .c-hex--outline {
+    color: var(--color-white);
+  }
+
   .c-hex--outline .c-hex__shape > path {
-    fill: none;
+    fill: transparent; /* transparent (not none) so it can transition + be hoverable */
     stroke: var(--color-red);
     stroke-width: 2px;
-    vector-effect: non-scaling-stroke; /* constant ~2px border at any hex size */
+    vector-effect: non-scaling-stroke; /* constant 2px border at any hex size (Figma = 2px) */
+    transition: fill 0.3s ease;
+  }
+
+  /* hover → fill ARPI red (matches the Figma hexagon hover state) */
+  .c-hex--outline:hover .c-hex__shape > path {
+    fill: var(--color-red);
   }
 
   .c-hex__inner {
@@ -104,4 +114,20 @@
       margin-top: calc(var(--hex-w) * 0.32); /* lower 1st/3rd/5th → 2nd/4th sit higher */
     }
   }
+
+  /* DBiP triad: two hexes stacked in the left column + one centered to the right
+     (Figma hex ≈ 309px). Sizing intrinsic (width + aspect-ratio). */
+  .c-hex-triad {
+    --hex-w: clamp(120px, 26vw, 290px);
+    display: grid;
+    grid-template-columns: repeat(2, var(--hex-w));
+    column-gap: calc(var(--hex-w) * 0.05);
+    align-items: center;
+    width: max-content;
+  }
+
+  .c-hex-triad > * { width: var(--hex-w); }
+  .c-hex-triad > :nth-child(1) { grid-column: 1; grid-row: 1; }
+  .c-hex-triad > :nth-child(2) { grid-column: 1; grid-row: 2; }
+  .c-hex-triad > :nth-child(3) { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
 }

@@ -3,7 +3,7 @@
      both fill (solid) and stroke (outline) get the brand's rounded vertices. --}}
 <div {{ $attributes->merge(['class' => "c-hex c-hex--{$variant}"]) }} @if($variant === 'outline') aria-hidden="true" @endif>
   <svg class="c-hex__shape" viewBox="0 0 90 80" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <path d="M34.95,4.47Q45,0 55.05,4.47L79.95,15.53Q90,20 90,31L90,49Q90,60 79.95,64.47L55.05,75.53Q45,80 34.95,75.53L10.05,64.47Q0,60 0,49L0,31Q0,20 10.05,15.53Z" />
+    <path d="M39.52,2.44Q45,0 50.48,2.44L84.52,17.56Q90,20 90,26L90,54Q90,60 84.52,62.44L50.48,77.56Q45,80 39.52,77.56L5.48,62.44Q0,60 0,54L0,26Q0,20 5.48,17.56Z" />
   </svg>
   <div class="c-hex__inner">{{ $slot }}</div>
 </div>

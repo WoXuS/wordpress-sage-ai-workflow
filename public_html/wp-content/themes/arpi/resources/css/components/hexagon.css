@@ -82,28 +82,26 @@
     .c-honeycomb > li:nth-child(5) { grid-area: bot-r; margin-top: calc(var(--hex-w) * -0.42); }
   }
 
-  /* desktop: single row, 2nd & 4th hexes raised by ~half hex height */
+  /* desktop: single offset row of separated hexes (Figma: gaps between them,
+     2nd & 4th sit higher). Achieved by lowering the odd hexes, so the even ones
+     stay at the top — no negative margins, no clipping. */
   @media (width >= 64rem) {
     .c-honeycomb {
       display: flex;
       flex-wrap: nowrap;
-      align-items: flex-end;
+      justify-content: center;
+      align-items: flex-start;
+      gap: clamp(8px, 1vw, 18px);
       width: auto;
       max-width: none;
-      /* reserve space for the raised (even) items above the row baseline —
-         negative margin-top on flex items isn't included when the browser
-         sizes/positions the flex container, so without this the raised
-         hexes overlap the block above. */
-      padding-top: calc(clamp(160px, 16vw, 214px) * 0.444);
     }
 
     .c-honeycomb > li {
-      --hex-w: clamp(160px, 16vw, 214px);
-      margin-inline: calc(var(--hex-w) * -0.055);
+      --hex-w: clamp(140px, 13vw, 186px);
     }
 
-    .c-honeycomb > li:nth-child(even) {
-      margin-top: calc(var(--hex-w) * -0.444); /* raise 2nd & 4th by ~half hex height */
+    .c-honeycomb > li:nth-child(odd) {
+      margin-top: calc(var(--hex-w) * 0.32); /* lower 1st/3rd/5th → 2nd/4th sit higher */
     }
   }
 

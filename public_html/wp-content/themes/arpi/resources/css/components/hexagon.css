@@ -64,15 +64,13 @@
      intrinsic (width + aspect-ratio) — no hardcoded section/row heights. */
   .c-honeycomb > li {
     list-style: none;
-    /* width comes from --hex-w, set fluidly on the .c-honeycomb instance
-       (fallback keeps the component usable without an override). */
-    width: var(--hex-w, 160px);
   }
 
   /* mobile / tablet: 2-1-2 quincunx (top pair, centered middle, bottom pair) with
      GAPS between hexes (Figma) — not a tight tessellation. */
   @media (width < 64rem) {
     .c-honeycomb {
+      --hex-w: clamp(130px, 38vw, 155px);
       display: grid;
       grid-template-columns: repeat(2, min-content);
       grid-template-areas:
@@ -86,6 +84,8 @@
       margin-inline: auto;
     }
 
+    .c-honeycomb > li { width: var(--hex-w); }
+
     .c-honeycomb > li:nth-child(1) { grid-area: bot-l; margin-top: calc(var(--hex-w) * -0.09); }
     .c-honeycomb > li:nth-child(2) { grid-area: top-l; }
     .c-honeycomb > li:nth-child(3) {
@@ -97,22 +97,24 @@
     .c-honeycomb > li:nth-child(5) { grid-area: bot-r; margin-top: calc(var(--hex-w) * -0.09); }
   }
 
-  /* desktop: single offset row of separated hexes (Figma: gaps between them,
-     2nd & 4th sit higher). Achieved by lowering the odd hexes, so the even ones
-     stay at the top — no negative margins, no clipping. */
+  /* desktop: the five hexes fill the full section width (each flex:1 → equal share),
+     2nd & 4th raised. --hex-w = the resulting hex width, so the offset tracks it.
+     (flex-item margin % resolves against the flex container width, so the calc works.) */
   @media (width >= 64rem) {
     .c-honeycomb {
+      --gap: clamp(8px, 1.5vw, 24px);
+      --hex-w: calc((100% - 4 * var(--gap)) / 5);
       display: flex;
       flex-wrap: nowrap;
-      justify-content: center;
       align-items: flex-start;
-      gap: clamp(8px, 1vw, 18px);
-      width: auto;
+      gap: var(--gap);
+      width: 100%;
       max-width: none;
     }
 
     .c-honeycomb > li {
-      flex: none; /* all hexes identical width — don't let flex size them by text length */
+      flex: 1; /* equal share of the row → hexes fill the available width */
+      min-width: 0;
     }
 
     .c-honeycomb > li:nth-child(odd) {

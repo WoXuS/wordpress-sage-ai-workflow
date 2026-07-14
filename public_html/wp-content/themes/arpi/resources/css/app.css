@@ -2,6 +2,10 @@
 @plugin "fluid-tailwindcss" {
   minViewport: 375;
   maxViewport: 1280;
+  /* Per-instance fluid hexagon widths (min@375 → max@1280). Referenced as
+     var(--fluid-spacing-hex-*) to set --hex-w on a specific hexagon cluster. */
+  --spacing-hex-honeycomb: 150px/180px; /* 5-in-a-row: bigger overflows the viewport < ~1600px */
+  --spacing-hex-dbip: 150px/290px;
 }
 @import "./theme.css";
 @import "./base/fonts.css";

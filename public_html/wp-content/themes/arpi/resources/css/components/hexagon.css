@@ -64,6 +64,9 @@
      intrinsic (width + aspect-ratio) — no hardcoded section/row heights. */
   .c-honeycomb > li {
     list-style: none;
+    /* width comes from --hex-w, set fluidly on the .c-honeycomb instance
+       (fallback keeps the component usable without an override). */
+    width: var(--hex-w, 160px);
   }
 
   /* mobile / tablet: 2-1-2 quincunx (top pair, centered middle, bottom pair) with
@@ -81,11 +84,6 @@
       column-gap: clamp(8px, 3vw, 14px);
       width: 100%;
       margin-inline: auto;
-    }
-
-    .c-honeycomb > li {
-      --hex-w: clamp(120px, 38vw, 152px);
-      width: var(--hex-w);
     }
 
     .c-honeycomb > li:nth-child(1) { grid-area: bot-l; margin-top: calc(var(--hex-w) * -0.09); }
@@ -114,8 +112,6 @@
     }
 
     .c-honeycomb > li {
-      --hex-w: clamp(140px, 13vw, 186px);
-      width: var(--hex-w);
       flex: none; /* all hexes identical width — don't let flex size them by text length */
     }
 
@@ -126,16 +122,16 @@
 
   /* DBiP triad: two hexes stacked in the left column + one centered to the right
      (Figma hex ≈ 309px). Sizing intrinsic (width + aspect-ratio). */
+  /* --hex-w is set fluidly on the .c-hex-triad instance (fallback for safety). */
   .c-hex-triad {
-    --hex-w: clamp(120px, 26vw, 290px);
     display: grid;
-    grid-template-columns: repeat(2, var(--hex-w));
+    grid-template-columns: repeat(2, var(--hex-w, 160px));
     column-gap: 0;
     align-items: center;
     width: max-content;
   }
 
-  .c-hex-triad > * { width: var(--hex-w); }
+  .c-hex-triad > * { width: var(--hex-w, 160px); }
   .c-hex-triad > :nth-child(1) { grid-column: 1; grid-row: 1; }
   .c-hex-triad > :nth-child(2) { grid-column: 1; grid-row: 2; }
   .c-hex-triad > :nth-child(3) {

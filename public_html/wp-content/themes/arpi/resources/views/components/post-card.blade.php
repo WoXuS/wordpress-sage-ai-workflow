@@ -1,7 +1,5 @@
 @props(['post'])
 @php $id = $post->ID; @endphp
-{{-- Whole card links to the post: branded ARPI thumbnail (title baked into the graphic,
-     red fallback block) + plain title + "Więcej →" cue (Figma 399:2228). --}}
 <a href="{{ get_permalink($id) }}" class="group/card flex flex-col gap-4">
   <div class="aspect-[412/400] w-full overflow-hidden rounded-2xl bg-red">
     @if (has_post_thumbnail($id))

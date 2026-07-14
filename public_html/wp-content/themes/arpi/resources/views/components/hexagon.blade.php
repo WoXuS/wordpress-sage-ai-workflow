@@ -1,8 +1,6 @@
 @props(['variant' => 'solid', 'href' => null])
 @php $tag = $href ? 'a' : 'div'; @endphp
-{{-- Flat-top hexagon using the exact Figma shape (resources/images/purple-hexagon.svg,
-     viewBox 417x372). solid = filled (white text over red); outline = stroked, fills
-     red on hover. Pass :href to make it a link, otherwise it's a plain <div>. --}}
+{{-- flat-top hex; path from resources/images/purple-hexagon.svg --}}
 <{{ $tag }}
   @if($href) href="{{ $href }}" @endif
   {{ $attributes->merge(['class' => "c-hex c-hex--{$variant}"]) }}

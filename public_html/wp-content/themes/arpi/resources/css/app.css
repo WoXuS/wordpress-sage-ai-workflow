@@ -2,10 +2,24 @@
 @plugin "fluid-tailwindcss" {
   minViewport: 375;
   maxViewport: 1280;
-  /* Fluid width for the DBiP hexagon triad (min@375 → max@1280); referenced as
-     var(--fluid-spacing-hex-dbip) to set --hex-w on that instance. The "Dlaczego
-     ARPI" honeycomb fills its row instead (see .c-honeycomb desktop). */
+  /* Semantic fluid spacing scale (min@375 → max@1280). Rounded, reused everywhere
+     instead of copying Figma's arbitrary per-instance px. Each generates a Tailwind
+     utility: py-section, gap-stack, gap-head, gap-cols, etc. */
+  --spacing-section: 48px/80px; /* section vertical rhythm  (py-section) */
+  --spacing-stack:   32px/48px; /* gap between a section's content blocks (gap-stack) */
+  --spacing-head:    16px/24px; /* gap between a heading and its subtitle (gap-head) */
+  --spacing-cols:    32px/64px; /* gap in a two-column image/text section (gap-cols) */
+
+  /* Fluid width for the DBiP hexagon triad; referenced as var(--fluid-spacing-hex-dbip)
+     to set --hex-w on that instance. The "Dlaczego ARPI" honeycomb fills its row. */
   --spacing-hex-dbip: 150px/290px;
+}
+
+/* Title + subtitle block used at the top of almost every section. */
+@utility section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fluid-spacing-head);
 }
 @import "./theme.css";
 @import "./base/fonts.css";

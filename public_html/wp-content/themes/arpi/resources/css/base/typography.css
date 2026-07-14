@@ -8,10 +8,9 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* .h1/.h2/.h3 apply a heading's visual size to any element, decoupled from the tag:
-     section titles are <h2 class="h1"> (look like h1 — one real <h1>/page = hero),
-     section leads are <p class="h2"> (look like h2 but stay paragraphs, not headings). */
-  h1, h2, h3, .h1, .h2, .h3 {
+  /* .h1 gives the h1 visual size to any element: section titles are <h2 class="h1">
+     so they look like h1 while keeping one real <h1> per page (the hero). */
+  h1, h2, h3, .h1 {
     font-weight: 400;
     text-wrap: balance;
   }
@@ -22,12 +21,12 @@
     letter-spacing: -0.25px;
   }
 
-  h2, .h2 {
+  h2 {
     font-size: var(--text-h2);
     line-height: 1.22;
   }
 
-  h3, .h3 {
+  h3 {
     font-size: var(--text-h3);
     line-height: 1.25;
   }

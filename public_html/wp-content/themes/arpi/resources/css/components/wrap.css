@@ -7,6 +7,6 @@
   }
 
   .o-wrap--header {
-    --wrap-padding-inline: clamp(16px, -10.5px + 7.07vw, 80px);  /* 16→80px */
+    --wrap-padding-inline: clamp(16px, -48px + 10vw, 80px);  /* 16→80px */
   }
 }

@@ -71,3 +71,11 @@ dump-db: ## Zrzut bazy: make dump-db FILE=dump.sql.gz
 
 push-db-staging: ## Wypchnij bazę dev → staging (nadpisuje staging DB, search-replace URL)
 	./scripts/deploy/push-db-to-staging.sh
+
+sync-plugins-staging: ## Zsynchronizuj wtyczki dev → staging (lustro plików, --delete)
+	./scripts/deploy/sync-plugins-to-staging.sh
+
+sync-uploads-staging: ## Zsynchronizuj media/uploads dev → staging (lustro plików, --delete)
+	./scripts/deploy/sync-uploads-to-staging.sh
+
+sync-staging: push-db-staging sync-plugins-staging sync-uploads-staging ## Pełne lustro dev → staging (baza + wtyczki + media)

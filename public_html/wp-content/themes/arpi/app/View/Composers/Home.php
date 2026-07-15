@@ -33,7 +33,7 @@ class Home extends Composer
             'accent'    => 'pod kontrolą.',
             'lead'      => 'Dbamy o Twoją księgowość, abyś mógł oszczędzać czas i energię. '
                 . 'Z nami możesz skupić się na tym, co najważniejsze dla Twojego biznesu.',
-            'image'     => 'resources/images/hp-hero.png',
+            'image'     => 'resources/images/hp-hero.svg',
             'image_alt' => 'Schemat obiegu dokumentów: KSeF, InFlow, ARPI Accounting, Urząd Skarbowy.',
         ];
     }
@@ -93,7 +93,7 @@ class Home extends Composer
     private function services(): array
     {
         return [
-            ['name' => 'Księgowość',           'icon' => 'file-stack',          'url' => home_url('/uslugi/ksiegowosc')],
+            ['name' => 'Księgowość',           'icon' => 'three-papers',          'url' => home_url('/uslugi/ksiegowosc')],
             ['name' => 'Kadry i płace',        'icon' => 'people',              'url' => home_url('/uslugi/kadry-i-place')],
             ['name' => 'Doradztwo podatkowe',  'icon' => 'bulb',                'url' => home_url('/uslugi/doradztwo-podatkowe')],
             ['name' => 'Budżetowanie i raporty','icon' => 'three-bar-graph',    'url' => home_url('/uslugi/budzetowanie-i-raporty')],

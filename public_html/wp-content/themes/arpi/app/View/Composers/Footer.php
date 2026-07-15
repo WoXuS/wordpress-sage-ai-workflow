@@ -59,7 +59,7 @@ class Footer extends Composer
             [
                 'name' => 'Rzeszów',
                 'address' => ['Juliusza Słowackiego 6/12', '35-060'],
-                'maps_url' => 'maps.app.goo.gl/C792GtwKiCwuzbPc8',
+                'maps_url' => 'https://maps.app.goo.gl/C792GtwKiCwuzbPc8',
                 'phone' => '+48 538 235 852',
                 'email' => 'contact@arpiaccounting.com',
             ],

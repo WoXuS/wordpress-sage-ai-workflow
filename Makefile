@@ -68,3 +68,6 @@ import-db: ## Import zrzutu: make import-db FILE=dump.sql.gz
 
 dump-db: ## Zrzut bazy: make dump-db FILE=dump.sql.gz
 	$(DC) exec -T db sh -c 'exec mariadb-dump -u root -p"$$MARIADB_ROOT_PASSWORD" "$$MARIADB_DATABASE"' | gzip > $(FILE)
+
+push-db-staging: ## Wypchnij bazę dev → staging (nadpisuje staging DB, search-replace URL)
+	./scripts/deploy/push-db-to-staging.sh

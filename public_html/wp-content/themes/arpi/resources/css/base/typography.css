@@ -8,6 +8,9 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  html, body { overflow-x: clip; }
+  img, svg, video, iframe, table, pre { max-width: 100%; }
+
   /* .h1 gives the h1 visual size to any element: section titles are <h2 class="h1">
      so they look like h1 while keeping one real <h1> per page (the hero). */
   h1, h2, h3, .h1 {

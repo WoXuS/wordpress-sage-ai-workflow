@@ -33,7 +33,8 @@ class Home extends Composer
             'accent'    => 'pod kontrolą.',
             'lead'      => 'Dbamy o Twoją księgowość, abyś mógł oszczędzać czas i energię. '
                 . 'Z nami możesz skupić się na tym, co najważniejsze dla Twojego biznesu.',
-            'image'     => 'resources/images/hp-hero.svg',
+            'image_desktop'     => 'resources/images/hp-hero--desktop.svg',
+            'image_mobile'     => 'resources/images/hp-hero--mobile.svg',
             'image_alt' => 'Schemat obiegu dokumentów: KSeF, InFlow, ARPI Accounting, Urząd Skarbowy.',
         ];
     }
@@ -44,13 +45,14 @@ class Home extends Composer
             'heading'   => 'O nas',
             'lead'      => 'Jesteśmy częścią ARPI Group, norweskiej firmy, w której zaufanie '
                 . 'i precyzja stanowią flagowe wartości. Działamy w Polsce od 2006 roku.',
-            'stats'     => 'Zrzeszamy ekspertów wyspecjalizowanych w zakresie księgowości, prawa '
+            'stats_desktop'     => 'Zrzeszamy ekspertów wyspecjalizowanych w zakresie księgowości, prawa '
                 . 'oraz administracji kadrowo-płacowej. Wybierając ARPI, powierzasz swój biznes '
                 . 'opiece profesjonalistów, którzy słuchają i odpowiadają zgodnie z potrzebami klienta. '
                 . 'W 2024 roku całkowity obrót firm naszych klientów przekroczył 586 553 123 PLN. '
                 . 'Nasz zespół zarządza kadrami i płacami ponad 3 530 pracowników miesięcznie dla naszych '
                 . 'klientów. Oferujemy klientom ubezpieczenie OC na kwoty: 2 200 000 PLN (księgowość), '
                 . '2 200 000 PLN (doradztwo podatkowe), 1 100 000 PLN (kadry).',
+            'stats_mobile' => 'KOMPLEKSOWE PODEJŚCIE I ZGRANY ZESPÓŁ TO PODSTAWA',
             'image'     => 'resources/images/about-us.png',
             'image_alt' => 'Zespół ARPI podczas pracy.',
         ];

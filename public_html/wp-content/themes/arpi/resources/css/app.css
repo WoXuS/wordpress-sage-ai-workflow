@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "fluid-tailwindcss" {
-  minViewport: 375;
+  minViewport: 640;
   maxViewport: 1280;
   /* Fluid spacing scale (rounded, reused instead of Figma's per-instance px). Names
      generate utilities: py-section, gap-stack, gap-cols; --fluid-spacing-head feeds .section-head. */

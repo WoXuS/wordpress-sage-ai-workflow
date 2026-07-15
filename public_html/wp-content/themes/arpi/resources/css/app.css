@@ -2,6 +2,21 @@
 @plugin "fluid-tailwindcss" {
   minViewport: 375;
   maxViewport: 1280;
+  /* Fluid spacing scale (rounded, reused instead of Figma's per-instance px). Names
+     generate utilities: py-section, gap-stack, gap-cols; --fluid-spacing-head feeds .section-head. */
+  --spacing-section: 48px/80px;
+  --spacing-stack:   32px/48px;
+  --spacing-head:    16px/24px;
+  --spacing-cols:    32px/64px;
+
+  /* fluid --hex-w for the DBiP triad instance */
+  --spacing-hex-dbip: 150px/290px;
+}
+
+@utility section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fluid-spacing-head);
 }
 @import "./theme.css";
 @import "./base/fonts.css";
@@ -10,6 +25,7 @@
 @import "./components/input.css";
 @import "./utilities/admin-bar.css";
 @import "./components/wrap.css";
+@import "./components/hexagon.css";
 
 @source "../../app/**/*.php";
 @source "../../config/**/*.php";

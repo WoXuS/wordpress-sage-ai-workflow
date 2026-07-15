@@ -8,6 +8,25 @@ THEME_HOST = public_html/$(THEME)
 help: ## Ten ekran pomocy
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "\033[32m%-16s\033[0m %s\n",$$1,$$2}'
 
+setup: ## Bootstrap na nowej maszynie (.env + sole, kontenery, rdzeń WP, motyw, instalacja)
+	@test -f .env || { \
+		cp .env.example .env; \
+		echo "-> .env utworzony z .env.example, generuję sole..."; \
+		for k in AUTH_KEY SECURE_AUTH_KEY LOGGED_IN_KEY NONCE_KEY AUTH_SALT SECURE_AUTH_SALT LOGGED_IN_SALT NONCE_SALT; do \
+			salt=$$(LC_ALL=C tr -dc 'A-Za-z0-9_@%+=' < /dev/urandom | head -c 64); \
+			tmp=$$(mktemp) && sed "s|^$$k=.*|$$k=$$salt|" .env > $$tmp && mv $$tmp .env; \
+		done; \
+	}
+	$(DC) up -d
+	$(PHP) sh -c "cd /var/app && composer install --no-interaction"
+	@test -f public_html/wp-load.php || $(PHP) wp core download --allow-root
+	$(MAKE) theme-install
+	@$(PHP) wp core is-installed --allow-root 2>/dev/null || $(PHP) wp core install --allow-root \
+		--url="http://localhost:8080" --title="ARPI Accounting" \
+		--admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email
+	@$(PHP) wp theme activate arpi --allow-root 2>/dev/null || true
+	@echo "✓ Gotowe: http://localhost:8080  (admin/admin) — teraz: make dev"
+
 up: ## Start kontenerów
 	$(DC) up -d
 

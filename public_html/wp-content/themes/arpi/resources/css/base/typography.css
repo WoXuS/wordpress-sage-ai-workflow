@@ -1,37 +1,36 @@
 @layer base {
   body {
     font-family: var(--font-sans);
-    font-size: var(--text-body); /* 16→20 fluid */
+    font-size: var(--text-body);
     line-height: 1.4;
     color: var(--color-black);
     background-color: var(--color-white);
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3 {
+  /* .h1 gives the h1 visual size to any element: section titles are <h2 class="h1">
+     so they look like h1 while keeping one real <h1> per page (the hero). */
+  h1, h2, h3, .h1 {
     font-weight: 400;
     text-wrap: balance;
   }
 
-  h1 {
+  h1, .h1 {
     font-size: var(--text-display);
     line-height: 0.98;
     letter-spacing: -0.25px;
   }
 
-  /* 64/65 */
   h2 {
     font-size: var(--text-h2);
     line-height: 1.22;
   }
 
-  /* 44/36 */
   h3 {
     font-size: var(--text-h3);
     line-height: 1.25;
   }
 
-  /* 30/24 */
   a {
     color: inherit;
     text-decoration: none;

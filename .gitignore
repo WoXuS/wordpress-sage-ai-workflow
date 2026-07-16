@@ -28,5 +28,9 @@ Thumbs.db
 /reference/legacy-theme/assets/images/
 /reference/legacy-theme/assets/font/
 
-# Production DB dump: contains subscriber PII, kept local only
+# Production DB dumps: contain subscriber PII, kept local only
 /docs/baza.sql
+/reference/prod-db.sql
+
+# Scratch screenshots dropped into the assistant workspace
+/.claude/img*.png

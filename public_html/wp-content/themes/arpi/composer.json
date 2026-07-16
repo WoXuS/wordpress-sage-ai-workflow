@@ -44,7 +44,10 @@
     "roots/acorn": "^6.0"
   },
   "require-dev": {
-    "laravel/pint": "^1.20"
+    "laravel/pint": "^1.20",
+    "php-stubs/acf-pro-stubs": "^6.8",
+    "php-stubs/wordpress-stubs": "^7.0",
+    "wpsyntex/polylang-stubs": "^3.7"
   },
   "suggest": {
     "log1x/sage-directives": "A collection of useful Blade directives for WordPress and Sage (^1.0)."

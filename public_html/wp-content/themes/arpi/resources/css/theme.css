@@ -14,12 +14,15 @@
   /* fluid type — endpoints 640→1280px, 1:1 with Figma; rem for font-size (a11y) */
   --text-display: clamp(2.25rem, 0.4375rem + 4.531vw, 4.0625rem); /* H1 36→65 */
   --text-h2: clamp(1.5rem, 0.75rem + 1.875vw, 2.25rem);   /* H2 24→36 */
-  --text-subtitle: clamp(1.5rem, 1rem + 1.25vw, 2rem); /* section subtitle 24→32 */
+  --text-subtitle: clamp(1.5rem, 1rem + 1.1vw, 2rem); /* section subtitle 24→32 */
   --text-subtitle--line-height: 1.25;
   --text-h3: clamp(1rem, 0.5rem + 1.25vw, 1.5rem);    /* H3 16→24 */
   --text-body-lg: clamp(1.25rem, 1rem + 0.625vw, 1.5rem);   /* 20→24 */
-  --text-body: clamp(1rem, 0.75rem + 0.625vw, 1.25rem);   /* 16→20 */
+  /*--text-body: clamp(1rem, 0.75rem + 0.625vw, 1.25rem);   !* 16→20 *!*/
+  --text-body: 1.25rem;   /* 20 */
   --text-body-sm: 1rem;                                        /* 16 fixed */
   /* layout: container horizontal padding, fluid 640→1280 (px — spacing, not type) */
   --wrap-padding-inline: clamp(30px, -20px + 7.813vw, 80px);
+
+  --breakpoint-xs: 30rem;
 }

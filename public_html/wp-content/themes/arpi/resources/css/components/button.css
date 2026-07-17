@@ -29,10 +29,14 @@
     border-color: var(--color-white);
     color: var(--color-white);
 
+    /* deepen the plum on hover (keeps white text readable) instead of washing
+       it out to a transparent tint that killed contrast against light bg */
     &:hover {
-      background-color: color-mix(in oklab, var(--color-red) 30%, transparent);
-      border-color: var(--color-red);
-      opacity: 0.91;
+      background-color: var(--color-red-dark);
+    }
+
+    &:active {
+      background-color: var(--color-red-darker);
     }
   }
 
@@ -42,9 +46,14 @@
     color: var(--color-red);
 
     &:hover {
-      background-color: var(--color-red);
+      background-color: var(--color-red-dark);
+      border-color: var(--color-red-dark);
       color: var(--color-white);
-      opacity: 0.91;
+    }
+
+    &:active {
+      background-color: var(--color-red-darker);
+      border-color: var(--color-red-darker);
     }
   }
 
@@ -55,10 +64,21 @@
     color: var(--color-red);
     font-size: var(--text-body); /* 16→20 */
 
-    /* also reacts when an enclosing card (.group/card) is hovered */
+    /* darken (not fade) on hover for stronger contrast; also reacts when an
+       enclosing card (.group/card) is hovered */
     &:hover,
     .group\/card:hover & {
-      color: color-mix(in oklab, var(--color-red) 70%, transparent);
+      color: var(--color-red-dark);
+    }
+
+    /* nudge the trailing arrow to echo the service-tile micro-interaction */
+    & svg {
+      transition: transform 0.2s ease;
+    }
+
+    &:hover svg,
+    .group\/card:hover & svg {
+      transform: translateX(3px);
     }
   }
 
@@ -67,8 +87,11 @@
     border-color: var(--color-white);
     color: var(--color-red);
 
+    /* warm cream shift reads better on dark/red backgrounds than an opacity fade */
     &:hover {
-      opacity: 0.9; /* provisional — no hover in Figma */
+      background-color: var(--color-cream);
+      border-color: var(--color-cream);
+      color: var(--color-red-dark);
     }
   }
 

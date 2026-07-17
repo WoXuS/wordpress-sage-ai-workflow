@@ -7,6 +7,8 @@
   --color-white: #ffffff;
   --color-black: #19191c;
   --color-red: #942d58;
+  --color-red-dark: #7b2549;   /* hover — deepened plum, keeps white text ~7:1 */
+  --color-red-darker: #651f3c; /* active/press */
   --color-cream: #f5f4ee;
 
   --font-sans: "Geomanist", ui-sans-serif, system-ui, sans-serif;

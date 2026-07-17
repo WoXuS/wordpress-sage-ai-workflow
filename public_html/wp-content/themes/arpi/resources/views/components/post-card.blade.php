@@ -1,6 +1,6 @@
 @props(['post'])
 @php $id = $post->ID; @endphp
-<a href="{{ get_permalink($id) }}" class="group/card flex h-full flex-col gap-5">
+<a href="{{ get_permalink($id) }}" {{ $attributes->merge(['class' => 'group/card flex h-full flex-col gap-5']) }}>
   <div class="aspect-412/400 w-full shrink-0 overflow-hidden rounded-[30px] bg-red">
     @if (has_post_thumbnail($id))
       {!! get_the_post_thumbnail($id, 'large', [

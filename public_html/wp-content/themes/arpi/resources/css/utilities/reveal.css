@@ -1,0 +1,97 @@
+/**
+ * Scroll-reveal + hero entrance animations.
+ *
+ * Everything is gated behind `.reveal-ready` (added by reveal.js) so that without
+ * JS nothing is ever hidden, and behind prefers-reduced-motion so motion-sensitive
+ * users get the final state instantly. reveal.js toggles `.is-visible`.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* --- scroll reveal ------------------------------------------------------ */
+  .reveal-ready [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .reveal-ready [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* --- hero entrance (plays on load) ------------------------------------- */
+  .reveal-ready .c-hero [data-hero] {
+    opacity: 0;
+    animation: hero-in 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation-delay: var(--hero-delay, 0ms);
+  }
+
+  .reveal-ready .c-hero [data-hero="image"] {
+    animation-name: hero-in-image;
+  }
+
+  /* --- hero ambient accent ---------------------------------------------- */
+  .c-hero::before {
+    animation: hero-drift 20s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-in-image {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-6%, 8%) scale(1.12);
+  }
+}
+
+/* Soft, blurred plum glow behind the hero — subtle depth, no motion required.
+   Positioned/clipped so it never triggers horizontal scroll. */
+.c-hero {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+}
+
+.c-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -25%;
+  right: -8%;
+  width: min(62vw, 620px);
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--color-red), transparent 82%),
+    transparent 70%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+}

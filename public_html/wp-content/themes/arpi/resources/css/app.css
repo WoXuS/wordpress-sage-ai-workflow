@@ -26,6 +26,7 @@
 @import "./utilities/admin-bar.css";
 @import "./components/wrap.css";
 @import "./components/hexagon.css";
+@import "./utilities/reveal.css";
 
 @source "../../app/**/*.php";
 @source "../../config/**/*.php";

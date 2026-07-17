@@ -89,9 +89,11 @@ jobs:
 
       - name: Clear Acorn/Blade caches (best-effort)
         continue-on-error: true
+        # wp-cli defaults to PHP 8.2 on cyberFolks, but the theme needs 8.3 — run
+        # wp under php83 explicitly (\$(command -v wp) is resolved on the remote).
         run: |
           ssh -p "${SSH_PORT:-22}" "${SSH_USER}@${SSH_HOST}" \
-            "cd '${DEPLOY_PATH}' && wp acorn optimize:clear && wp acorn view:cache"
+            "cd '${DEPLOY_PATH}' && /opt/alt/php83/usr/bin/php \$(command -v wp) acorn optimize:clear && /opt/alt/php83/usr/bin/php \$(command -v wp) acorn view:cache"
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}

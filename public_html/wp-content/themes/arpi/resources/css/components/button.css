@@ -55,7 +55,9 @@
     color: var(--color-red);
     font-size: var(--text-body); /* 16→20 */
 
-    &:hover {
+    /* also reacts when an enclosing card (.group/card) is hovered */
+    &:hover,
+    .group\/card:hover & {
       color: color-mix(in oklab, var(--color-red) 70%, transparent);
     }
   }

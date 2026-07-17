@@ -139,6 +139,22 @@ add_action('after_setup_theme', function () {
 }, 20);
 
 /**
+ * Load and save ACF field groups, post types and taxonomies as local JSON
+ * under the theme, so definitions live in git rather than the database.
+ *
+ * @link https://www.advancedcustomfields.com/resources/local-json/
+ */
+add_filter('acf/settings/load_json', function ($paths) {
+    $paths[] = get_theme_file_path('resources/acf-json');
+
+    return $paths;
+});
+
+add_filter('acf/settings/save_json', function () {
+    return get_theme_file_path('resources/acf-json');
+});
+
+/**
  * Register the theme sidebars.
  *
  * @return void

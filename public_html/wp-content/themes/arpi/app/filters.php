@@ -30,6 +30,33 @@ add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
 }, 10, 3);
 
 /**
+ * Resolve the %chapter-name% token in `dbip-chapters` permalinks.
+ *
+ * The CPT registers a custom permalink base of `dbip-chapters/%chapter-name%`
+ * (resources/acf-json/post_type_…json). WordPress rewrite rules already route
+ * the structured URL, but get_permalink() leaves the taxonomy token literal, so
+ * substitute the chapter's assigned `chapter-name` term slug (falling back to
+ * the Yoast primary term, then the first term, then `uncategorized`).
+ */
+add_filter('post_type_link', function ($url, $post) {
+    if ($post->post_type !== 'dbip-chapters' || strpos($url, '%chapter-name%') === false) {
+        return $url;
+    }
+
+    $slug  = 'uncategorized';
+    $terms = get_the_terms($post->ID, 'chapter-name');
+    if ($terms && ! is_wp_error($terms)) {
+        $primary = (int) get_post_meta($post->ID, '_yoast_wpseo_primary_chapter-name', true);
+        $term = $primary
+            ? (current(array_filter($terms, fn ($t) => $t->term_id === $primary)) ?: $terms[0])
+            : $terms[0];
+        $slug = $term->slug;
+    }
+
+    return str_replace('%chapter-name%', $slug, $url);
+}, 10, 2);
+
+/**
  * Keep non-production environments (e.g. the cyberFolks staging subdomain) out of
  * search indexes. Gated on WP_ENV via wp_get_environment_type(); production is
  * untouched. Basic Auth on staging is handled at the hosting level.

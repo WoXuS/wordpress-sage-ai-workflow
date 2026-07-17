@@ -123,12 +123,21 @@ class Home extends Composer
     private function blogMeta(): array
     {
         $postsPage = (int) get_option('page_for_posts');
+        $isEn = (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
 
         return [
-            'heading' => 'Blog',
-            'intro'   => 'Zapraszamy do śledzenia najnowszych zmian dotyczących podatków i księgowości. '
-                . 'Wszystkie artykuły są regularnie opracowywane przez zespół ekspertów ARPI.',
-            'all_url' => $postsPage ? get_permalink($postsPage) : home_url('/blog'),
+            'heading'   => 'Blog',
+            'intro'     => $isEn
+                ? 'Follow the latest developments in tax and accounting. Every article is prepared '
+                    . 'on a regular basis by the team of experts at ARPI.'
+                : 'Zapraszamy do śledzenia najnowszych zmian dotyczących podatków i księgowości. '
+                    . 'Wszystkie artykuły są regularnie opracowywane przez zespół ekspertów ARPI.',
+            'all_label' => $isEn ? 'All articles' : 'Wszystkie artykuły',
+            'more_label' => $isEn ? 'See all' : 'Zobacz wszystkie',
+            'empty'     => $isEn
+                ? 'The latest articles will appear here soon.'
+                : 'Wkrótce pojawią się tu najnowsze artykuły.',
+            'all_url'   => $postsPage ? get_permalink($postsPage) : home_url('/blog'),
         ];
     }
 

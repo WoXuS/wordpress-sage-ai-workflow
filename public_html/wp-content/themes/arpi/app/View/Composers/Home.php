@@ -134,7 +134,24 @@ class Home extends Composer
 
     private function blogCategories(): array
     {
-        return get_categories(['hide_empty' => false, 'exclude' => [1]]); // 1 = "Uncategorized"
+        // Exclude "Uncategorized" in every language (Polylang keeps one per language).
+        $excluded = [(int) get_option('default_category')];
+        if (function_exists('pll_get_term_translations')) {
+            $excluded = array_map('intval', pll_get_term_translations($excluded[0]));
+        }
+
+        $categories = get_categories(['hide_empty' => false, 'exclude' => $excluded]);
+
+        // Show only the categories of the current language.
+        if (function_exists('pll_current_language') && function_exists('pll_get_term_language')) {
+            $lang = pll_current_language();
+            $categories = array_values(array_filter(
+                $categories,
+                fn ($cat) => pll_get_term_language($cat->term_id) === $lang
+            ));
+        }
+
+        return $categories;
     }
 
     private function latestPosts(): array

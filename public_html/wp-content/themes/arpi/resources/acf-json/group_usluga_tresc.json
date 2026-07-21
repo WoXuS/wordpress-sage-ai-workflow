@@ -1,0 +1,233 @@
+{
+    "key": "group_usluga_tresc",
+    "title": "Usługa — treść strony",
+    "fields": [
+        {
+            "key": "field_usluga_hero",
+            "label": "Hero",
+            "name": "hero",
+            "type": "group",
+            "instructions": "Nagłówek strony. Tytuł usługi bierze się z tytułu wpisu.",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_usluga_hero_icon_source",
+                    "label": "Źródło ikony",
+                    "name": "icon_source",
+                    "type": "button_group",
+                    "choices": {
+                        "library": "Z biblioteki",
+                        "custom": "Własna ikonka"
+                    },
+                    "default_value": "library",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal"
+                },
+                {
+                    "key": "field_usluga_hero_icon_name",
+                    "label": "Ikona",
+                    "name": "icon_name",
+                    "type": "select",
+                    "instructions": "Lista budowana z plików w resources/icons.",
+                    "choices": [],
+                    "ui": 1,
+                    "ajax": 0,
+                    "allow_null": 0,
+                    "return_format": "value",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_usluga_hero_icon_source",
+                                "operator": "==",
+                                "value": "library"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "key": "field_usluga_hero_icon_file",
+                    "label": "Własna ikonka (SVG)",
+                    "name": "icon_file",
+                    "type": "image",
+                    "instructions": "Wgranie SVG wymaga wtyczki Safe SVG (sanityzacja).",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "library": "all",
+                    "mime_types": "svg",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_usluga_hero_icon_source",
+                                "operator": "==",
+                                "value": "custom"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "key": "field_usluga_hero_lead",
+                    "label": "Lead / wstęp",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 4,
+                    "new_lines": ""
+                }
+            ]
+        },
+        {
+            "key": "field_usluga_scope_intro",
+            "label": "Nagłówek nad siatką ikon",
+            "name": "scope_intro",
+            "type": "text",
+            "instructions": "Opcjonalny czerwony śródtytuł nad siatką ikon (np. „Wspólnie ustalimy…”)."
+        },
+        {
+            "key": "field_usluga_scope",
+            "label": "Zakres usług (ikony)",
+            "name": "scope",
+            "type": "repeater",
+            "instructions": "Siatka ikon z etykietami pod hero.",
+            "layout": "block",
+            "button_label": "Dodaj pozycję",
+            "min": 0,
+            "sub_fields": [
+                {
+                    "key": "field_usluga_scope_icon_source",
+                    "label": "Źródło ikony",
+                    "name": "icon_source",
+                    "type": "button_group",
+                    "choices": {
+                        "library": "Z biblioteki",
+                        "custom": "Własna ikonka"
+                    },
+                    "default_value": "library",
+                    "return_format": "value",
+                    "allow_null": 0,
+                    "layout": "horizontal"
+                },
+                {
+                    "key": "field_usluga_scope_icon_name",
+                    "label": "Ikona",
+                    "name": "icon_name",
+                    "type": "select",
+                    "instructions": "Lista budowana z plików w resources/icons.",
+                    "choices": [],
+                    "ui": 1,
+                    "ajax": 0,
+                    "allow_null": 0,
+                    "return_format": "value",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_usluga_scope_icon_source",
+                                "operator": "==",
+                                "value": "library"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "key": "field_usluga_scope_icon_file",
+                    "label": "Własna ikonka (SVG)",
+                    "name": "icon_file",
+                    "type": "image",
+                    "instructions": "Wgranie SVG wymaga wtyczki Safe SVG (sanityzacja).",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "library": "all",
+                    "mime_types": "svg",
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_usluga_scope_icon_source",
+                                "operator": "==",
+                                "value": "custom"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    "key": "field_usluga_scope_label",
+                    "label": "Etykieta",
+                    "name": "label",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "key": "field_usluga_body",
+            "label": "Treść",
+            "name": "body",
+            "type": "wysiwyg",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 0,
+            "delay": 0
+        },
+        {
+            "key": "field_usluga_reports",
+            "label": "Raporty",
+            "name": "reports",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_usluga_reports_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_usluga_reports_items",
+                    "label": "Punkty",
+                    "name": "items",
+                    "type": "repeater",
+                    "layout": "table",
+                    "button_label": "Dodaj punkt",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_usluga_reports_item_text",
+                            "label": "Tekst",
+                            "name": "text",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_usluga_tile_excerpt",
+            "label": "Opis kafla („Pozostałe usługi”)",
+            "name": "tile_excerpt",
+            "type": "textarea",
+            "instructions": "Krótki opis tej usługi pokazywany na kaflu w sekcji „Pozostałe usługi” na innych stronach.",
+            "rows": 3,
+            "new_lines": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "usluga"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1753142400
+}

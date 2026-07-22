@@ -12,9 +12,12 @@ export default function initReveal() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const root = document.documentElement;
-  root.classList.add('reveal-ready');
+  root.classList.add('reveal-ready'); // usually already set by the inline head gate
 
-  if (!('IntersectionObserver' in window)) return; // graceful: leave everything visible
+  if (!('IntersectionObserver' in window)) return; // graceful: head failsafe unhides everything
+
+  // Tell the head failsafe that reveal is running, so it keeps the gate.
+  window.__revealReady = true;
 
   const show = (el, delay = 0) => {
     if (delay) el.style.transitionDelay = `${delay}ms`;

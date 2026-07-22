@@ -3,6 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{-- Gate scroll-reveal before first paint so [data-reveal] is hidden from the
+         start, even when the JS module loads late (Vite dev). Failsafe removes the
+         gate if reveal.js never initialises, so content is never stuck hidden. --}}
+    <script>
+      (function () {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var el = document.documentElement;
+        el.classList.add('reveal-ready');
+        addEventListener('load', function () {
+          setTimeout(function () {
+            if (!window.__revealReady) el.classList.remove('reveal-ready');
+          }, 1200);
+        });
+      })();
+    </script>
+
     @php(do_action('get_header'))
     @php(wp_head())
 

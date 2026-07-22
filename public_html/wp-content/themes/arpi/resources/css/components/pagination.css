@@ -1,0 +1,38 @@
+@layer components {
+  /* WordPress paginate_links() output — styled to match the pill button system */
+  .c-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    & .page-numbers {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 44px;
+      padding: 0 14px;
+      border: 2px solid var(--color-red);
+      border-radius: 30px;
+      color: var(--color-red);
+      font-size: var(--text-body-sm);
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    & a.page-numbers:hover {
+      background: var(--color-red-dark);
+      border-color: var(--color-red-dark);
+      color: var(--color-white);
+    }
+    & .page-numbers.current {
+      background: var(--color-red);
+      color: var(--color-white);
+    }
+    & .page-numbers.dots {
+      border-color: transparent;
+      min-width: 24px;
+      padding: 0;
+    }
+  }
+}

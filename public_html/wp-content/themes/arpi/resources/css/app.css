@@ -27,6 +27,8 @@
 @import "./components/wrap.css";
 @import "./components/hexagon.css";
 @import "./components/dbip.css";
+@import "./components/prose.css";
+@import "./components/pagination.css";
 @import "./utilities/reveal.css";
 
 @source "../../app/**/*.php";

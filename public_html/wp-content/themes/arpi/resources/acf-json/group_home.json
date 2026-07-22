@@ -1,0 +1,369 @@
+{
+    "key": "group_home",
+    "title": "Strona główna — treść",
+    "fields": [
+        {
+            "key": "field_home_hero",
+            "label": "Hero",
+            "name": "hero",
+            "type": "group",
+            "instructions": "Pierwsza sekcja z nagłówkiem i schematem obiegu dokumentów.",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_home_hero_title",
+                    "label": "Tytuł",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "Główna część nagłówka (czarna)."
+                },
+                {
+                    "key": "field_home_hero_accent",
+                    "label": "Tytuł — akcent",
+                    "name": "accent",
+                    "type": "text",
+                    "instructions": "Druga część nagłówka wyróżniona kolorem (czerwona)."
+                },
+                {
+                    "key": "field_home_hero_lead",
+                    "label": "Lead / wstęp",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_home_hero_image_desktop",
+                    "label": "Grafika (desktop)",
+                    "name": "image_desktop",
+                    "type": "image",
+                    "instructions": "Puste = użyta zostanie domyślna grafika z motywu. Wgranie SVG wymaga wtyczki Safe SVG.",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "library": "all"
+                },
+                {
+                    "key": "field_home_hero_image_mobile",
+                    "label": "Grafika (mobile)",
+                    "name": "image_mobile",
+                    "type": "image",
+                    "instructions": "Puste = użyta zostanie domyślna grafika z motywu.",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "library": "all"
+                },
+                {
+                    "key": "field_home_hero_image_alt",
+                    "label": "Opis alternatywny grafiki (alt)",
+                    "name": "image_alt",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "key": "field_home_about",
+            "label": "O nas",
+            "name": "about",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_home_about_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_about_lead",
+                    "label": "Podtytuł",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_home_about_stats_desktop",
+                    "label": "Akapit (desktop)",
+                    "name": "stats_desktop",
+                    "type": "textarea",
+                    "instructions": "Pełny akapit ze statystykami — widoczny na desktopie.",
+                    "rows": 5,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_home_about_stats_mobile",
+                    "label": "Akapit (mobile)",
+                    "name": "stats_mobile",
+                    "type": "text",
+                    "instructions": "Skrócona wersja pokazywana na urządzeniach mobilnych."
+                },
+                {
+                    "key": "field_home_about_image",
+                    "label": "Zdjęcie",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "Puste = domyślne zdjęcie z motywu.",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "library": "all"
+                },
+                {
+                    "key": "field_home_about_image_alt",
+                    "label": "Opis alternatywny (alt)",
+                    "name": "image_alt",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "key": "field_home_memberships",
+            "label": "Jesteśmy częścią",
+            "name": "memberships",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_home_memberships_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_memberships_lead",
+                    "label": "Podtytuł",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_home_memberships_image",
+                    "label": "Grafika (logotypy organizacji)",
+                    "name": "image",
+                    "type": "image",
+                    "instructions": "Puste = domyślna grafika z motywu.",
+                    "return_format": "array",
+                    "preview_size": "medium",
+                    "library": "all"
+                },
+                {
+                    "key": "field_home_memberships_image_alt",
+                    "label": "Opis alternatywny (alt)",
+                    "name": "image_alt",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "key": "field_home_why",
+            "label": "Dlaczego ARPI?",
+            "name": "why",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_home_why_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_why_intro",
+                    "label": "Wstęp",
+                    "name": "intro",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_home_why_hexes",
+                    "label": "Hasła (plaster miodu)",
+                    "name": "hexes",
+                    "type": "repeater",
+                    "instructions": "Krótkie hasła wyświetlane na sześciokątach.",
+                    "layout": "table",
+                    "button_label": "Dodaj hasło",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_home_why_hex_label",
+                            "label": "Hasło",
+                            "name": "label",
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "key": "field_home_why_statement",
+                    "label": "Zdanie podsumowujące",
+                    "name": "statement",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_home_why_caption",
+                    "label": "Podpis",
+                    "name": "caption",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "key": "field_home_services",
+            "label": "Nasze usługi",
+            "name": "services",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_home_services_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_services_items",
+                    "label": "Kafle usług",
+                    "name": "items",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Dodaj usługę",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_home_services_item_icon",
+                            "label": "Ikona",
+                            "name": "icon_name",
+                            "type": "select",
+                            "instructions": "Lista budowana z plików w resources/icons.",
+                            "choices": [],
+                            "ui": 1,
+                            "ajax": 0,
+                            "allow_null": 0,
+                            "return_format": "value"
+                        },
+                        {
+                            "key": "field_home_services_item_name",
+                            "label": "Nazwa",
+                            "name": "name",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_home_services_item_link",
+                            "label": "Odnośnik",
+                            "name": "link",
+                            "type": "link",
+                            "return_format": "array"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_home_dbip",
+            "label": "Doing Business in Poland",
+            "name": "dbip",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_home_dbip_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_dbip_paragraphs",
+                    "label": "Akapity",
+                    "name": "paragraphs",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Dodaj akapit",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_home_dbip_paragraph_text",
+                            "label": "Tekst",
+                            "name": "text",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": ""
+                        }
+                    ]
+                },
+                {
+                    "key": "field_home_dbip_cta",
+                    "label": "Przycisk (CTA)",
+                    "name": "cta",
+                    "type": "link",
+                    "instructions": "Tekst i adres przycisku.",
+                    "return_format": "array"
+                }
+            ]
+        },
+        {
+            "key": "field_home_blog",
+            "label": "Blog",
+            "name": "blog",
+            "type": "group",
+            "instructions": "Kategorie i wpisy pobierane są automatycznie — poniżej edytujesz tylko teksty sekcji.",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_home_blog_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_blog_intro",
+                    "label": "Wstęp",
+                    "name": "intro",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_home_blog_all_label",
+                    "label": "Etykieta „Wszystkie artykuły”",
+                    "name": "all_label",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_blog_more_label",
+                    "label": "Etykieta przycisku „Zobacz wszystkie”",
+                    "name": "more_label",
+                    "type": "text"
+                },
+                {
+                    "key": "field_home_blog_empty",
+                    "label": "Tekst gdy brak wpisów",
+                    "name": "empty",
+                    "type": "text"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_type",
+                "operator": "==",
+                "value": "front_page"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1753142400
+}

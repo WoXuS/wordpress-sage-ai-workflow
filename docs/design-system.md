@@ -89,9 +89,13 @@ Figma at ~375px and ~1440px.**
   **no template rewrite**. This is a first-day architectural rule.
 - **ACF content is per-post (post-per-language)**, not global Options Pages — cleaner for Polylang.
   (Exception: genuinely global settings like the DBiP version/date use an options page.)
-- Hardcoded-vs-ACF status today: **Home** & **Footer** composers hold hardcoded PL arrays
-  (`// TODO: get_field(..., 'option')`); **Usluga** & **DBiP** composers read ACF with hardcoded
-  fallbacks.
+- Hardcoded-vs-ACF status today: **Home**, **Usluga** & **DBiP** composers read ACF with hardcoded
+  fallbacks (`fromAcf() ?? fromHardcoded()`); the Home fallback branches PL/EN so both language
+  home pages render even before ACF is filled. **Footer** still holds hardcoded PL arrays.
+- **Home ACF lives on the front-page Page** (per-post, not an options page). The EN home is a
+  linked Polylang translation of the PL front page, so each language edits its own content.
+  `HomeServiceProvider` extends ACF's "Front Page" location rule to also match the translation of
+  the front page — keeping the field group free of hardcoded post IDs.
 
 ### CPTs in play
 - **`usluga`** (slug `uslugi`) — service subpages `/uslugi/{slug}` (PL+EN via Polylang). Single
@@ -237,7 +241,7 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 | Composer | `$views` | Exposes / notes |
 |---|---|---|
 | `App` | `['*']` | `siteName`. |
-| `Home` | `['front-page']` | `hero, about, memberships, why, services, dbip, blog, blogCategories, latestPosts`. Hardcoded PL; `blogMeta`/`blogCategories` branch EN via `pll_current_language()`; categories filtered to current language, excl. default. |
+| `Home` | `['front-page']` | `hero, about, memberships, why, services, dbip, blog, blogCategories, latestPosts`. `fromAcf()` (reads `group_home` on the current-language front page) → fallback `fromHardcoded()` which branches PL/EN via `pll_current_language()`. ACF image sub-fields resolve to a URL, falling back to the bundled theme asset; `services` items carry an icon slug + link. `blogMeta` merges ACF text overrides onto EN/PL defaults; `blogCategories` filtered to current language, excl. default. |
 | `Footer` | `['sections.footer']` | `company, offices, newsletter, socials, badges` (hardcoded; eager `with()`). |
 | `Post` | `['partials.page-header','partials.content*']` | `title`, `pagination`. Feeds the stock `search`/`page-header` partials. |
 | `Blog` | `['index','partials.content-single-post']` | Dispatches by context. **Archive** (`index` = blog home + category/tag/author/date): `heading, intro, categories, activeTermId, allUrl, allLabel, empty, pagination` (styled `paginate_links` array). **Single**: `crumbs, category, meta{date,author}, nav{prev,next}, labels`. EN/PL via `pll_current_language()`; categories filtered to current language, default excluded. Prev/next use `get_{previous,next}_post` (Polylang keeps them in-language). |
@@ -250,12 +254,15 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 ## 10. Providers · setup · filters · icons · assets
 
 Providers (`functions.php` → `Application::configure()->withProviders`): `ThemeServiceProvider`
-(Sage base), `AcfServiceProvider`, `DbipServiceProvider`. Then loads `app/setup.php` + `app/filters.php`.
+(Sage base), `AcfServiceProvider`, `DbipServiceProvider`, `HomeServiceProvider`. Then loads
+`app/setup.php` + `app/filters.php`.
 
 - **Hooks live in classes** (providers), not in `setup.php`/`filters.php` for new logic — see conventions.
 - **`AcfServiceProvider`** — `acf/load_field/name=icon_name` → choices from `Icons::choices()`.
 - **`DbipServiceProvider`** — registers the DBiP options page (`acf_add_options_page`, slug
   `dbip-settings`); `protected_title_format` strips WP's "Zabezpieczone:" prefix for `dbip-chapters`.
+- **`HomeServiceProvider`** — `acf/location/match_rule` filter: makes ACF's `page_type == front_page`
+  rule also match the Polylang translation of the front page (so `group_home` shows on the EN home).
 - **`app/setup.php`** — ACF local-JSON load/save (`resources/acf-json`); `theme.json` served from
   `public/build/assets/theme.json`; editor.css/editor.js injection; `after_setup_theme` supports
   (title-tag, post-thumbnails, html5, …); registers `primary_navigation` menu + two sidebars.
@@ -317,6 +324,7 @@ initClampFill`. `editor.js` is a separate block-editor entry.
 | `group_usluga_tresc.json` | `usluga` fields: `hero` (group + icon-picker), `scope_intro`, `scope` (repeater), `body` (wysiwyg), `reports` (group), `tile_excerpt` |
 | `group_dbip_chapter.json` | `chapter-name` term fields: `title_image` (image), `chapter_introduction` (wysiwyg) |
 | `group_dbip_settings.json` | options page `dbip-settings`: `dbip_version`, `dbip_date` |
+| `group_home.json` | front-page fields (`page_type == front_page`): `hero`, `about`, `memberships`, `why` (+ `hexes` repeater), `services` (+ `items` repeater w/ icon select & link), `dbip` (+ `paragraphs` repeater, `cta` link), `blog` text. Groups/repeaters need ACF **Pro**; free ACF ignores them → composer falls back to hardcoded. |
 
 Icon-picker pattern (usluga): sub-fields `icon_source` (library/custom), `icon_name` (select fed by
 `Icons::choices()`), `icon_file` (SVG upload — needs the **Safe SVG** plugin). Composer normalises to
@@ -380,7 +388,7 @@ public_html/wp-content/themes/arpi/
 │   ├── setup.php                 # theme supports, ACF local-json, menus, sidebars
 │   ├── filters.php               # excerpt, nav classes, dbip permalink, robots
 │   ├── Support/Icons.php         # icon choices for ACF
-│   ├── Providers/{Theme,Acf,Dbip}ServiceProvider.php
+│   ├── Providers/{Theme,Acf,Dbip,Home}ServiceProvider.php
 │   └── View/Composers/{App,Home,Post,Blog,Footer,Comments,Usluga,Dbip}.php
 └── resources/
     ├── css/{app,theme,editor}.css + base/{fonts,typography}.css

@@ -2,6 +2,7 @@
 
 use App\Providers\AcfServiceProvider;
 use App\Providers\DbipServiceProvider;
+use App\Providers\HomeServiceProvider;
 use App\Providers\ThemeServiceProvider;
 use Roots\Acorn\Application;
 
@@ -39,6 +40,7 @@ Application::configure()
         ThemeServiceProvider::class,
         AcfServiceProvider::class,
         DbipServiceProvider::class,
+        HomeServiceProvider::class,
     ])
     ->boot();
 

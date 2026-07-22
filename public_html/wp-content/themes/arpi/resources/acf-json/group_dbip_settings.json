@@ -1,0 +1,37 @@
+{
+    "key": "group_dbip_settings",
+    "title": "Doing Business in Poland — ustawienia",
+    "fields": [
+        {
+            "key": "field_dbip_version",
+            "label": "Wersja",
+            "name": "dbip_version",
+            "type": "text",
+            "instructions": "Etykieta wersji w hero archiwum (np. „v 1.25”).",
+            "placeholder": "v 1.25"
+        },
+        {
+            "key": "field_dbip_date",
+            "label": "Data wydania",
+            "name": "dbip_date",
+            "type": "text",
+            "instructions": "Data pod wersją (np. „January 2025”).",
+            "placeholder": "January 2025"
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "dbip-settings"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "active": true,
+    "show_in_rest": 0
+}

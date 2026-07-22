@@ -1,4 +1,11 @@
 @props(['as' => 'div', 'variant' => null])
-<{{ $as }} {{ $attributes->merge(['class' => 'o-wrap' . ($variant === 'header' ? ' o-wrap--header' : '')]) }}>
+@php
+  $variantClass = match ($variant) {
+      'header' => ' o-wrap--header',
+      'wide' => ' o-wrap--wide',
+      default => '',
+  };
+@endphp
+<{{ $as }} {{ $attributes->merge(['class' => 'o-wrap'.$variantClass]) }}>
   {{ $slot }}
 </{{ $as }}>

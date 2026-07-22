@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\AcfServiceProvider;
+use App\Providers\DbipServiceProvider;
 use App\Providers\ThemeServiceProvider;
 use Roots\Acorn\Application;
 
@@ -37,6 +38,7 @@ Application::configure()
     ->withProviders([
         ThemeServiceProvider::class,
         AcfServiceProvider::class,
+        DbipServiceProvider::class,
     ])
     ->boot();
 

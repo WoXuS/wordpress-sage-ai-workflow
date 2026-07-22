@@ -1,0 +1,43 @@
+{
+    "key": "group_dbip_chapter",
+    "title": "Rozdział DBiP — treść",
+    "fields": [
+        {
+            "key": "field_dbip_chapter_title_image",
+            "label": "Zdjęcie rozdziału",
+            "name": "title_image",
+            "type": "image",
+            "instructions": "Zdjęcie osoby w hero rozdziału (skos dokłada CSS).",
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "mime_types": "jpg,jpeg,png,webp"
+        },
+        {
+            "key": "field_dbip_chapter_introduction",
+            "label": "Wstęp rozdziału",
+            "name": "chapter_introduction",
+            "type": "wysiwyg",
+            "instructions": "Opcjonalny wstęp nad kaflami subrozdziałów.",
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "taxonomy",
+                "operator": "==",
+                "value": "chapter-name"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "active": true,
+    "show_in_rest": 0
+}

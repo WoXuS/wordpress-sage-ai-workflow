@@ -9,4 +9,10 @@
   .o-wrap--header {
     --wrap-padding-inline: clamp(16px, -48px + 10vw, 80px);  /* 16→80px */
   }
+
+  /* Roomier variant — wider max + tighter gutters (DBiP archive). */
+  .o-wrap--wide {
+    max-width: 1600px;
+    --wrap-padding-inline: clamp(20px, -24px + 6.9vw, 64px);  /* 20→64px */
+  }
 }

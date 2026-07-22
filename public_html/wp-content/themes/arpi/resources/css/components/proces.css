@@ -1,0 +1,60 @@
+@layer components {
+  /* "Proces ARPI" — three-stage process page. Each stage = a static hexagon
+     (icon + label) with process tags on one side, heading + prose on the other. */
+
+  /* Outline hexagons here are decorative, not links: keep the icon/label red at
+     rest (the component defaults content to white for the hover-fill state) and
+     suppress that hover fill so the icon never washes out. */
+  .c-proces .c-hex--outline {
+    color: var(--color-red);
+  }
+
+  .c-proces .c-hex--outline:hover .c-hex__shape > path {
+    fill: transparent;
+  }
+
+  .c-proces__divider {
+    border: 0;
+    border-top: 1px solid color-mix(in oklab, var(--color-red) 35%, transparent);
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Non-interactive process tags (steps), pill-shaped to echo the button system. */
+  .c-proces__tag {
+    display: block;
+    text-align: center;
+    padding: 12px 20px;
+    border: 2px solid transparent;
+    border-radius: 30px;
+    font-size: var(--text-body-sm);
+    line-height: 1.3;
+  }
+
+  .c-proces__tag--outline {
+    background-color: var(--color-white);
+    border-color: var(--color-red);
+    color: var(--color-red);
+  }
+
+  .c-proces__tag--solid {
+    background-color: var(--color-red);
+    color: var(--color-white);
+  }
+
+  /* Benefit list: numbered, with a coloured lead in place of a bold weight
+     (the theme ships a single 400 weight). */
+  .c-proces__list {
+    list-style: decimal;
+    padding-left: 24px;
+  }
+
+  .c-proces__list > li::marker {
+    color: var(--color-red);
+  }
+
+  .c-proces__list strong {
+    font-weight: 400;
+    color: var(--color-red);
+  }
+}

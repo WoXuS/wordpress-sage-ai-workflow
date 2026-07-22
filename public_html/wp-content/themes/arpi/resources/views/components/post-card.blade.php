@@ -10,9 +10,9 @@
     @endif
   </div>
   <div class="flex flex-1 flex-col gap-3">
-    <h3 class="max-md:text-h2 transition-colors group-hover/card:text-red">{{ get_the_title($id) }}</h3>
+    <h3 class="max-md:text-h2 transition-colors group-hover/card:text-red">{{ html_entity_decode(get_the_title($id), ENT_QUOTES) }}</h3>
     <div data-clamp-fill class="text-body-sm hidden md:block md:grow md:shrink-0 md:basis-[2lh] md:overflow-hidden">
-      <p>{{ get_the_excerpt($id) }}</p>
+      <p>{{ html_entity_decode(get_the_excerpt($id), ENT_QUOTES) }}</p>
     </div>
     <span class="c-btn c-btn--ghost mt-auto self-start md:mt-0">Więcej @svg('icon-arrow-right', 'size-5')</span>
   </div>

@@ -200,9 +200,11 @@ Ad-hoc fluid pairs use the `fl-` prefix directly: `fl-py-12/24`, `fl-gap-6/12`, 
 | `.o-wrap` + `--header/--wide` | `components/wrap.css` | Container. base max-width **1440px** + fluid gutter (**horizontal only, no vertical padding**); `--header` tighter gutter (16→80); `--wide` max **1600px** + tighter gutter (DBiP archive). |
 | `.c-hex*`, `.c-honeycomb*`, `.c-hex-triad` | `components/hexagon.css` | Flat-top hexagon (`aspect-ratio 417/372`, clip via inline SVG path). solid=red fill/white text; outline=stroke, fills on hover. Honeycomb = responsive layout (`max-md` 2-2-1, `md` 5-across interlocked). `c-hex-triad` = DBiP 3-hex cluster. `--hex-w` drives sizing. |
 | `.c-dbip-num`, `.c-dbip-photo(--mobile)`, `.dbip-content` | `components/dbip.css` | DBiP: number-tab & slanted-photo clip-paths; `.dbip-content` = Gutenberg prose (red headings, red list markers, smooth-underline links, `.double-column` 2-col ≥1024, `.highlighted-paragraph` cream callout, responsive tables `.top-row-highlighted`/`.left-column-highlighted`). |
+| `.c-prose` | `components/prose.css` | Long-form article body for classic-editor **blog** posts: red h2/h3/h4, red list markers, animated-underline links, blockquote, rounded images, cream-header tables. Simpler than `.dbip-content` (no Gutenberg block variants). Used by `content-single-post` with a `max-w-[70ch]` measure. |
+| `.c-pagination` | `components/pagination.css` | Styles WordPress `paginate_links()` output (`.page-numbers`) as pill buttons matching the button system (red outline, solid = current, `.dots` = ellipsis). |
 | `section-head` (`@utility`) | `app.css` | flex column, `gap: --fluid-spacing-head` — title+subtitle block. |
 | `top-admin-safe` (`@utility`) | `utilities/admin-bar.css` | pins sticky elements below the WP admin bar (≥601px). |
-| reveal | `utilities/reveal.css` | scroll-reveal + hero animation; **all gated by `.reveal-ready` (JS) + `prefers-reduced-motion: no-preference`**. `[data-reveal]` fades/rises in; `.c-hero` has a blurred plum glow + drift. |
+| reveal | `utilities/reveal.css` | scroll-reveal + hero animation; **all gated by `.reveal-ready` + `prefers-reduced-motion: no-preference`**. `[data-reveal]` fades/rises in; `.c-hero` has a blurred plum glow + drift. **`.reveal-ready` is set by an inline `<head>` script _before first paint_** (see §12) — not by `reveal.js` — so above-the-fold `[data-reveal]` (blog archive/single) animates reliably even when the JS module loads late in Vite dev. A failsafe unhides everything if reveal JS never runs. |
 
 ---
 
@@ -216,7 +218,7 @@ Ad-hoc fluid pairs use the `fl-` prefix directly: `fl-py-12/24`, `fl-gap-6/12`, 
 | `<x-input>` | `type='text', variant=null` | `.c-input`; `variant='on-red'`. |
 | `<x-dynamic-icon>` | `icon` (`{type,name}` or `{type:'file',url}`) | renders an uploaded SVG file **or** `@svg('icon-'.name)`. Used by ACF icon-picker. |
 | `<x-service-tile>` | `service` | red rounded homepage service tile (icon + name + circular arrow), links to `/uslugi/{slug}`. |
-| `<x-post-card>` | `post` | blog card (thumb + title + `[data-clamp-fill]` excerpt + "Więcej"). |
+| `<x-post-card>` | `post` | blog card (thumb + title + `[data-clamp-fill]` excerpt + "Więcej"). Title & excerpt run through `html_entity_decode()` (WP returns entity-encoded text → Blade would double-encode). No thumbnails exist yet → the rounded `bg-red` block shows as a solid plum placeholder (intended). |
 | `<x-social-links>` | `links=[]` | circular outlined social icon links. |
 | `<x-lang-switcher>` | — | Polylang PL/EN switcher (`pll_the_languages`) with hardcoded fallback. |
 | `<x-alert>` | `type, message` | Sage default alert box (unused by content). |
@@ -237,7 +239,8 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 | `App` | `['*']` | `siteName`. |
 | `Home` | `['front-page']` | `hero, about, memberships, why, services, dbip, blog, blogCategories, latestPosts`. Hardcoded PL; `blogMeta`/`blogCategories` branch EN via `pll_current_language()`; categories filtered to current language, excl. default. |
 | `Footer` | `['sections.footer']` | `company, offices, newsletter, socials, badges` (hardcoded; eager `with()`). |
-| `Post` | `['partials.page-header','partials.content*']` | `title`, `pagination`. |
+| `Post` | `['partials.page-header','partials.content*']` | `title`, `pagination`. Feeds the stock `search`/`page-header` partials. |
+| `Blog` | `['index','partials.content-single-post']` | Dispatches by context. **Archive** (`index` = blog home + category/tag/author/date): `heading, intro, categories, activeTermId, allUrl, allLabel, empty, pagination` (styled `paginate_links` array). **Single**: `crumbs, category, meta{date,author}, nav{prev,next}, labels`. EN/PL via `pll_current_language()`; categories filtered to current language, default excluded. Prev/next use `get_{previous,next}_post` (Polylang keeps them in-language). |
 | `Comments` | `['partials.comments']` | Sage defaults. |
 | `Usluga` | `['single-usluga']` | `hero, scope_intro, scope, body, reports, others, labels`. `fromAcf()` (icon-picker resolves source/name/file) → fallback `fromHardcoded()` (PL map keyed by slug). `others()` queries sibling `usluga` (current Polylang lang, `tile_excerpt`). `labels()` EN/PL branch. |
 | `Dbip` | `['archive-dbip-chapters','taxonomy-chapter-name','single-dbip-chapters']` | dispatches by `is_post_type_archive`/`is_tax`/single. Chapters ordered by termmeta `dbip_chapter_order` (excl. `no-chapter`); version/date from options; hardcoded EN CEO/About; prev/next crosses chapter boundaries; glossary = `no-chapter` term. |
@@ -273,7 +276,7 @@ initClampFill`. `editor.js` is a separate block-editor entry.
 
 | Module | Behavior | Data attrs |
 |---|---|---|
-| `reveal.js` | adds `.reveal-ready`; IntersectionObserver adds `.is-visible`; `[data-reveal-group]` staggers children (90ms); bails on reduced-motion | `data-reveal`, `data-reveal-group`, `--reveal-delay`, `data-hero` |
+| `reveal.js` | IntersectionObserver adds `.is-visible`; `[data-reveal-group]` staggers children (90ms); bails on reduced-motion; sets `window.__revealReady` so the head gate's failsafe keeps `.reveal-ready`. (The `.reveal-ready` class itself is set earlier by an inline head script — §12.) | `data-reveal`, `data-reveal-group`, `--reveal-delay`, `data-hero` |
 | `menu.js` | mobile menu toggle: `data-open`, `aria-expanded`, body scroll-lock, Escape/X close | `data-menu-toggle/-overlay/-close`, `data-open` |
 | `header.js` | sticky shrink: `data-scrolled="true"` past 100px scroll | `data-header`, `data-scrolled` |
 | `clamp-fill.js` | snaps `[data-clamp-fill]` excerpts to whole lines (`-webkit-line-clamp`); off ≤767px | `data-clamp-fill` |
@@ -282,18 +285,23 @@ initClampFill`. `editor.js` is a separate block-editor entry.
 
 ## 12. Templates & partials (`resources/views/`)
 
-- **`layouts/app.blade.php`** — shell: `wp_head`, `@vite`, skip-link, header, `<main>@yield('content')`,
-  optional sidebar, footer, `wp_footer`.
+- **`layouts/app.blade.php`** — shell: an **inline `<head>` reveal gate** (adds `.reveal-ready` before
+  first paint, with a `load`+1200ms failsafe that unhides if `window.__revealReady` was never set),
+  `wp_head`, `@vite`, skip-link, header, `<main>@yield('content')`, optional sidebar, footer, `wp_footer`.
 - **`sections/`** — `header` (sticky `.c-header`, `top-admin-safe`, scroll-shrink, mobile red overlay
   nav + desktop bar via `wp_nav_menu(primary_navigation)`, lang-switcher, hamburger), `footer` (red,
   newsletter + company `<address>` + offices + Forbes badges + socials), `sidebar`.
-- **Top-level templates** (all `@extends('layouts.app')`): `front-page`, `index`, `page`, `single`
-  (`@includeFirst content-single-{type}`), `search`, `404`, `template-custom`, `single-usluga`,
+- **Top-level templates** (all `@extends('layouts.app')`): `front-page`, `index` (**styled blog
+  archive** — heading + category pills + `<x-post-card>` grid + `.c-pagination`; serves blog home &
+  category/tag/author/date), `page`, `single` (`@includeFirst content-single-{type}` → `post` resolves
+  to the styled `content-single-post`), `search`, `404`, `template-custom`, `single-usluga`,
   `archive-dbip-chapters`, `taxonomy-chapter-name`, `single-dbip-chapters`.
 - **Partials**: `partials/home/{hero,about,memberships,why-arpi,services,blog,dbip}`,
   `partials/usluga/{hero,scope,body,reports,others}`,
-  `partials/dbip/{archive-hero,ceo,about,chapter-hero,chapters}`, plus `page-header`, `content*`,
-  `comments`, `entry-meta`, `newsletter`, `footer-office`, `forms/search`.
+  `partials/dbip/{archive-hero,ceo,about,chapter-hero,chapters}`, plus `content-single-post` (styled
+  blog single: breadcrumb + category pill + `.c-prose` body + prev/next via `<x-dbip.post-nav>`),
+  `page-header`, `content*` (stock, still used by `search`), `comments`, `entry-meta`, `newsletter`,
+  `footer-office`, `forms/search`.
 - Section conventions: one partial = one section; `front-page`/`single-*` just compose includes.
   Full-bleed sections (memberships, blog) put the background full-width but content in `<x-container>`.
 
@@ -373,10 +381,10 @@ public_html/wp-content/themes/arpi/
 │   ├── filters.php               # excerpt, nav classes, dbip permalink, robots
 │   ├── Support/Icons.php         # icon choices for ACF
 │   ├── Providers/{Theme,Acf,Dbip}ServiceProvider.php
-│   └── View/Composers/{App,Home,Post,Footer,Comments,Usluga,Dbip}.php
+│   └── View/Composers/{App,Home,Post,Blog,Footer,Comments,Usluga,Dbip}.php
 └── resources/
     ├── css/{app,theme,editor}.css + base/{fonts,typography}.css
-    │   + components/{button,input,wrap,hexagon,dbip}.css
+    │   + components/{button,input,wrap,hexagon,dbip,prose,pagination}.css
     │   + utilities/{admin-bar,reveal}.css
     ├── js/{app,editor}.js + modules/{reveal,menu,header,clamp-fill}.js
     ├── fonts/geomanist-regular-webfont.{woff2,woff}

@@ -142,9 +142,13 @@ Tailwind's default palette is wiped (`--color-*: initial`) so `bg-red` means **o
 Transparent brand tint via Tailwind opacity: `bg-red/30`, `text-red/60`; in CSS use
 `color-mix(in oklab, var(--color-red) 30%, transparent)`.
 
-### Typography — Geomanist **400 only** (single family, single weight)
-Fluid type, endpoints **640→1280px**, `rem` for font-size (a11y). Font-size tokens carry **no**
-line-height (line-height is applied per element/component — the anti-boilerplate rule).
+### Typography — Geomanist **Light 300** (body copy) + **Regular 400** (headings/UI)
+Two weights, one family. **Body copy is Light 300** (`body { font-weight: 300 }` → Body Big/Base/Small
+inherit it); **headings** (`h1/h2/h3/.h1`) and **buttons/inputs** (`.c-btn`, `.c-input`) pin **400** so
+they stay Regular. Both `@font-face`s live in `base/fonts.css` (`geomanist-light-webfont.*` weight 300,
+`geomanist-regular-webfont.*` weight 400). Fluid type, endpoints **640→1280px**, `rem` for font-size
+(a11y). Font-size tokens carry **no** line-height (line-height is applied per element/component — the
+anti-boilerplate rule).
 
 | Token | clamp | px range | Notes |
 |---|---|---|---|
@@ -395,7 +399,7 @@ public_html/wp-content/themes/arpi/
     │   + components/{button,input,wrap,hexagon,dbip,prose,pagination}.css
     │   + utilities/{admin-bar,reveal}.css
     ├── js/{app,editor}.js + modules/{reveal,menu,header,clamp-fill}.js
-    ├── fonts/geomanist-regular-webfont.{woff2,woff}
+    ├── fonts/geomanist-{light,regular}-webfont.{woff2,woff}  # 300 body, 400 headings/UI
     ├── icons/*.svg               # 43 icons, kebab-case → @svg('icon-<slug>')
     ├── images/                   # Vite::asset(...) — logo, forbes, home, dbip/*
     ├── acf-json/*.json           # CPTs, taxonomy, field groups

@@ -50,14 +50,17 @@ class Home extends Composer
         $services = get_field('services', $id) ?: [];
         $dbip = get_field('dbip', $id) ?: [];
 
+        $isEn = $this->isEn();
+        $heroImages = $this->heroImages($isEn);
+
         return [
             'hero' => [
                 'title'         => $hero['title'] ?? '',
                 'accent'        => $hero['accent'] ?? '',
                 'lead'          => $hero['lead'] ?? '',
-                'image_desktop' => $this->imageUrl($hero['image_desktop'] ?? null, 'resources/images/hp-hero--desktop.svg'),
-                'image_mobile'  => $this->imageUrl($hero['image_mobile'] ?? null, 'resources/images/hp-hero--mobile.svg'),
-                'image_alt'     => $hero['image_alt'] ?? '',
+                'image_desktop' => $this->imageUrl($hero['image_desktop'] ?? null, $heroImages['desktop']),
+                'image_mobile'  => $this->imageUrl($hero['image_mobile'] ?? null, $heroImages['mobile']),
+                'image_alt'     => ($hero['image_alt'] ?? '') ?: $this->heroAlt($isEn),
             ],
             'about' => [
                 'heading'       => $about['heading'] ?? '',
@@ -95,24 +98,48 @@ class Home extends Composer
                 'cta_url'    => is_array($dbip['cta'] ?? null) ? ($dbip['cta']['url'] ?? '#') : '#',
             ],
             'blog' => get_field('blog', $id) ?: [],
+
         ];
     }
 
     // ACF image sub-field → URL, falling back to the bundled theme asset.
-    private function imageUrl($image, string $fallback): string
+    // A null fallback yields null (e.g. the EN hero has no separate mobile art).
+    private function imageUrl($image, ?string $fallback): ?string
     {
         if (is_array($image) && ! empty($image['url'])) {
             return $image['url'];
         }
 
-        return Vite::asset($fallback);
+        return $fallback ? Vite::asset($fallback) : null;
+    }
+
+    // The hero art differs per language: PL uses a two-part document-flow diagram
+    // (wide desktop SVG + tall mobile SVG); EN uses a single landscape shot of the
+    // "Doing business in Poland" publication (no separate mobile variant).
+    private function heroImages(bool $isEn): array
+    {
+        return $isEn
+            ? ['desktop' => 'resources/images/hp-hero--english.png', 'mobile' => null]
+            : ['desktop' => 'resources/images/hp-hero--desktop.svg', 'mobile' => 'resources/images/hp-hero--mobile.svg'];
+    }
+
+    private function heroAlt(bool $isEn): string
+    {
+        return $isEn
+            ? 'The “Doing business in Poland” guide by ARPI Accounting.'
+            : 'Schemat obiegu dokumentów: KSeF, InFlow, ARPI Accounting, Urząd Skarbowy.';
+    }
+
+    private function isEn(): bool
+    {
+        return (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
     }
 
     // ---- Fallback: hardcoded content (pre-ACF), branched PL/EN -------------
 
     private function fromHardcoded(): array
     {
-        $isEn = (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
+        $isEn = $this->isEn();
 
         return [
             'hero'        => $this->hero($isEn),
@@ -126,6 +153,8 @@ class Home extends Composer
 
     private function hero(bool $isEn): array
     {
+        $images = $this->heroImages($isEn);
+
         return [
             'title'  => $isEn ? 'Your accounting' : 'Twoja księgowość',
             'accent' => $isEn ? 'under control.' : 'pod kontrolą.',
@@ -134,17 +163,16 @@ class Home extends Composer
                     . 'With us, you can focus on what matters most for your business.'
                 : 'Dbamy o Twoją księgowość, abyś mógł oszczędzać czas i energię. '
                     . 'Z nami możesz skupić się na tym, co najważniejsze dla Twojego biznesu.',
-            'image_desktop' => Vite::asset('resources/images/hp-hero--desktop.svg'),
-            'image_mobile'  => Vite::asset('resources/images/hp-hero--mobile.svg'),
-            'image_alt'     => $isEn
-                ? 'Document flow diagram: KSeF, InFlow, ARPI Accounting, Tax Office.'
-                : 'Schemat obiegu dokumentów: KSeF, InFlow, ARPI Accounting, Urząd Skarbowy.',
+            'image_desktop' => Vite::asset($images['desktop']),
+            'image_mobile'  => $images['mobile'] ? Vite::asset($images['mobile']) : null,
+            'image_alt'     => $this->heroAlt($isEn),
         ];
     }
 
     private function about(bool $isEn): array
     {
         return [
+            'anchor' => $isEn ? 'about-us' : 'o-nas',
             'heading' => $isEn ? 'About us' : 'O nas',
             'lead'    => $isEn
                 ? 'We are part of ARPI Group, a Norwegian company where trust and precision '
@@ -197,7 +225,7 @@ class Home extends Composer
     private function why(bool $isEn): array
     {
         return [
-            'heading' => $isEn ? 'Why ARPI?' : 'Dlaczego ARPI?',
+            'heading' => $isEn ? 'About us' : 'O nas',
             'intro'   => $isEn
                 ? 'Since 2001 we have supported international companies starting operations on the '
                     . 'Polish market. We have experience selecting the best solutions for growing a '
@@ -235,6 +263,7 @@ class Home extends Composer
         ];
 
         return [
+            'anchor' => $isEn ? 'services' : 'uslugi',
             'heading' => $isEn ? 'Our services' : 'Nasze usługi',
             'items'   => array_map(fn ($item) => [
                 'name' => $item['name'],

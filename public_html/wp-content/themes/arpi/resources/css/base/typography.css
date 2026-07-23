@@ -2,6 +2,7 @@
   body {
     font-family: var(--font-sans);
     font-size: var(--text-body);
+    font-weight: 300; /* Geomanist Light for body copy (Body Big/Base/Small) */
     line-height: 1.4;
     color: var(--color-black);
     background-color: var(--color-white);

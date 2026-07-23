@@ -98,6 +98,7 @@ class Home extends Composer
                 'cta_url'    => is_array($dbip['cta'] ?? null) ? ($dbip['cta']['url'] ?? '#') : '#',
             ],
             'blog' => get_field('blog', $id) ?: [],
+
         ];
     }
 
@@ -171,6 +172,7 @@ class Home extends Composer
     private function about(bool $isEn): array
     {
         return [
+            'anchor' => $isEn ? 'about-us' : 'o-nas',
             'heading' => $isEn ? 'About us' : 'O nas',
             'lead'    => $isEn
                 ? 'We are part of ARPI Group, a Norwegian company where trust and precision '
@@ -223,7 +225,7 @@ class Home extends Composer
     private function why(bool $isEn): array
     {
         return [
-            'heading' => $isEn ? 'Why ARPI?' : 'Dlaczego ARPI?',
+            'heading' => $isEn ? 'About us' : 'O nas',
             'intro'   => $isEn
                 ? 'Since 2001 we have supported international companies starting operations on the '
                     . 'Polish market. We have experience selecting the best solutions for growing a '
@@ -261,6 +263,7 @@ class Home extends Composer
         ];
 
         return [
+            'anchor' => $isEn ? 'services' : 'uslugi',
             'heading' => $isEn ? 'Our services' : 'Nasze usługi',
             'items'   => array_map(fn ($item) => [
                 'name' => $item['name'],

@@ -8,6 +8,7 @@
     background-color: transparent;
     color: var(--color-black);
     font-size: var(--text-body-sm);
+    font-weight: 400; /* stay Regular while body copy is Light (300) */
     line-height: 1;
 
     &::placeholder {

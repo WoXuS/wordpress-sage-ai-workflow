@@ -10,6 +10,7 @@
     border-radius: 30px;
 
     font-size: var(--text-body-sm); /* 16px, fixed */
+    font-weight: 400; /* stay Regular while body copy is Light (300) */
     line-height: 1;
     letter-spacing: 0.5px;
     white-space: nowrap;

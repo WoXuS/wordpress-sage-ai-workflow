@@ -251,6 +251,7 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 | `Blog` | `['index','partials.content-single-post']` | Dispatches by context. **Archive** (`index` = blog home + category/tag/author/date): `heading, intro, categories, activeTermId, allUrl, allLabel, empty, pagination` (styled `paginate_links` array). **Single**: `crumbs, category, meta{date,author}, nav{prev,next}, labels`. EN/PL via `pll_current_language()`; categories filtered to current language, default excluded. Prev/next use `get_{previous,next}_post` (Polylang keeps them in-language). |
 | `Comments` | `['partials.comments']` | Sage defaults. |
 | `Contact` | `['template-contact']` | `hero, general, offices, socials, form`. Hardcoded, EN/PL branched via `pll_current_language()`. `form` exposes the REST `endpoint`, a `wp_rest` nonce, topic options and all labels/messages for the AJAX contact form. Offices mirror `Footer::offices()` + opening hours. |
+| `Careers` | `['template-careers']` | `hero, intro, mosaic, benefits, positions, cta`. Hardcoded, EN/PL branched. Improvised page (no Figma): text block + photo/stat `mosaic` (dense-flow grid reusing bundled assets), benefit cards, open-role list, red CTA. Roles/CTA link to `mailto:rekrutacja@arpiaccounting.com`. ACF-ready like the others. |
 | `Usluga` | `['single-usluga']` | `hero, scope_intro, scope, body, reports, others, labels`. `fromAcf()` (icon-picker resolves source/name/file) → fallback `fromHardcoded()` (PL map keyed by slug). `others()` queries sibling `usluga` (current Polylang lang, `tile_excerpt`). `labels()` EN/PL branch. |
 | `Dbip` | `['archive-dbip-chapters','taxonomy-chapter-name','single-dbip-chapters']` | dispatches by `is_post_type_archive`/`is_tax`/single. Chapters ordered by termmeta `dbip_chapter_order` (excl. `no-chapter`); version/date from options; hardcoded EN CEO/About; prev/next crosses chapter boundaries; glossary = `no-chapter` term. |
 
@@ -322,8 +323,11 @@ initClampFill`. `editor.js` is a separate block-editor entry.
 - **Contact page**: `template-contact.blade.php` ("Template Name: Contact") assigned to the PL
   **Kontakt** + EN **Contact** pages (seeded via `scripts/seed-contact-pages.php`, linked as Polylang
   translations). Composes `partials/contact/{hero,details,form}`; the form posts to `arpi/v1/contact`.
+- **Careers page**: `template-careers.blade.php` ("Template Name: Careers") assigned to the PL
+  **Kariera** + EN **Careers** pages (seeded via `scripts/seed-careers-pages.php`, Polylang-linked).
+  Improvised (no design) from existing patterns; composes `partials/careers/{hero,intro,mosaic,benefits,positions,cta}`.
 - **Partials**: `partials/home/{hero,about,memberships,why-arpi,services,blog,dbip}`,
-  `partials/contact/{hero,details,form}`,
+  `partials/contact/{hero,details,form}`, `partials/careers/{hero,intro,mosaic,benefits,positions,cta}`,
   `partials/usluga/{hero,scope,body,reports,others}`,
   `partials/dbip/{archive-hero,ceo,about,chapter-hero,chapters}`, plus `content-single-post` (styled
   blog single: breadcrumb + category pill + `.c-prose` body + prev/next via `<x-dbip.post-nav>`),
@@ -422,6 +426,7 @@ public_html/wp-content/themes/arpi/
     └── views/                    # layouts, sections, components, partials, templates
 scripts/                          # WP-CLI seed/import scripts (make wp ARGS="eval-file …")
   seed-contact-pages.php          #   creates PL Kontakt + EN Contact pages (template-contact)
+  seed-careers-pages.php          #   creates PL Kariera + EN Careers pages (template-careers)
   extract-mailpoet-stage.py       #   stage MailPoet/CF7 tables from the prod dump → /tmp/mp-stage.sql
   migrate-mailpoet-leads.sql      #   import legacy subscribers/lists/CF7 leads into MailPoet (idempotent)
 docs/design-tokens.md             # raw Figma token extraction

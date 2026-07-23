@@ -74,15 +74,22 @@ class Footer extends Composer
     }
 
     /**
-     * Newsletter block copy (markup-only form; MailPoet wired later).
+     * Newsletter block copy + AJAX endpoint (posts to ContactServiceProvider,
+     * subscribes to the Newsletter PL/EN MailPoet list).
      */
     protected function newsletter(): array
     {
+        $isEn = (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
+
         return [
-            'heading' => 'Newsletter',
-            'copy' => 'Zapisz się do naszego newslettera i bądź na bieżąco z najważniejszymi zmianami w polskim prawie',
-            'submit' => 'Subskrybuj',
-            'action' => '#',
+            'heading'  => 'Newsletter',
+            'copy'     => 'Zapisz się do naszego newslettera i bądź na bieżąco z najważniejszymi zmianami w polskim prawie',
+            'submit'   => 'Subskrybuj',
+            'endpoint' => rest_url('arpi/v1/newsletter'),
+            'nonce'    => wp_create_nonce('wp_rest'),
+            'lang'     => $isEn ? 'en' : 'pl',
+            'success'  => $isEn ? 'Thank you for subscribing!' : 'Dziękujemy za zapisanie się!',
+            'error'    => $isEn ? 'Something went wrong. Please try again.' : 'Coś poszło nie tak. Spróbuj ponownie.',
         ];
     }
 
@@ -92,8 +99,8 @@ class Footer extends Composer
     protected function socials(): array
     {
         return [
-            ['network' => 'Facebook', 'url' => '#', 'icon' => 'facebook'],
-            ['network' => 'LinkedIn', 'url' => '#', 'icon' => 'linkedin'],
+            ['network' => 'Facebook', 'url' => 'https://www.facebook.com/arpiaccounting/', 'icon' => 'facebook'],
+            ['network' => 'LinkedIn', 'url' => 'https://www.linkedin.com/company/arpi-accounting/', 'icon' => 'linkedin'],
         ];
     }
 

@@ -20,6 +20,29 @@
     }
   }
 
+  /* Multi-line variant: auto height, readable leading, gentler radius. */
+  .c-input--area {
+    line-height: 1.4;
+    border-radius: 20px;
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  /* select needs room for the native caret and normal leading. */
+  select.c-input {
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  .c-checkbox {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--color-red);
+    cursor: pointer;
+  }
+
   /* On the red footer: white outline + white text. */
   .c-input--on-red {
     border-color: var(--color-white);

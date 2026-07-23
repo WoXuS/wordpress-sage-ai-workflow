@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\AcfServiceProvider;
+use App\Providers\ContactServiceProvider;
 use App\Providers\DbipServiceProvider;
 use App\Providers\HomeServiceProvider;
 use App\Providers\ThemeServiceProvider;
@@ -41,6 +42,7 @@ Application::configure()
         AcfServiceProvider::class,
         DbipServiceProvider::class,
         HomeServiceProvider::class,
+        ContactServiceProvider::class,
     ])
     ->boot();
 

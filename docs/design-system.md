@@ -204,7 +204,7 @@ Ad-hoc fluid pairs use the `fl-` prefix directly: `fl-py-12/24`, `fl-gap-6/12`, 
 | Class | File | What |
 |---|---|---|
 | `.c-btn` + `--solid/--outline/--ghost/--white/--underline` | `components/button.css` | Pill button. base: inline-flex, gap 16, pad 14/24, 2px border, radius 30, `--text-body-sm`, ls .5, nowrap. solid=red/white text (hover red-dark, active red-darker); outline=white/red (hover fills red-dark); ghost=no box, `--text-body`, trailing svg translates +3px on hover (reacts to `.group/card`); white=white/red (hover cream); underline=animated transparent→currentColor underline. |
-| `.c-input` + `--on-red` | `components/input.css` | Pill input, 2px black border radius 30, focus→red border; `--on-red` = white border/text (footer). |
+| `.c-input` + `--on-red` / `--area` | `components/input.css` | Pill input, 2px black border radius 30, focus→red border; `--on-red` = white border/text (footer); `--area` = textarea variant (auto height, leading 1.4, softer radius). Also styles `select.c-input` and `.c-checkbox` (20px, `accent-color: red`). |
 | `.o-wrap` + `--header/--wide` | `components/wrap.css` | Container. base max-width **1440px** + fluid gutter (**horizontal only, no vertical padding**); `--header` tighter gutter (16→80); `--wide` max **1600px** + tighter gutter (DBiP archive). |
 | `.c-hex*`, `.c-honeycomb*`, `.c-hex-triad` | `components/hexagon.css` | Flat-top hexagon (`aspect-ratio 417/372`, clip via inline SVG path). solid=red fill/white text; outline=stroke, fills on hover. Honeycomb = responsive layout (`max-md` 2-2-1, `md` 5-across interlocked). `c-hex-triad` = DBiP 3-hex cluster. `--hex-w` drives sizing. |
 | `.c-dbip-num`, `.c-dbip-photo(--mobile)`, `.dbip-content` | `components/dbip.css` | DBiP: number-tab & slanted-photo clip-paths; `.dbip-content` = Gutenberg prose (red headings, red list markers, smooth-underline links, `.double-column` 2-col ≥1024, `.highlighted-paragraph` cream callout, responsive tables `.top-row-highlighted`/`.left-column-highlighted`). |
@@ -227,7 +227,7 @@ Ad-hoc fluid pairs use the `fl-` prefix directly: `fl-py-12/24`, `fl-gap-6/12`, 
 | `<x-dynamic-icon>` | `icon` (`{type,name}` or `{type:'file',url}`) | renders an uploaded SVG file **or** `@svg('icon-'.name)`. Used by ACF icon-picker. |
 | `<x-service-tile>` | `service` | red rounded homepage service tile (icon + name + circular arrow), links to `/uslugi/{slug}`. |
 | `<x-post-card>` | `post` | blog card (thumb + title + `[data-clamp-fill]` excerpt + "Więcej"). Title & excerpt run through `html_entity_decode()` (WP returns entity-encoded text → Blade would double-encode). No thumbnails exist yet → the rounded `bg-red` block shows as a solid plum placeholder (intended). |
-| `<x-social-links>` | `links=[]` | circular outlined social icon links. |
+| `<x-social-links>` | `links=[], variant='light'` | circular outlined social icon links; `variant='dark'` for light backgrounds (black outline → red-on-hover, used on the contact page). |
 | `<x-lang-switcher>` | — | Polylang PL/EN switcher (`pll_the_languages`) with hardcoded fallback. |
 | `<x-alert>` | `type, message` | Sage default alert box (unused by content). |
 | `<x-dbip.breadcrumb>` | `items` | breadcrumb `<nav>` with arrow separators + optional prefix. |
@@ -250,6 +250,7 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 | `Post` | `['partials.page-header','partials.content*']` | `title`, `pagination`. Feeds the stock `search`/`page-header` partials. |
 | `Blog` | `['index','partials.content-single-post']` | Dispatches by context. **Archive** (`index` = blog home + category/tag/author/date): `heading, intro, categories, activeTermId, allUrl, allLabel, empty, pagination` (styled `paginate_links` array). **Single**: `crumbs, category, meta{date,author}, nav{prev,next}, labels`. EN/PL via `pll_current_language()`; categories filtered to current language, default excluded. Prev/next use `get_{previous,next}_post` (Polylang keeps them in-language). |
 | `Comments` | `['partials.comments']` | Sage defaults. |
+| `Contact` | `['template-contact']` | `hero, general, offices, socials, form`. Hardcoded, EN/PL branched via `pll_current_language()`. `form` exposes the REST `endpoint`, a `wp_rest` nonce, topic options and all labels/messages for the AJAX contact form. Offices mirror `Footer::offices()` + opening hours. |
 | `Usluga` | `['single-usluga']` | `hero, scope_intro, scope, body, reports, others, labels`. `fromAcf()` (icon-picker resolves source/name/file) → fallback `fromHardcoded()` (PL map keyed by slug). `others()` queries sibling `usluga` (current Polylang lang, `tile_excerpt`). `labels()` EN/PL branch. |
 | `Dbip` | `['archive-dbip-chapters','taxonomy-chapter-name','single-dbip-chapters']` | dispatches by `is_post_type_archive`/`is_tax`/single. Chapters ordered by termmeta `dbip_chapter_order` (excl. `no-chapter`); version/date from options; hardcoded EN CEO/About; prev/next crosses chapter boundaries; glossary = `no-chapter` term. |
 
@@ -258,8 +259,8 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 ## 10. Providers · setup · filters · icons · assets
 
 Providers (`functions.php` → `Application::configure()->withProviders`): `ThemeServiceProvider`
-(Sage base), `AcfServiceProvider`, `DbipServiceProvider`, `HomeServiceProvider`. Then loads
-`app/setup.php` + `app/filters.php`.
+(Sage base), `AcfServiceProvider`, `DbipServiceProvider`, `HomeServiceProvider`,
+`ContactServiceProvider`. Then loads `app/setup.php` + `app/filters.php`.
 
 - **Hooks live in classes** (providers), not in `setup.php`/`filters.php` for new logic — see conventions.
 - **`AcfServiceProvider`** — `acf/load_field/name=icon_name` → choices from `Icons::choices()`.
@@ -267,6 +268,16 @@ Providers (`functions.php` → `Application::configure()->withProviders`): `Them
   `dbip-settings`); `protected_title_format` strips WP's "Zabezpieczone:" prefix for `dbip-chapters`.
 - **`HomeServiceProvider`** — `acf/location/match_rule` filter: makes ACF's `page_type == front_page`
   rule also match the Polylang translation of the front page (so `group_home` shows on the EN home).
+- **`ContactServiceProvider`** — registers two public REST routes under `arpi/v1` (`/contact`,
+  `/newsletter`) backing the front-end forms. Guarded by the `wp_rest` nonce + a `website` honeypot
+  (bots get a fake 200). Contact submissions email the office (`wp_mail`, best-effort) and push the
+  lead into MailPoet; the footer newsletter subscribes to Newsletter PL/EN. Lists resolved/created
+  by name via **`app/Support/Mailpoet.php`** (thin wrapper over MailPoet's `MP('v1')` API — no-ops
+  gracefully when the plugin is inactive). Newsletter opt-ins use double opt-in (`send_confirmation_email`);
+  plain enquiries land in the Kontakt list without an email. The office recipient is env-based via
+  `wp_get_environment_type()` — `contact@arpiaccounting.com` on production, else `dev@example.test`
+  (dev + staging test inbox). Mail transport: **FluentSMTP** carries `wp_mail`; MailPoet sends via its
+  own SMTP config — both point at **Brevo** (From = ARPI Accounting `<contact@arpiaccounting.com>`).
 - **`app/setup.php`** — ACF local-JSON load/save (`resources/acf-json`); `theme.json` served from
   `public/build/assets/theme.json`; editor.css/editor.js injection; `after_setup_theme` supports
   (title-tag, post-thumbnails, html5, …); registers `primary_navigation` menu + two sidebars.
@@ -291,6 +302,7 @@ initClampFill`. `editor.js` is a separate block-editor entry.
 | `menu.js` | mobile menu toggle: `data-open`, `aria-expanded`, body scroll-lock, Escape/X close | `data-menu-toggle/-overlay/-close`, `data-open` |
 | `header.js` | sticky shrink: `data-scrolled="true"` past 100px scroll | `data-header`, `data-scrolled` |
 | `clamp-fill.js` | snaps `[data-clamp-fill]` excerpts to whole lines (`-webkit-line-clamp`); off ≤767px | `data-clamp-fill` |
+| `forms.js` | progressive enhancement for `[data-ajax-form]` (contact + footer newsletter): posts the form as JSON to `data-endpoint` with the `X-WP-Nonce` header, then shows `data-success`/`data-error` (or the server message) in `[data-form-status]` and resets on success | `data-ajax-form`, `data-endpoint`, `data-nonce`, `data-success`, `data-error`, `data-form-status` |
 
 ---
 
@@ -307,7 +319,11 @@ initClampFill`. `editor.js` is a separate block-editor entry.
   category/tag/author/date), `page`, `single` (`@includeFirst content-single-{type}` → `post` resolves
   to the styled `content-single-post`), `search`, `404`, `template-custom`, `single-usluga`,
   `archive-dbip-chapters`, `taxonomy-chapter-name`, `single-dbip-chapters`.
+- **Contact page**: `template-contact.blade.php` ("Template Name: Contact") assigned to the PL
+  **Kontakt** + EN **Contact** pages (seeded via `scripts/seed-contact-pages.php`, linked as Polylang
+  translations). Composes `partials/contact/{hero,details,form}`; the form posts to `arpi/v1/contact`.
 - **Partials**: `partials/home/{hero,about,memberships,why-arpi,services,blog,dbip}`,
+  `partials/contact/{hero,details,form}`,
   `partials/usluga/{hero,scope,body,reports,others}`,
   `partials/dbip/{archive-hero,ceo,about,chapter-hero,chapters}`, plus `content-single-post` (styled
   blog single: breadcrumb + category pill + `.c-prose` body + prev/next via `<x-dbip.post-nav>`),
@@ -405,11 +421,22 @@ public_html/wp-content/themes/arpi/
     ├── acf-json/*.json           # CPTs, taxonomy, field groups
     └── views/                    # layouts, sections, components, partials, templates
 scripts/                          # WP-CLI seed/import scripts (make wp ARGS="eval-file …")
+  seed-contact-pages.php          #   creates PL Kontakt + EN Contact pages (template-contact)
+  extract-mailpoet-stage.py       #   stage MailPoet/CF7 tables from the prod dump → /tmp/mp-stage.sql
+  migrate-mailpoet-leads.sql      #   import legacy subscribers/lists/CF7 leads into MailPoet (idempotent)
 docs/design-tokens.md             # raw Figma token extraction
 docs/superpowers/{specs,plans,runbooks}/   # per-phase design + implementation docs
 ```
 
 ---
 
-*Last synced with the code: 2026-07-22. If you touch tokens, components, composers, providers, JS
+*Last synced with the code: 2026-07-23. If you touch tokens, components, composers, providers, JS
 modules, or ACF, update the relevant section here so this stays the reliable single source.*
+
+> **Forms & MailPoet (added 2026-07-23).** The **MailPoet** plugin is now a dependency (installed in
+> dev; the client manages it in wp-admin like ACF/Polylang). Both the contact form and the footer
+> newsletter POST to `ContactServiceProvider`'s REST routes and push leads into MailPoet lists
+> (Kontakt PL/EN, Newsletter PL/EN). Legacy subscribers (~1.3k) + their lists and 122 Contact-Form-7
+> leads were migrated from `reference/prod-db.sql` via the two `scripts/` migration files (staging
+> tables `zimp_*` → live `wp_mailpoet_*`, matched by email/list-name, statuses preserved). MailPoet's
+> API ignores an explicit subscriber `status`; it's governed by the signup-confirmation setting.

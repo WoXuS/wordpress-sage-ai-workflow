@@ -1,0 +1,437 @@
+{
+    "key": "group_careers",
+    "title": "Kariera — treść strony",
+    "fields": [
+        {
+            "key": "field_careers_hero",
+            "label": "Hero",
+            "name": "hero",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_careers_hero_title",
+                    "label": "Tytuł",
+                    "name": "title",
+                    "type": "text",
+                    "instructions": "Główna część nagłówka (czarna)."
+                },
+                {
+                    "key": "field_careers_hero_accent",
+                    "label": "Tytuł — akcent",
+                    "name": "accent",
+                    "type": "text",
+                    "instructions": "Druga część nagłówka wyróżniona kolorem (czerwona)."
+                },
+                {
+                    "key": "field_careers_hero_lead",
+                    "label": "Lead / wstęp",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                }
+            ]
+        },
+        {
+            "key": "field_careers_intro",
+            "label": "Dlaczego warto",
+            "name": "intro",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_careers_intro_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_careers_intro_lead",
+                    "label": "Podtytuł",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 2,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_careers_intro_paragraphs",
+                    "label": "Akapity",
+                    "name": "paragraphs",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Dodaj akapit",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_careers_intro_paragraph_text",
+                            "label": "Tekst",
+                            "name": "text",
+                            "type": "textarea",
+                            "rows": 4,
+                            "new_lines": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_careers_mosaic",
+            "label": "Życie w ARPI (mozaika)",
+            "name": "mosaic",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_careers_mosaic_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_careers_mosaic_tiles",
+                    "label": "Kafle",
+                    "name": "tiles",
+                    "type": "repeater",
+                    "instructions": "Kolaż zdjęć, statystyk i cytatów.",
+                    "layout": "block",
+                    "button_label": "Dodaj kafel",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_careers_tile_kind",
+                            "label": "Typ kafla",
+                            "name": "kind",
+                            "type": "select",
+                            "choices": {
+                                "photo": "Zdjęcie",
+                                "stat": "Statystyka",
+                                "quote": "Cytat",
+                                "accent": "Akcent (grafika)"
+                            },
+                            "default_value": "stat",
+                            "allow_null": 0,
+                            "ui": 1,
+                            "return_format": "value"
+                        },
+                        {
+                            "key": "field_careers_tile_span",
+                            "label": "Rozmiar w siatce (opcjonalnie)",
+                            "name": "span",
+                            "type": "text",
+                            "instructions": "Zaawansowane — puste = domyślny rozmiar dla danego typu. Klasy Tailwind, np. „col-span-2 row-span-2”."
+                        },
+                        {
+                            "key": "field_careers_tile_image",
+                            "label": "Grafika",
+                            "name": "image",
+                            "type": "image",
+                            "return_format": "array",
+                            "preview_size": "thumbnail",
+                            "library": "all",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_careers_tile_kind",
+                                        "operator": "==",
+                                        "value": "photo"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "field": "field_careers_tile_kind",
+                                        "operator": "==",
+                                        "value": "accent"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_careers_tile_alt",
+                            "label": "Opis alternatywny (alt)",
+                            "name": "alt",
+                            "type": "text",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_careers_tile_kind",
+                                        "operator": "==",
+                                        "value": "photo"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_careers_tile_value",
+                            "label": "Liczba",
+                            "name": "value",
+                            "type": "text",
+                            "instructions": "Np. „2006”, „18+”.",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_careers_tile_kind",
+                                        "operator": "==",
+                                        "value": "stat"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_careers_tile_label",
+                            "label": "Podpis liczby",
+                            "name": "label",
+                            "type": "text",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_careers_tile_kind",
+                                        "operator": "==",
+                                        "value": "stat"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_careers_tile_text",
+                            "label": "Treść cytatu",
+                            "name": "text",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": "",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_careers_tile_kind",
+                                        "operator": "==",
+                                        "value": "quote"
+                                    }
+                                ]
+                            ]
+                        },
+                        {
+                            "key": "field_careers_tile_attribution",
+                            "label": "Autor cytatu",
+                            "name": "attribution",
+                            "type": "text",
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_careers_tile_kind",
+                                        "operator": "==",
+                                        "value": "quote"
+                                    }
+                                ]
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_careers_benefits",
+            "label": "Co oferujemy",
+            "name": "benefits",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_careers_benefits_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_careers_benefits_lead",
+                    "label": "Podtytuł",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 2,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_careers_benefits_items",
+                    "label": "Karty",
+                    "name": "items",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Dodaj kartę",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_careers_benefit_icon",
+                            "label": "Ikona",
+                            "name": "icon_name",
+                            "type": "select",
+                            "instructions": "Lista budowana z plików w resources/icons.",
+                            "choices": [],
+                            "ui": 1,
+                            "ajax": 0,
+                            "allow_null": 0,
+                            "return_format": "value"
+                        },
+                        {
+                            "key": "field_careers_benefit_title",
+                            "label": "Tytuł",
+                            "name": "title",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_careers_benefit_text",
+                            "label": "Opis",
+                            "name": "text",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_careers_recruitment_email",
+            "label": "Adres rekrutacyjny (e-mail)",
+            "name": "recruitment_email",
+            "type": "email",
+            "instructions": "Adres, na który kierują wszystkie przyciski „Aplikuj” i CTA."
+        },
+        {
+            "key": "field_careers_positions",
+            "label": "Otwarte rekrutacje",
+            "name": "positions",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_careers_positions_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_careers_positions_lead",
+                    "label": "Podtytuł",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 2,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_careers_positions_apply_label",
+                    "label": "Etykieta przycisku „Aplikuj”",
+                    "name": "apply_label",
+                    "type": "text"
+                },
+                {
+                    "key": "field_careers_positions_items",
+                    "label": "Stanowiska",
+                    "name": "items",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Dodaj stanowisko",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_careers_position_title",
+                            "label": "Nazwa stanowiska",
+                            "name": "title",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_careers_position_location",
+                            "label": "Lokalizacja",
+                            "name": "location",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_careers_position_type",
+                            "label": "Wymiar / tryb",
+                            "name": "type",
+                            "type": "text",
+                            "instructions": "Np. „Pełny etat · Hybrydowo”."
+                        }
+                    ]
+                },
+                {
+                    "key": "field_careers_positions_open",
+                    "label": "Aplikacja otwarta",
+                    "name": "open",
+                    "type": "group",
+                    "layout": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_careers_open_heading",
+                            "label": "Nagłówek",
+                            "name": "heading",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_careers_open_text",
+                            "label": "Opis",
+                            "name": "text",
+                            "type": "textarea",
+                            "rows": 2,
+                            "new_lines": ""
+                        },
+                        {
+                            "key": "field_careers_open_label",
+                            "label": "Etykieta przycisku",
+                            "name": "label",
+                            "type": "text"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "field_careers_cta",
+            "label": "CTA (baner na dole)",
+            "name": "cta",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_careers_cta_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_careers_cta_lead",
+                    "label": "Podtytuł",
+                    "name": "lead",
+                    "type": "textarea",
+                    "rows": 2,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_careers_cta_label",
+                    "label": "Etykieta przycisku",
+                    "name": "label",
+                    "type": "text"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "template-careers.blade.php"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1753142400
+}

@@ -11,6 +11,137 @@ class Careers extends Composer
 
     protected function with(): array
     {
+        $content = $this->fromAcf() ?? $this->fromHardcoded();
+
+        return [
+            'hero'      => $content['hero'],
+            'intro'     => $content['intro'],
+            'mosaic'    => $content['mosaic'],
+            'benefits'  => $content['benefits'],
+            'positions' => $content['positions'],
+            'cta'       => $content['cta'],
+        ];
+    }
+
+    private function isEn(): bool
+    {
+        return (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
+    }
+
+    // ---- Primary source: ACF (group_careers on the Kariera/Careers page) ----
+    // Located by page template, so the PL and EN pages each edit their own
+    // per-post content. Returns null until the hero title is filled in — then
+    // the hardcoded fallback renders instead.
+
+    private function fromAcf(): ?array
+    {
+        if (! function_exists('get_field')) {
+            return null;
+        }
+
+        $hero = get_field('hero');
+
+        if (! $hero || empty($hero['title'])) {
+            return null;
+        }
+
+        $intro = get_field('intro') ?: [];
+        $mosaic = get_field('mosaic') ?: [];
+        $benefits = get_field('benefits') ?: [];
+        $email = get_field('recruitment_email') ?: 'rekrutacja@arpiaccounting.com';
+        $cta = get_field('cta') ?: [];
+
+        return [
+            'hero' => [
+                'title'  => $hero['title'] ?? '',
+                'accent' => $hero['accent'] ?? '',
+                'lead'   => $hero['lead'] ?? '',
+            ],
+            'intro' => [
+                'heading'    => $intro['heading'] ?? '',
+                'lead'       => $intro['lead'] ?? '',
+                'paragraphs' => array_map(fn ($row) => $row['text'] ?? '', $intro['paragraphs'] ?? []),
+            ],
+            'mosaic' => [
+                'heading' => $mosaic['heading'] ?? '',
+                'tiles'   => array_map(fn ($tile) => $this->tile($tile), $mosaic['tiles'] ?? []),
+            ],
+            'benefits' => [
+                'heading' => $benefits['heading'] ?? '',
+                'lead'    => $benefits['lead'] ?? '',
+                'items'   => array_map(fn ($row) => [
+                    'icon'  => $row['icon_name'] ?? 'handshake',
+                    'title' => $row['title'] ?? '',
+                    'text'  => $row['text'] ?? '',
+                ], $benefits['items'] ?? []),
+            ],
+            'positions' => $this->positionsFromAcf(get_field('positions') ?: [], $email),
+            'cta' => [
+                'heading'   => $cta['heading'] ?? '',
+                'lead'      => $cta['lead'] ?? '',
+                'label'     => $cta['label'] ?? '',
+                'apply_url' => 'mailto:'.$email,
+            ],
+        ];
+    }
+
+    // Normalise a mosaic tile: resolve the image sub-field to a URL and fall
+    // back to a per-kind default grid span when the (advanced) span is left blank.
+    private function tile(array $tile): array
+    {
+        $kind = $tile['kind'] ?? 'stat';
+        $image = $tile['image'] ?? null;
+
+        return [
+            'kind'        => $kind,
+            'span'        => ($tile['span'] ?? '') ?: $this->defaultSpan($kind),
+            'image'       => is_array($image) ? ($image['url'] ?? '') : '',
+            'alt'         => $tile['alt'] ?? '',
+            'value'       => $tile['value'] ?? '',
+            'label'       => $tile['label'] ?? '',
+            'text'        => $tile['text'] ?? '',
+            'attribution' => $tile['attribution'] ?? '',
+        ];
+    }
+
+    private function defaultSpan(string $kind): string
+    {
+        return match ($kind) {
+            'photo' => 'col-span-2 row-span-2',
+            'quote' => 'col-span-2 md:col-span-4',
+            default => 'aspect-square',
+        };
+    }
+
+    private function positionsFromAcf(array $positions, string $email): array
+    {
+        $isEn = $this->isEn();
+        $subject = $isEn ? 'Job application' : 'Aplikacja rekrutacyjna';
+        $open = $positions['open'] ?? [];
+
+        return [
+            'heading'     => $positions['heading'] ?? '',
+            'lead'        => $positions['lead'] ?? '',
+            'apply_label' => $positions['apply_label'] ?? '',
+            'items'       => array_map(fn ($role) => [
+                'title'     => $role['title'] ?? '',
+                'location'  => $role['location'] ?? '',
+                'type'      => $role['type'] ?? '',
+                'apply_url' => 'mailto:'.$email.'?subject='.rawurlencode($subject.' — '.($role['title'] ?? '')),
+            ], $positions['items'] ?? []),
+            'open' => [
+                'heading'   => $open['heading'] ?? '',
+                'text'      => $open['text'] ?? '',
+                'label'     => $open['label'] ?? '',
+                'apply_url' => 'mailto:'.$email.'?subject='.rawurlencode($isEn ? 'Open application' : 'Aplikacja otwarta'),
+            ],
+        ];
+    }
+
+    // ---- Fallback: hardcoded content (pre-ACF), branched PL/EN --------------
+
+    private function fromHardcoded(): array
+    {
         $isEn = $this->isEn();
 
         return [
@@ -21,11 +152,6 @@ class Careers extends Composer
             'positions' => $this->positions($isEn),
             'cta'       => $this->cta($isEn),
         ];
-    }
-
-    private function isEn(): bool
-    {
-        return (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
     }
 
     private function hero(bool $isEn): array

@@ -89,9 +89,17 @@ Figma at ~375px and ~1440px.**
   **no template rewrite**. This is a first-day architectural rule.
 - **ACF content is per-post (post-per-language)**, not global Options Pages — cleaner for Polylang.
   (Exception: genuinely global settings like the DBiP version/date use an options page.)
-- Hardcoded-vs-ACF status today: **Home**, **Usluga** & **DBiP** composers read ACF with hardcoded
-  fallbacks (`fromAcf() ?? fromHardcoded()`); the Home fallback branches PL/EN so both language
-  home pages render even before ACF is filled. **Footer** still holds hardcoded PL arrays.
+- Hardcoded-vs-ACF status today: **Home**, **Usluga**, **DBiP**, **Footer**, **Careers** & **Proces**
+  composers read ACF with hardcoded fallbacks (`fromAcf() ?? fromHardcoded()`); each fallback branches
+  PL/EN (or is per-language via Polylang) so every page renders even before ACF is filled. **Contact**
+  is the only composer still fully hardcoded (deferred to a dedicated future task). Because the dev box
+  runs **ACF free** (options pages, `group`/`repeater` fields are Pro-only), the ACF paths are inert
+  locally and every page falls back — the wiring is exercised on the client's Pro environment.
+- **Global theme settings** (footer company/offices/socials/badges/newsletter copy) live on a dedicated
+  **"Ustawienia motywu" options page** (`ThemeSettingsServiceProvider`), made **per-language** by a
+  filter that appends the current Polylang language to its option id (`theme_settings_{lang}`), scoped
+  strictly to that page so the DBiP options page stays language-neutral. Read with
+  `get_field('…', ThemeSettingsServiceProvider::OPTIONS_ID)`.
 - **Home ACF lives on the front-page Page** (per-post, not an options page). The EN home is a
   linked Polylang translation of the PL front page, so each language edits its own content.
   `HomeServiceProvider` extends ACF's "Front Page" location rule to also match the translation of
@@ -246,12 +254,13 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 |---|---|---|
 | `App` | `['*']` | `siteName`. |
 | `Home` | `['front-page']` | `hero, about, memberships, why, services, dbip, blog, blogCategories, latestPosts`. `fromAcf()` (reads `group_home` on the current-language front page) → fallback `fromHardcoded()` which branches PL/EN via `pll_current_language()`. ACF image sub-fields resolve to a URL, falling back to the bundled theme asset; `services` items carry an icon slug + link. `blogMeta` merges ACF text overrides onto EN/PL defaults; `blogCategories` filtered to current language, excl. default. |
-| `Footer` | `['sections.footer']` | `company, offices, newsletter, socials, badges` (hardcoded; eager `with()`). |
+| `Footer` | `['sections.footer']` | `company, offices, newsletter, socials, badges` (eager `with()`). `fromAcf()` reads the per-language **theme-settings** options page (company legal info, offices, socials, Forbes badges, newsletter copy) → fallback `fromHardcoded()`. `newsletter()` always keeps the REST endpoint/nonce/status messages theme-owned; ACF only overrides its copy. Textarea address fields split on newlines into lines. |
 | `Post` | `['partials.page-header','partials.content*']` | `title`, `pagination`. Feeds the stock `search`/`page-header` partials. |
 | `Blog` | `['index','partials.content-single-post']` | Dispatches by context. **Archive** (`index` = blog home + category/tag/author/date): `heading, intro, categories, activeTermId, allUrl, allLabel, empty, pagination` (styled `paginate_links` array). **Single**: `crumbs, category, meta{date,author}, nav{prev,next}, labels`. EN/PL via `pll_current_language()`; categories filtered to current language, default excluded. Prev/next use `get_{previous,next}_post` (Polylang keeps them in-language). |
 | `Comments` | `['partials.comments']` | Sage defaults. |
 | `Contact` | `['template-contact']` | `hero, general, offices, socials, form`. Hardcoded, EN/PL branched via `pll_current_language()`. `form` exposes the REST `endpoint`, a `wp_rest` nonce, topic options and all labels/messages for the AJAX contact form. Offices mirror `Footer::offices()` + opening hours. |
-| `Careers` | `['template-careers']` | `hero, intro, mosaic, benefits, positions, cta`. Hardcoded, EN/PL branched. Improvised page (no Figma): text block + photo/stat `mosaic` (dense-flow grid reusing bundled assets), benefit cards, open-role list, red CTA. Roles/CTA link to `mailto:rekrutacja@arpiaccounting.com`. ACF-ready like the others. |
+| `Careers` | `['template-careers']` | `hero, intro, mosaic, benefits, positions, cta`. `fromAcf()` (group_careers, located by page template so PL/EN each edit their own page) → fallback `fromHardcoded()` (EN/PL branched). Improvised page (no Figma): text block + photo/stat `mosaic` (dense-flow grid; tiles carry an optional advanced `span`, else a per-kind default), benefit cards, open-role list, red CTA. A single `recruitment_email` ACF field drives every `mailto:` (roles/open/CTA). |
+| `Proces` | `['template-proces']` | `hero, stages`. `fromAcf()` (group_proces, located by page template) → fallback `pl()`/`en()`. `stages` repeater carries `tone` (hex variant), icon, `hex_label`, optional `logo`, tags, paras, and an optional benefits `list` — the composer collapses the ACF `{lead,desc}` sub-fields into the `[$lead,$desc]` pairs the Blade destructures. |
 | `Usluga` | `['single-usluga']` | `hero, scope_intro, scope, body, reports, others, labels`. `fromAcf()` (icon-picker resolves source/name/file) → fallback `fromHardcoded()` (PL map keyed by slug). `others()` queries sibling `usluga` (current Polylang lang, `tile_excerpt`). `labels()` EN/PL branch. |
 | `Dbip` | `['archive-dbip-chapters','taxonomy-chapter-name','single-dbip-chapters']` | dispatches by `is_post_type_archive`/`is_tax`/single. Chapters ordered by termmeta `dbip_chapter_order` (excl. `no-chapter`); version/date from options; hardcoded EN CEO/About; prev/next crosses chapter boundaries; glossary = `no-chapter` term. |
 
@@ -261,7 +270,7 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 
 Providers (`functions.php` → `Application::configure()->withProviders`): `ThemeServiceProvider`
 (Sage base), `AcfServiceProvider`, `DbipServiceProvider`, `HomeServiceProvider`,
-`ContactServiceProvider`. Then loads `app/setup.php` + `app/filters.php`.
+`ContactServiceProvider`, `ThemeSettingsServiceProvider`. Then loads `app/setup.php` + `app/filters.php`.
 
 - **Hooks live in classes** (providers), not in `setup.php`/`filters.php` for new logic — see conventions.
 - **`AcfServiceProvider`** — `acf/load_field/name=icon_name` → choices from `Icons::choices()`.
@@ -269,6 +278,13 @@ Providers (`functions.php` → `Application::configure()->withProviders`): `Them
   `dbip-settings`); `protected_title_format` strips WP's "Zabezpieczone:" prefix for `dbip-chapters`.
 - **`HomeServiceProvider`** — `acf/location/match_rule` filter: makes ACF's `page_type == front_page`
   rule also match the Polylang translation of the front page (so `group_home` shows on the EN home).
+- **`ThemeSettingsServiceProvider`** — registers the top-level **"Ustawienia motywu"** options page
+  (`acf_add_options_page`, slug `theme-settings`, `post_id` `theme_settings`) and an
+  `acf/validate_post_id` filter scoped strictly to that `post_id` that suffixes it with the current
+  Polylang language (`theme_settings_{lang}`) — making the one options field group per-language without
+  touching the DBiP options page or any post/term ids. Falls back to the default language (or no suffix
+  if Polylang is inactive). Options-page + `group`/`repeater` fields are ACF **Pro**; on free ACF the
+  page never registers and the Footer composer falls back to hardcoded.
 - **`ContactServiceProvider`** — registers two public REST routes under `arpi/v1` (`/contact`,
   `/newsletter`) backing the front-end forms. Guarded by the `wp_rest` nonce + a `website` honeypot
   (bots get a fake 200). Contact submissions email the office (`wp_mail`, best-effort) and push the
@@ -349,6 +365,9 @@ initClampFill`. `editor.js` is a separate block-editor entry.
 | `group_dbip_chapter.json` | `chapter-name` term fields: `title_image` (image), `chapter_introduction` (wysiwyg) |
 | `group_dbip_settings.json` | options page `dbip-settings`: `dbip_version`, `dbip_date` |
 | `group_home.json` | front-page fields (`page_type == front_page`): `hero`, `about`, `memberships`, `why` (+ `hexes` repeater), `services` (+ `items` repeater w/ icon select & link), `dbip` (+ `paragraphs` repeater, `cta` link), `blog` text. Groups/repeaters need ACF **Pro**; free ACF ignores them → composer falls back to hardcoded. |
+| `group_theme_settings.json` | global theme settings (`options_page == theme-settings`, per-language): `company` (group), `offices`/`socials`/`badges` (repeaters), `newsletter` (group). Feeds the Footer composer. |
+| `group_careers.json` | Careers page (`page_template == template-careers.blade.php`): `hero`, `intro` (+paragraphs), `mosaic` (+tiles repeater w/ `kind` select & conditional sub-fields), `benefits` (+items w/ icon select), `positions` (+items repeater, `open` group), `cta`, `recruitment_email`. |
+| `group_proces.json` | Proces page (`page_template == template-proces.blade.php`): `hero` (group), `stages` (repeater: `tone` select, icon, `hex_label`, `logo` group, `tags`/`paras` repeaters, `list_intro`, `list` repeater of lead+desc). |
 
 Icon-picker pattern (usluga): sub-fields `icon_source` (library/custom), `icon_name` (select fed by
 `Icons::choices()`), `icon_file` (SVG upload — needs the **Safe SVG** plugin). Composer normalises to
@@ -412,8 +431,8 @@ public_html/wp-content/themes/arpi/
 │   ├── setup.php                 # theme supports, ACF local-json, menus, sidebars
 │   ├── filters.php               # excerpt, nav classes, dbip permalink, robots
 │   ├── Support/Icons.php         # icon choices for ACF
-│   ├── Providers/{Theme,Acf,Dbip,Home}ServiceProvider.php
-│   └── View/Composers/{App,Home,Post,Blog,Footer,Comments,Usluga,Dbip}.php
+│   ├── Providers/{Theme,Acf,Dbip,Home,Contact,ThemeSettings}ServiceProvider.php
+│   └── View/Composers/{App,Home,Post,Blog,Footer,Comments,Contact,Careers,Proces,Usluga,Dbip}.php
 └── resources/
     ├── css/{app,theme,editor}.css + base/{fonts,typography}.css
     │   + components/{button,input,wrap,hexagon,dbip,prose,pagination}.css
@@ -435,7 +454,7 @@ docs/superpowers/{specs,plans,runbooks}/   # per-phase design + implementation d
 
 ---
 
-*Last synced with the code: 2026-07-23. If you touch tokens, components, composers, providers, JS
+*Last synced with the code: 2026-08-03. If you touch tokens, components, composers, providers, JS
 modules, or ACF, update the relevant section here so this stays the reliable single source.*
 
 > **Forms & MailPoet (added 2026-07-23).** The **MailPoet** plugin is now a dependency (installed in

@@ -5,6 +5,7 @@ use App\Providers\ContactServiceProvider;
 use App\Providers\DbipServiceProvider;
 use App\Providers\HomeServiceProvider;
 use App\Providers\ThemeServiceProvider;
+use App\Providers\ThemeSettingsServiceProvider;
 use Roots\Acorn\Application;
 
 /*
@@ -43,6 +44,7 @@ Application::configure()
         DbipServiceProvider::class,
         HomeServiceProvider::class,
         ContactServiceProvider::class,
+        ThemeSettingsServiceProvider::class,
     ])
     ->boot();
 

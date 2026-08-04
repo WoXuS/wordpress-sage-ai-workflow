@@ -1,0 +1,204 @@
+{
+    "key": "group_proces",
+    "title": "Proces ARPI — treść strony",
+    "fields": [
+        {
+            "key": "field_proces_hero",
+            "label": "Hero",
+            "name": "hero",
+            "type": "group",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_proces_hero_title",
+                    "label": "Tytuł",
+                    "name": "title",
+                    "type": "text"
+                },
+                {
+                    "key": "field_proces_hero_intro",
+                    "label": "Wstęp",
+                    "name": "intro",
+                    "type": "textarea",
+                    "rows": 2,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_proces_hero_subtitle",
+                    "label": "Podtytuł",
+                    "name": "subtitle",
+                    "type": "textarea",
+                    "rows": 2,
+                    "new_lines": ""
+                }
+            ]
+        },
+        {
+            "key": "field_proces_stages",
+            "label": "Etapy",
+            "name": "stages",
+            "type": "repeater",
+            "instructions": "Kolejne etapy procesu księgowego.",
+            "layout": "block",
+            "button_label": "Dodaj etap",
+            "min": 0,
+            "sub_fields": [
+                {
+                    "key": "field_proces_stage_tone",
+                    "label": "Wariant sześciokąta",
+                    "name": "tone",
+                    "type": "select",
+                    "choices": {
+                        "outline": "Kontur",
+                        "solid": "Wypełniony"
+                    },
+                    "default_value": "outline",
+                    "allow_null": 0,
+                    "ui": 1,
+                    "return_format": "value"
+                },
+                {
+                    "key": "field_proces_stage_icon",
+                    "label": "Ikona (w sześciokącie)",
+                    "name": "icon_name",
+                    "type": "select",
+                    "instructions": "Lista budowana z plików w resources/icons.",
+                    "choices": [],
+                    "ui": 1,
+                    "ajax": 0,
+                    "allow_null": 0,
+                    "return_format": "value"
+                },
+                {
+                    "key": "field_proces_stage_hex_label",
+                    "label": "Etykieta w sześciokącie",
+                    "name": "hex_label",
+                    "type": "text",
+                    "instructions": "Np. „KSeF”, „InFlow”, „ARPI”."
+                },
+                {
+                    "key": "field_proces_stage_logo",
+                    "label": "Logo nad sześciokątem (opcjonalnie)",
+                    "name": "logo",
+                    "type": "group",
+                    "instructions": "Zostaw pusty tekst, aby ukryć logo.",
+                    "layout": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_proces_stage_logo_icon",
+                            "label": "Symbol (ikona)",
+                            "name": "icon_name",
+                            "type": "select",
+                            "instructions": "Lista budowana z plików w resources/icons.",
+                            "choices": [],
+                            "ui": 1,
+                            "ajax": 0,
+                            "allow_null": 1,
+                            "return_format": "value"
+                        },
+                        {
+                            "key": "field_proces_stage_logo_text",
+                            "label": "Tekst logo",
+                            "name": "text",
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "key": "field_proces_stage_heading",
+                    "label": "Nagłówek etapu",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_proces_stage_tags",
+                    "label": "Znaczniki procesu",
+                    "name": "tags",
+                    "type": "repeater",
+                    "layout": "table",
+                    "button_label": "Dodaj znacznik",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_proces_stage_tag_text",
+                            "label": "Tekst",
+                            "name": "text",
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "key": "field_proces_stage_paras",
+                    "label": "Akapity",
+                    "name": "paras",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Dodaj akapit",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_proces_stage_para_text",
+                            "label": "Tekst",
+                            "name": "text",
+                            "type": "textarea",
+                            "rows": 4,
+                            "new_lines": ""
+                        }
+                    ]
+                },
+                {
+                    "key": "field_proces_stage_list_intro",
+                    "label": "Wstęp do listy korzyści (opcjonalnie)",
+                    "name": "list_intro",
+                    "type": "text"
+                },
+                {
+                    "key": "field_proces_stage_list",
+                    "label": "Lista korzyści (opcjonalnie)",
+                    "name": "list",
+                    "type": "repeater",
+                    "layout": "block",
+                    "button_label": "Dodaj korzyść",
+                    "min": 0,
+                    "sub_fields": [
+                        {
+                            "key": "field_proces_stage_list_lead",
+                            "label": "Nagłówek (pogrubiony)",
+                            "name": "lead",
+                            "type": "text"
+                        },
+                        {
+                            "key": "field_proces_stage_list_desc",
+                            "label": "Opis",
+                            "name": "desc",
+                            "type": "textarea",
+                            "rows": 3,
+                            "new_lines": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page_template",
+                "operator": "==",
+                "value": "template-proces.blade.php"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1753142400
+}

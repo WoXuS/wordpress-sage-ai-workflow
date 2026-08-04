@@ -37,6 +37,13 @@ define('DISALLOW_FILE_EDIT', true);
 // hosting like cyberFolks. Overridable via .env if a host ever needs otherwise.
 define('FS_METHOD', arpi_env('FS_METHOD', 'direct'));
 
+// FluentSMTP reads this constant for the Brevo (Sendinblue) connection when the
+// connection is set to store its key in wp-config. The value lives in .env
+// (untracked, above the docroot) — never inline the key here.
+if ($brevoSmtpKey = arpi_env('BREVO_SMTP_KEY')) {
+    define('FLUENTMAIL_SENDINBLUE_API_KEY', $brevoSmtpKey);
+}
+
 if (!defined('ABSPATH')) {
     define('ABSPATH', __DIR__ . '/');
 }

@@ -17,7 +17,7 @@ class DbipServiceProvider extends ServiceProvider
                 'page_title' => 'Doing Business in Poland',
                 'menu_title' => 'Ustawienia DBiP',
                 'menu_slug' => 'dbip-settings',
-                'parent_slug' => 'edit.php?post_type=dbip-chapters',
+                'parent_slug' => AdminMenuServiceProvider::SLUG,
                 'capability' => 'manage_options',
                 'update_button' => 'Zapisz',
             ]);

@@ -1,10 +1,12 @@
 <?php
 
 use App\Providers\AcfServiceProvider;
+use App\Providers\AdminMenuServiceProvider;
 use App\Providers\ContactServiceProvider;
 use App\Providers\DbipServiceProvider;
 use App\Providers\HomeServiceProvider;
 use App\Providers\ThemeServiceProvider;
+use App\Providers\WhistleblowerServiceProvider;
 use Roots\Acorn\Application;
 
 /*
@@ -39,10 +41,12 @@ require $composer;
 Application::configure()
     ->withProviders([
         ThemeServiceProvider::class,
+        AdminMenuServiceProvider::class,
         AcfServiceProvider::class,
         DbipServiceProvider::class,
         HomeServiceProvider::class,
         ContactServiceProvider::class,
+        WhistleblowerServiceProvider::class,
     ])
     ->boot();
 

@@ -1,0 +1,206 @@
+{
+    "key": "group_theme_settings",
+    "title": "Ustawienia motywu",
+    "fields": [
+        {
+            "key": "field_ts_company",
+            "label": "Dane spółki",
+            "name": "company",
+            "type": "group",
+            "instructions": "Dane rejestrowe wyświetlane w stopce.",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ts_company_name",
+                    "label": "Nazwa",
+                    "name": "name",
+                    "type": "text"
+                },
+                {
+                    "key": "field_ts_company_krs",
+                    "label": "KRS",
+                    "name": "krs",
+                    "type": "text"
+                },
+                {
+                    "key": "field_ts_company_nip",
+                    "label": "NIP",
+                    "name": "nip",
+                    "type": "text"
+                },
+                {
+                    "key": "field_ts_company_address",
+                    "label": "Adres",
+                    "name": "address",
+                    "type": "textarea",
+                    "instructions": "Jedna linia adresu = jeden wiersz.",
+                    "rows": 2,
+                    "new_lines": ""
+                }
+            ]
+        },
+        {
+            "key": "field_ts_offices",
+            "label": "Biura",
+            "name": "offices",
+            "type": "repeater",
+            "instructions": "Lokalizacje biur — używane w stopce i na stronie kontaktu.",
+            "layout": "block",
+            "button_label": "Dodaj biuro",
+            "min": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ts_office_name",
+                    "label": "Miasto / nazwa",
+                    "name": "name",
+                    "type": "text"
+                },
+                {
+                    "key": "field_ts_office_address",
+                    "label": "Adres",
+                    "name": "address",
+                    "type": "textarea",
+                    "instructions": "Jedna linia adresu = jeden wiersz.",
+                    "rows": 2,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_ts_office_maps_url",
+                    "label": "Link do Google Maps",
+                    "name": "maps_url",
+                    "type": "url"
+                },
+                {
+                    "key": "field_ts_office_phone",
+                    "label": "Telefon",
+                    "name": "phone",
+                    "type": "text"
+                },
+                {
+                    "key": "field_ts_office_email",
+                    "label": "E-mail",
+                    "name": "email",
+                    "type": "email"
+                },
+                {
+                    "key": "field_ts_office_hours",
+                    "label": "Godziny otwarcia",
+                    "name": "hours",
+                    "type": "text",
+                    "instructions": "Np. „pon.–pt., 8:00–16:00”. Pokazywane na stronie kontaktu."
+                }
+            ]
+        },
+        {
+            "key": "field_ts_socials",
+            "label": "Social media",
+            "name": "socials",
+            "type": "repeater",
+            "layout": "block",
+            "button_label": "Dodaj profil",
+            "min": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ts_social_network",
+                    "label": "Nazwa (dostępność)",
+                    "name": "network",
+                    "type": "text",
+                    "instructions": "Np. „Facebook” — używane jako etykieta dla czytników ekranu."
+                },
+                {
+                    "key": "field_ts_social_url",
+                    "label": "Adres profilu",
+                    "name": "url",
+                    "type": "url"
+                },
+                {
+                    "key": "field_ts_social_icon",
+                    "label": "Ikona",
+                    "name": "icon_name",
+                    "type": "select",
+                    "instructions": "Lista budowana z plików w resources/icons.",
+                    "choices": [],
+                    "ui": 1,
+                    "ajax": 0,
+                    "allow_null": 0,
+                    "return_format": "value"
+                }
+            ]
+        },
+        {
+            "key": "field_ts_badges",
+            "label": "Wyróżnienia (Forbes)",
+            "name": "badges",
+            "type": "repeater",
+            "instructions": "Grafiki wyróżnień pokazywane w stopce.",
+            "layout": "block",
+            "button_label": "Dodaj wyróżnienie",
+            "min": 0,
+            "sub_fields": [
+                {
+                    "key": "field_ts_badge_image",
+                    "label": "Grafika",
+                    "name": "image",
+                    "type": "image",
+                    "return_format": "array",
+                    "preview_size": "thumbnail",
+                    "library": "all"
+                },
+                {
+                    "key": "field_ts_badge_alt",
+                    "label": "Opis alternatywny (alt)",
+                    "name": "alt",
+                    "type": "text"
+                }
+            ]
+        },
+        {
+            "key": "field_ts_newsletter",
+            "label": "Newsletter (stopka)",
+            "name": "newsletter",
+            "type": "group",
+            "instructions": "Teksty bloku newslettera w stopce. Zapis odbywa się przez formularz — adres i zabezpieczenia ustawia motyw.",
+            "layout": "block",
+            "sub_fields": [
+                {
+                    "key": "field_ts_newsletter_heading",
+                    "label": "Nagłówek",
+                    "name": "heading",
+                    "type": "text"
+                },
+                {
+                    "key": "field_ts_newsletter_copy",
+                    "label": "Opis",
+                    "name": "copy",
+                    "type": "textarea",
+                    "rows": 3,
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_ts_newsletter_submit",
+                    "label": "Etykieta przycisku",
+                    "name": "submit",
+                    "type": "text"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "theme-settings"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "active": true,
+    "description": "",
+    "show_in_rest": 0,
+    "modified": 1753142400
+}

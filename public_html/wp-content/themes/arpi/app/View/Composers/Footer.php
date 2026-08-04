@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use App\Providers\ThemeSettingsServiceProvider;
 use Illuminate\Support\Facades\Vite;
 use Roots\Acorn\View\Composer;
 
@@ -27,12 +28,14 @@ class Footer extends Composer
      */
     protected function with(): array
     {
+        $content = $this->fromAcf() ?? $this->fromHardcoded();
+
         return [
-            'company' => $this->company(),
-            'offices' => $this->offices(),
-            'newsletter' => $this->newsletter(),
-            'socials' => $this->socials(),
-            'badges' => $this->badges(),
+            'company'    => $content['company'],
+            'offices'    => $content['offices'],
+            'socials'    => $content['socials'],
+            'badges'     => $content['badges'],
+            'newsletter' => $this->newsletter($content['newsletter'] ?? []),
             'whistleblower' => $this->whistleblower(),
         ];
     }
@@ -52,9 +55,74 @@ class Footer extends Composer
         ];
     }
 
+    // ---- Primary source: ACF (per-language theme-settings options page) -----
+    // Reads the global "Ustawienia motywu" options page. Returns null until the
+    // company name is filled in — then the hardcoded fallback renders instead.
+
+    private function fromAcf(): ?array
+    {
+        if (! function_exists('get_field')) {
+            return null;
+        }
+
+        $id = ThemeSettingsServiceProvider::OPTIONS_ID;
+        $company = get_field('company', $id);
+
+        if (! $company || empty($company['name'])) {
+            return null;
+        }
+
+        return [
+            'company' => [
+                'name'    => $company['name'] ?? '',
+                'krs'     => $company['krs'] ?? '',
+                'nip'     => $company['nip'] ?? '',
+                'address' => $this->lines($company['address'] ?? ''),
+            ],
+            'offices' => array_map(fn ($row) => [
+                'name'     => $row['name'] ?? '',
+                'address'  => $this->lines($row['address'] ?? ''),
+                'maps_url' => $row['maps_url'] ?? '',
+                'phone'    => $row['phone'] ?? '',
+                'email'    => $row['email'] ?? '',
+            ], get_field('offices', $id) ?: []),
+            'socials' => array_map(fn ($row) => [
+                'network' => $row['network'] ?? '',
+                'url'     => $row['url'] ?? '#',
+                'icon'    => $row['icon_name'] ?? '',
+            ], get_field('socials', $id) ?: []),
+            'badges' => array_values(array_filter(array_map(function ($row) {
+                $image = $row['image'] ?? null;
+
+                return is_array($image) && ! empty($image['url'])
+                    ? ['src' => $image['url'], 'alt' => $row['alt'] ?? '']
+                    : null;
+            }, get_field('badges', $id) ?: []))),
+            'newsletter' => get_field('newsletter', $id) ?: [],
+        ];
+    }
+
+    // Split a textarea value into trimmed, non-empty lines.
+    private function lines(string $value): array
+    {
+        return array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $value))));
+    }
+
+    // ---- Fallback: hardcoded content (pre-ACF) ------------------------------
+
+    private function fromHardcoded(): array
+    {
+        return [
+            'company'    => $this->company(),
+            'offices'    => $this->offices(),
+            'socials'    => $this->socials(),
+            'badges'     => $this->badges(),
+            'newsletter' => [],
+        ];
+    }
+
     /**
      * Company registration details.
-     * TODO: swap to get_field(..., 'option') in the ACF phase.
      */
     protected function company(): array
     {
@@ -91,26 +159,36 @@ class Footer extends Composer
 
     /**
      * Newsletter block copy + AJAX endpoint (posts to ContactServiceProvider,
-     * subscribes to the Newsletter PL/EN MailPoet list).
+     * subscribes to the Newsletter PL/EN MailPoet list). ACF copy overrides win
+     * when filled; the endpoint/nonce/status messages are always theme-owned.
      */
-    protected function newsletter(): array
+    protected function newsletter(array $acf = []): array
     {
         $isEn = (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
 
-        return [
-            'heading'  => 'Newsletter',
-            'copy'     => 'Zapisz się do naszego newslettera i bądź na bieżąco z najważniejszymi zmianami w polskim prawie',
-            'submit'   => 'Subskrybuj',
+        $defaults = [
+            'heading' => 'Newsletter',
+            'copy'    => 'Zapisz się do naszego newslettera i bądź na bieżąco z najważniejszymi zmianami w polskim prawie',
+            'submit'  => 'Subskrybuj',
+        ];
+
+        $overrides = array_filter([
+            'heading' => $acf['heading'] ?? null,
+            'copy'    => $acf['copy'] ?? null,
+            'submit'  => $acf['submit'] ?? null,
+        ], fn ($v) => ! empty($v));
+
+        return array_merge($defaults, $overrides, [
             'endpoint' => rest_url('arpi/v1/newsletter'),
             'nonce'    => wp_create_nonce('wp_rest'),
             'lang'     => $isEn ? 'en' : 'pl',
             'success'  => $isEn ? 'Thank you for subscribing!' : 'Dziękujemy za zapisanie się!',
             'error'    => $isEn ? 'Something went wrong. Please try again.' : 'Coś poszło nie tak. Spróbuj ponownie.',
-        ];
+        ]);
     }
 
     /**
-     * Social links (URLs are placeholders).
+     * Social links.
      */
     protected function socials(): array
     {

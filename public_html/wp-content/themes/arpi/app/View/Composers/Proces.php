@@ -10,7 +10,7 @@ class Proces extends Composer
 
     public function with(): array
     {
-        $content = $this->isEn() ? $this->en() : $this->pl();
+        $content = $this->fromAcf() ?? ($this->isEn() ? $this->en() : $this->pl());
 
         return [
             'hero'   => $content['hero'],
@@ -23,8 +23,62 @@ class Proces extends Composer
         return (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
     }
 
-    // TODO: swap the static getters below to get_field(...) once the ACF field
-    // group for this page is added (same pattern as Usluga/Home).
+    // ---- Primary source: ACF (group_proces on the Proces page) --------------
+    // Located by page template, so the PL and EN pages each edit their own
+    // per-post content. Returns null until the hero title is filled in — then
+    // the hardcoded fallback (pl()/en()) renders instead.
+
+    private function fromAcf(): ?array
+    {
+        if (! function_exists('get_field')) {
+            return null;
+        }
+
+        $hero = get_field('hero');
+
+        if (! $hero || empty($hero['title'])) {
+            return null;
+        }
+
+        return [
+            'hero' => [
+                'title'    => $hero['title'] ?? '',
+                'intro'    => $hero['intro'] ?? '',
+                'subtitle' => $hero['subtitle'] ?? '',
+            ],
+            'stages' => array_map(fn ($stage) => $this->stage($stage), get_field('stages') ?: []),
+        ];
+    }
+
+    // Normalise one ACF stage row to the shape the Blade partial consumes.
+    // `logo` is only emitted when its text is filled; `list` collapses the
+    // {lead, desc} sub-fields into the [$lead, $desc] pairs the view destructures.
+    private function stage(array $row): array
+    {
+        $stage = [
+            'tone'      => $row['tone'] ?? 'outline',
+            'icon'      => $row['icon_name'] ?? 'grouped-papers',
+            'hex_label' => $row['hex_label'] ?? '',
+            'heading'   => $row['heading'] ?? '',
+            'tags'      => array_map(fn ($r) => $r['text'] ?? '', $row['tags'] ?? []),
+            'paras'     => array_map(fn ($r) => $r['text'] ?? '', $row['paras'] ?? []),
+        ];
+
+        $logo = $row['logo'] ?? [];
+        if (! empty($logo['text'])) {
+            $stage['logo'] = ['symbol' => $logo['icon_name'] ?? '', 'text' => $logo['text']];
+        }
+
+        $list = array_map(fn ($r) => [$r['lead'] ?? '', $r['desc'] ?? ''], $row['list'] ?? []);
+        if ($list) {
+            $stage['list_intro'] = $row['list_intro'] ?? '';
+            $stage['list'] = $list;
+        }
+
+        return $stage;
+    }
+
+    // ---- Fallback: hardcoded content (pre-ACF), branched PL/EN --------------
 
     private function pl(): array
     {

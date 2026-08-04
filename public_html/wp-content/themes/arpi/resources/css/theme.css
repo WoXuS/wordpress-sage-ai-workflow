@@ -10,6 +10,8 @@
   --color-red-dark: #7b2549;   /* hover — deepened plum, keeps white text ~7:1 */
   --color-red-darker: #651f3c; /* active/press */
   --color-cream: #f5f4ee;
+  --color-success: #2e7d46;     /* form success / valid state — green on light bg */
+  --color-error: #c62828;       /* form error / invalid state — a clear red, distinct from brand plum */
 
   --font-sans: "Geomanist", ui-sans-serif, system-ui, sans-serif;
 

@@ -45,7 +45,7 @@
     "publicly_queryable": true,
     "show_ui": true,
     "show_in_menu": true,
-    "admin_menu_parent": "",
+    "admin_menu_parent": "arpi-admin",
     "show_in_admin_bar": true,
     "show_in_nav_menus": true,
     "show_in_rest": true,

@@ -36,6 +36,22 @@ class Footer extends Composer
             'socials'    => $content['socials'],
             'badges'     => $content['badges'],
             'newsletter' => $this->newsletter($content['newsletter'] ?? []),
+            'whistleblower' => $this->whistleblower(),
+        ];
+    }
+
+    /**
+     * Whistleblower page link, resolved to the current-language page.
+     */
+    protected function whistleblower(): array
+    {
+        $isEn = (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
+        $slug = $isEn ? 'whistleblower' : 'sygnalista';
+        $page = get_page_by_path($slug);
+
+        return [
+            'url'   => $page ? get_permalink($page) : home_url('/'.$slug),
+            'label' => $isEn ? 'whistleblower form' : 'zgłoszenie anonimowe',
         ];
     }
 

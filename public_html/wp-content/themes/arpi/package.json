@@ -23,6 +23,7 @@
     "vite": "^8.0.0"
   },
   "dependencies": {
-    "fluid-tailwindcss": "^1.1.7"
+    "fluid-tailwindcss": "^1.1.7",
+    "trix": "^2.1.19"
   }
 }

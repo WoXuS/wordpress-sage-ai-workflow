@@ -52,4 +52,40 @@
       border-color: var(--color-white);
     }
   }
+
+  /* Invalid state (set by the validation module). */
+  .c-input.is-invalid,
+  .c-input.is-invalid:focus {
+    border-color: var(--color-error);
+  }
+  .c-checkbox.is-invalid {
+    outline: 2px solid var(--color-error);
+    outline-offset: 2px;
+  }
+
+  /* Per-field error message, injected under the control. */
+  .c-field-error {
+    color: var(--color-error);
+    font-size: var(--text-body-sm);
+    line-height: 1.3;
+  }
+
+  /* AJAX form status line — coloured by outcome (set in forms.js). */
+  [data-form-status].is-success {
+    color: var(--color-success);
+  }
+  [data-form-status].is-error {
+    color: var(--color-error);
+  }
+
+  /* On the red footer, keep both the status and field errors readable. */
+  .c-footer [data-form-status].is-success,
+  .c-footer [data-form-status].is-error,
+  .c-footer .c-field-error {
+    color: var(--color-white);
+  }
+  .c-footer .c-input--on-red.is-invalid,
+  .c-footer .c-input--on-red.is-invalid:focus {
+    border-color: var(--color-white);
+  }
 }

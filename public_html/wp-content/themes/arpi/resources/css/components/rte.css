@@ -1,0 +1,134 @@
+/* Trix rich-text editor, themed to match .c-input--area. Imported from rte.js
+   AFTER trix.css, so these unlayered rules win over Trix defaults by source order. */
+
+trix-editor {
+  display: block;
+  min-height: 160px;
+  padding: 14px 24px;
+  border: 2px solid var(--color-black);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--color-black);
+  font-size: var(--text-body-sm);
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+trix-editor:focus {
+  outline: none;
+  border-color: var(--color-red);
+}
+
+trix-editor.is-invalid,
+trix-editor.is-invalid:focus {
+  border-color: var(--color-error);
+}
+
+/* Toolbar — brand-aligned, wraps to multiple rows (no horizontal scroll). */
+trix-toolbar {
+  margin-bottom: 10px;
+}
+
+trix-toolbar .trix-button-row {
+  flex-wrap: wrap;
+  overflow-x: visible;
+  gap: 8px;
+}
+
+trix-toolbar .trix-button-group {
+  border-color: color-mix(in oklab, var(--color-black) 20%, transparent);
+  margin: 0 !important;
+}
+
+trix-toolbar .trix-button {
+  border-bottom: none;
+}
+
+trix-toolbar .trix-button:not(:disabled):hover {
+  background: color-mix(in oklab, var(--color-red) 12%, transparent);
+}
+
+trix-toolbar .trix-button.trix-active {
+  background: var(--color-red);
+  color: var(--color-white);
+}
+
+/* We provide a dedicated attachments field — hide Trix's own file controls. */
+trix-toolbar .trix-button-group--file-tools {
+  display: none;
+}
+
+
+.trix-button-group.trix-button-group--history-tools {
+  order: 2;
+}
+
+.trix-button-group.trix-button-group--file-tools {
+  order: 1;
+}
+
+.trix-button-group.trix-button-group--block-tools {
+  order: 3;
+}
+
+/* --- Editor content ---------------------------------------------------------
+   Trix stores content as semantic tags; the theme's reset strips their defaults
+   (and only ships weights 300/400), so restore readable formatting here. */
+
+trix-editor > * {
+  margin: 0;
+}
+trix-editor > * + * {
+  margin-top: 0.7em;
+}
+
+trix-editor strong {
+  font-weight: 700; /* faux-bold over Geomanist Regular — clearly heavier than 300 body */
+}
+trix-editor em {
+  font-style: italic;
+}
+trix-editor a {
+  color: var(--color-red);
+  text-decoration: underline;
+}
+
+trix-editor h1 {
+  font-size: var(--text-h3); /* ~16→24px, not the giant display heading */
+  line-height: 1.3;
+  font-weight: 400;
+}
+
+trix-editor ul,
+trix-editor ol {
+  padding-left: 1.5em;
+}
+trix-editor ul {
+  list-style: disc;
+}
+trix-editor ol {
+  list-style: decimal;
+}
+trix-editor ul ul {
+  list-style: circle;
+}
+trix-editor li {
+  margin: 0.15em 0;
+}
+
+trix-editor blockquote {
+  border-left: 3px solid var(--color-red);
+  padding-left: 1em;
+  font-style: italic;
+  color: color-mix(in oklab, var(--color-black) 75%, transparent);
+}
+
+trix-editor pre {
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--color-black) 8%, transparent);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}

@@ -270,9 +270,21 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 
 Providers (`functions.php` → `Application::configure()->withProviders`): `ThemeServiceProvider`
 (Sage base), `AcfServiceProvider`, `DbipServiceProvider`, `HomeServiceProvider`,
-`ContactServiceProvider`, `ThemeSettingsServiceProvider`. Then loads `app/setup.php` + `app/filters.php`.
+`ContactServiceProvider`, `ThemeSettingsServiceProvider`, `AdminMenuServiceProvider`,
+`WhistleblowerServiceProvider`. Then loads `app/setup.php` + `app/filters.php`.
 
 - **Hooks live in classes** (providers), not in `setup.php`/`filters.php` for new logic — see conventions.
+- **`AdminMenuServiceProvider`** — registers the top-level **"ARPI"** hub (slug `arpi-admin`, custom
+  "A" CSS-mask icon, landing page = link cards to every custom section) and visually groups the custom
+  block at the top of the sidebar: a `custom_menu_order`/`menu_order` filter clusters the slugs listed in
+  `AdminMenuServiceProvider::GROUP` right below the Dashboard, styled as one brand-tinted card (left
+  accent bar `#952d58` + gap) in `groupStyle`. **RULE — every future custom CPT or options page MUST
+  join this group:** register it as its **own top-level** menu (CPT → ACF `admin_menu_parent` empty /
+  `show_in_menu => true`; options page → no `parent_slug`, unless it belongs to a domain, then
+  `parent_slug` = that domain's CPT menu, e.g. `edit.php?post_type=dbip-chapters`) **and add its menu
+  slug to `AdminMenuServiceProvider::GROUP`** so the clustering + styling pick it up. WP admin has only
+  **2 menu levels** — never nest a 3rd; domain sub-screens (taxonomy/reorder/settings) hang off the
+  domain's own CPT menu.
 - **`AcfServiceProvider`** — `acf/load_field/name=icon_name` → choices from `Icons::choices()`.
 - **`DbipServiceProvider`** — registers the DBiP options page (`acf_add_options_page`, slug
   `dbip-settings`); `protected_title_format` strips WP's "Zabezpieczone:" prefix for `dbip-chapters`.
@@ -401,6 +413,11 @@ These are firm, user-confirmed rules for this repo:
    for a specific quirk). Don't restate what the code says.
 10. **Anti-boilerplate typography.** Font-*size* is a token; line-height/tracking applied per
     element/component, never duplicated per style.
+11. **Document as you build — keep this doc the ground truth.** Whenever you add a feature, an
+    admin/front subpage, a provider, or a design principle, record it **in the same change** — in the
+    relevant § here (and as a memory when it's a firm preference), so this file stays the single
+    reference future AI prompts read first. Don't ship undocumented conventions; a rule that only lives
+    in code will be missed next time.
 
 ---
 

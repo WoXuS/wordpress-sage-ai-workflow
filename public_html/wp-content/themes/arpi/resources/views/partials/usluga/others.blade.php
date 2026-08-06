@@ -7,7 +7,7 @@
           <li class="w-full max-w-xs xs:w-[calc(50%-2rem)] lg:w-[calc(33.333%-3rem)]">
             <a href="{{ $service['url'] }}"
                class="group/card flex h-full flex-col items-center text-center fl-gap-3/5">
-              <span class="grid place-items-center rounded-2xl bg-red text-white fl-size-32/52">
+              <span class="grid place-items-center rounded-2xl bg-red text-white fl-size-32/52 transition-transform duration-300 ease-out group-hover/card:scale-110">
                 <x-dynamic-icon :icon="$service['icon']" class="fl-size-14/22!" />
               </span>
               <h3 class="text-h3 uppercase text-red">{{ $service['name'] }}</h3>

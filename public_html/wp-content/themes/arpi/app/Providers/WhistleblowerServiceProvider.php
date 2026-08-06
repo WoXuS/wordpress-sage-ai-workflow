@@ -73,7 +73,7 @@ class WhistleblowerServiceProvider extends ServiceProvider
             'labels' => ['name' => 'Zgłoszenia (Sygnalista)', 'singular_name' => 'Zgłoszenie', 'menu_name' => 'Sygnalista'],
             'public' => false,
             'show_ui' => true,
-            'show_in_menu' => AdminMenuServiceProvider::SLUG,
+            'show_in_menu' => true,
             'exclude_from_search' => true,
             'publicly_queryable' => false,
             'has_archive' => false,

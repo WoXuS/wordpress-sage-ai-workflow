@@ -19,4 +19,20 @@ class Icons
 
         return $choices;
     }
+
+    /**
+     * Same icons as choices(), mapped slug => public URL of the SVG. Used to show
+     * thumbnails next to the labels in the ACF `icon_name` select.
+     */
+    public static function urlMap(): array
+    {
+        $map = [];
+
+        foreach (glob(get_theme_file_path('resources/icons/*.svg')) as $file) {
+            $slug = basename($file, '.svg');
+            $map[$slug] = get_theme_file_uri("resources/icons/{$slug}.svg");
+        }
+
+        return $map;
+    }
 }

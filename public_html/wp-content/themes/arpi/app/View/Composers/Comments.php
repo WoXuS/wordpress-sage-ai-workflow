@@ -6,18 +6,10 @@ use Roots\Acorn\View\Composer;
 
 class Comments extends Composer
 {
-    /**
-     * List of views served by this composer.
-     *
-     * @var array
-     */
     protected static $views = [
         'partials.comments',
     ];
 
-    /**
-     * The comment title.
-     */
     public function title(): string
     {
         return sprintf(
@@ -28,9 +20,6 @@ class Comments extends Composer
         );
     }
 
-    /**
-     * Retrieve the comments.
-     */
     public function responses(): ?string
     {
         if (! have_comments()) {
@@ -44,9 +33,6 @@ class Comments extends Composer
         ]);
     }
 
-    /**
-     * The previous comments link.
-     */
     public function previous(): ?string
     {
         if (! get_previous_comments_link()) {
@@ -58,9 +44,6 @@ class Comments extends Composer
         );
     }
 
-    /**
-     * The next comments link.
-     */
     public function next(): ?string
     {
         if (! get_next_comments_link()) {
@@ -72,17 +55,11 @@ class Comments extends Composer
         );
     }
 
-    /**
-     * Determine if the comments are paginated.
-     */
     public function paginated(): bool
     {
         return get_comment_pages_count() > 1 && get_option('page_comments');
     }
 
-    /**
-     * Determine if the comments are closed.
-     */
     public function closed(): bool
     {
         return ! comments_open() && get_comments_number() != '0' && post_type_supports(get_post_type(), 'comments');

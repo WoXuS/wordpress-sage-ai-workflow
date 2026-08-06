@@ -1,25 +1,12 @@
 <?php
 
-/**
- * Theme filters.
- */
-
 namespace App;
 
-/**
- * Add "… Continued" to the excerpt.
- *
- * @return string
- */
 add_filter('excerpt_more', function () {
     return sprintf(' &hellip; <a href="%s">%s</a>', get_permalink(), __('Continued', 'sage'));
 });
 
-/**
- * Utility classes for primary-navigation links. The menu is rendered once and
- * restyled by breakpoint: white on the mobile overlay (red bg), red on the
- * desktop bar (white bg).
- */
+// One menu, restyled by breakpoint: white on the mobile overlay, red on the desktop bar.
 add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
     if (($args->theme_location ?? '') !== 'primary_navigation') {
         return $atts;
@@ -29,15 +16,8 @@ add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
     return $atts;
 }, 10, 3);
 
-/**
- * Resolve the %chapter-name% token in `dbip-chapters` permalinks.
- *
- * The CPT registers a custom permalink base of `dbip-chapters/%chapter-name%`
- * (resources/acf-json/post_type_…json). WordPress rewrite rules already route
- * the structured URL, but get_permalink() leaves the taxonomy token literal, so
- * substitute the chapter's assigned `chapter-name` term slug (falling back to
- * the Yoast primary term, then the first term, then `uncategorized`).
- */
+// get_permalink() leaves the %chapter-name% permalink token literal; sub in the
+// chapter's term slug (Yoast primary term → first term → uncategorized).
 add_filter('post_type_link', function ($url, $post) {
     if ($post->post_type !== 'dbip-chapters' || strpos($url, '%chapter-name%') === false) {
         return $url;
@@ -56,11 +36,7 @@ add_filter('post_type_link', function ($url, $post) {
     return str_replace('%chapter-name%', $slug, $url);
 }, 10, 2);
 
-/**
- * Keep non-production environments (e.g. the cyberFolks staging subdomain) out of
- * search indexes. Gated on WP_ENV via wp_get_environment_type(); production is
- * untouched. Basic Auth on staging is handled at the hosting level.
- */
+// Keep non-production (staging) out of search indexes; production untouched.
 add_filter('wp_robots', function ($robots) {
     if (wp_get_environment_type() !== 'production') {
         return wp_robots_no_robots($robots);

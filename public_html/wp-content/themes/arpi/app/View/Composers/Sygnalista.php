@@ -37,10 +37,6 @@ class Sygnalista extends Composer
         ];
     }
 
-    /**
-     * Explanatory / legal context shown above the form. Kept as editable copy so
-     * the compliance wording can be adjusted without touching the template.
-     */
     private function info(bool $isEn): array
     {
         return [
@@ -68,10 +64,7 @@ class Sygnalista extends Composer
         ];
     }
 
-    /**
-     * Report form copy + config. Posts to the whistleblower REST endpoint
-     * (WhistleblowerServiceProvider); the message body is plain text.
-     */
+    // Posts to the whistleblower REST endpoint (WhistleblowerServiceProvider); message body is plain text.
     private function form(bool $isEn): array
     {
         return [

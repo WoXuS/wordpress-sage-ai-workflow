@@ -28,11 +28,7 @@ class Careers extends Composer
         return (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
     }
 
-    // ---- Primary source: ACF (group_careers on the Kariera/Careers page) ----
-    // Located by page template, so the PL and EN pages each edit their own
-    // per-post content. Returns null until the hero title is filled in — then
-    // the hardcoded fallback renders instead.
-
+    // Located by page template, so PL/EN pages each edit their own content; null until hero filled, then hardcoded fallback renders.
     private function fromAcf(): ?array
     {
         if (! function_exists('get_field')) {
@@ -85,8 +81,6 @@ class Careers extends Composer
         ];
     }
 
-    // Normalise a mosaic tile: resolve the image sub-field to a URL and fall
-    // back to a per-kind default grid span when the (advanced) span is left blank.
     private function tile(array $tile): array
     {
         $kind = $tile['kind'] ?? 'stat';
@@ -137,8 +131,6 @@ class Careers extends Composer
             ],
         ];
     }
-
-    // ---- Fallback: hardcoded content (pre-ACF), branched PL/EN --------------
 
     private function fromHardcoded(): array
     {
@@ -196,11 +188,7 @@ class Careers extends Composer
         ];
     }
 
-    /**
-     * Photo/stat mosaic — a "life at ARPI" collage. Tiles carry their own grid
-     * span so the Blade layout stays declarative; `dense` auto-flow tessellates
-     * the leftover gaps. Photos reuse bundled theme assets until real HR shots land.
-     */
+    // Photos reuse bundled theme assets until real HR shots land.
     private function mosaic(bool $isEn): array
     {
         return [
@@ -274,10 +262,6 @@ class Careers extends Composer
         ];
     }
 
-    /**
-     * Open roles. `email` drives a prefilled mailto; the composer keeps a single
-     * recruitment address so it is trivial to swap for ACF later.
-     */
     private function positions(bool $isEn): array
     {
         $email = 'rekrutacja@arpiaccounting.com';

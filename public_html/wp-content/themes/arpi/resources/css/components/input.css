@@ -20,7 +20,6 @@
     }
   }
 
-  /* Multi-line variant: auto height, readable leading, gentler radius. */
   .c-input--area {
     line-height: 1.4;
     border-radius: 20px;
@@ -28,7 +27,7 @@
     min-height: 140px;
   }
 
-  /* select needs room for the native caret and normal leading. */
+  /* select needs normal leading for the native caret. */
   select.c-input {
     line-height: 1.4;
     cursor: pointer;
@@ -43,7 +42,6 @@
     cursor: pointer;
   }
 
-  /* On the red footer: white outline + white text. */
   .c-input--on-red {
     border-color: var(--color-white);
     color: var(--color-white);
@@ -53,7 +51,7 @@
     }
   }
 
-  /* Invalid state (set by the validation module). */
+  /* .is-invalid is set by the validation module. */
   .c-input.is-invalid,
   .c-input.is-invalid:focus {
     border-color: var(--color-error);
@@ -63,14 +61,14 @@
     outline-offset: 2px;
   }
 
-  /* Per-field error message, injected under the control. */
+  /* Injected by JS under the control. */
   .c-field-error {
     color: var(--color-error);
     font-size: var(--text-body-sm);
     line-height: 1.3;
   }
 
-  /* AJAX form status line — coloured by outcome (set in forms.js). */
+  /* Status classes set in forms.js. */
   [data-form-status].is-success {
     color: var(--color-success);
   }
@@ -78,7 +76,6 @@
     color: var(--color-error);
   }
 
-  /* On the red footer, keep both the status and field errors readable. */
   .c-footer [data-form-status].is-success,
   .c-footer [data-form-status].is-error,
   .c-footer .c-field-error {

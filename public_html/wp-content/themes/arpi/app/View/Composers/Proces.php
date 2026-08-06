@@ -23,11 +23,7 @@ class Proces extends Composer
         return (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
     }
 
-    // ---- Primary source: ACF (group_proces on the Proces page) --------------
-    // Located by page template, so the PL and EN pages each edit their own
-    // per-post content. Returns null until the hero title is filled in — then
-    // the hardcoded fallback (pl()/en()) renders instead.
-
+    // Located by page template, so PL/EN pages each edit their own content; null until hero filled, then pl()/en() fallback renders.
     private function fromAcf(): ?array
     {
         if (! function_exists('get_field')) {
@@ -50,9 +46,7 @@ class Proces extends Composer
         ];
     }
 
-    // Normalise one ACF stage row to the shape the Blade partial consumes.
-    // `logo` is only emitted when its text is filled; `list` collapses the
-    // {lead, desc} sub-fields into the [$lead, $desc] pairs the view destructures.
+    // `logo` is emitted only when its text is filled; `list` collapses {lead, desc} into the [$lead, $desc] pairs the view destructures.
     private function stage(array $row): array
     {
         $stage = [
@@ -77,8 +71,6 @@ class Proces extends Composer
 
         return $stage;
     }
-
-    // ---- Fallback: hardcoded content (pre-ACF), branched PL/EN --------------
 
     private function pl(): array
     {

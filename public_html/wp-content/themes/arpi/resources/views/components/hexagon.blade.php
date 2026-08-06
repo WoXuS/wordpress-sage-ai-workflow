@@ -1,6 +1,5 @@
 @props(['variant' => 'solid', 'href' => null])
 @php $tag = $href ? 'a' : 'div'; @endphp
-{{-- flat-top hex; path from resources/images/purple-hexagon.svg --}}
 <{{ $tag }}
   @if($href) href="{{ $href }}" @endif
   {{ $attributes->merge(['class' => "c-hex c-hex--{$variant}"]) }}

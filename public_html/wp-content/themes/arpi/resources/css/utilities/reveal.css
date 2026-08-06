@@ -1,13 +1,7 @@
-/**
- * Scroll-reveal + hero entrance animations.
- *
- * Everything is gated behind `.reveal-ready` (added by reveal.js) so that without
- * JS nothing is ever hidden, and behind prefers-reduced-motion so motion-sensitive
- * users get the final state instantly. reveal.js toggles `.is-visible`.
- */
+/* Gated behind .reveal-ready (added by reveal.js) so without JS nothing is ever
+   hidden; reduced-motion users get the final state instantly. reveal.js toggles .is-visible. */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* --- scroll reveal ------------------------------------------------------ */
   .reveal-ready [data-reveal] {
     opacity: 0;
     transform: translateY(24px);
@@ -23,7 +17,6 @@
     transform: none;
   }
 
-  /* --- hero entrance (plays on load) ------------------------------------- */
   .reveal-ready .c-hero [data-hero] {
     opacity: 0;
     animation: hero-in 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
@@ -34,7 +27,6 @@
     animation-name: hero-in-image;
   }
 
-  /* --- hero ambient accent ---------------------------------------------- */
   .c-hero::before {
     animation: hero-drift 20s ease-in-out infinite alternate;
   }
@@ -71,8 +63,7 @@
   }
 }
 
-/* Soft, blurred plum glow behind the hero — subtle depth, no motion required.
-   Positioned/clipped so it never triggers horizontal scroll. */
+/* Positioned/clipped so the hero glow never triggers horizontal scroll. */
 .c-hero {
   position: relative;
   overflow: clip;

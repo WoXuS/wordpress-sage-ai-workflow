@@ -8,12 +8,10 @@ use WP_REST_Request;
 use WP_REST_Response;
 
 /**
- * REST endpoints backing the front-end forms (contact + footer newsletter).
- *
- * Both routes are public but guarded by the REST nonce + a honeypot field.
- * Leads are pushed into MailPoet lists (Kontakt PL/EN, Newsletter PL/EN); the
- * contact form also emails the office. MailPoet calls degrade to no-ops when
- * the plugin is inactive, so submissions never fatal.
+ * REST endpoints backing the front-end forms (contact + footer newsletter),
+ * guarded by the REST nonce + a honeypot. Leads go into MailPoet lists; the
+ * contact form also emails the office. MailPoet calls degrade to no-ops when the
+ * plugin is inactive, so submissions never fatal.
  */
 class ContactServiceProvider extends ServiceProvider
 {
@@ -61,11 +59,11 @@ class ContactServiceProvider extends ServiceProvider
 
         [$first, $last] = $this->splitName($name);
 
-        // Best-effort office notification (does not block lead capture).
+        // Best-effort — does not block lead capture.
         $this->notifyOffice(compact('name', 'email', 'phone', 'company', 'topic', 'message'), $isEn);
 
-        // Capture the lead in MailPoet. Double opt-in only when they asked for
-        // the newsletter; a plain enquiry just lands in the Kontakt CRM list.
+        // Double opt-in only when they asked for the newsletter; a plain enquiry
+        // just lands in the Kontakt CRM list.
         $lists = [$isEn ? 'Kontakt EN' : 'Kontakt PL'];
         if ($wantsNewsletter) {
             $lists[] = $isEn ? 'Newsletter EN' : 'Newsletter PL';
@@ -93,10 +91,7 @@ class ContactServiceProvider extends ServiceProvider
         return new WP_REST_Response(['ok' => true], 200);
     }
 
-    /**
-     * Shared spam guard. Returns a response to short-circuit with, or null to
-     * proceed. Honeypot hits get a fake 200 so bots don't learn they were caught.
-     */
+    // Honeypot hits get a fake 200 so bots don't learn they were caught.
     private function guard(WP_REST_Request $request): ?WP_REST_Response
     {
         if (trim((string) $request->get_param('website')) !== '') {

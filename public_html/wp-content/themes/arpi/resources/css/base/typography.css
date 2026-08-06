@@ -2,7 +2,7 @@
   body {
     font-family: var(--font-sans);
     font-size: var(--text-body);
-    font-weight: 300; /* Geomanist Light for body copy (Body Big/Base/Small) */
+    font-weight: 300; /* Geomanist Light */
     line-height: 1.4;
     color: var(--color-black);
     background-color: var(--color-white);
@@ -12,8 +12,8 @@
   html, body { overflow-x: clip; }
   img, svg, video, iframe, table, pre { max-width: 100%; }
 
-  /* .h1 gives the h1 visual size to any element: section titles are <h2 class="h1">
-     so they look like h1 while keeping one real <h1> per page (the hero). */
+  /* .h1 gives h1 sizing to any element, so section titles can be <h2 class="h1">
+     and keep one real <h1> per page. */
   h1, h2, h3, .h1 {
     font-weight: 400;
     text-wrap: balance;

@@ -6,20 +6,12 @@ use Roots\Acorn\View\Composer;
 
 class Post extends Composer
 {
-    /**
-     * List of views served by this composer.
-     *
-     * @var array
-     */
     protected static $views = [
         'partials.page-header',
         'partials.content',
         'partials.content-*',
     ];
 
-    /**
-     * Retrieve the post title.
-     */
     public function title(): string
     {
         if ($this->view->name() !== 'partials.page-header') {
@@ -53,9 +45,6 @@ class Post extends Composer
         return get_the_title();
     }
 
-    /**
-     * Retrieve the pagination links.
-     */
     public function pagination(): string
     {
         return wp_link_pages([

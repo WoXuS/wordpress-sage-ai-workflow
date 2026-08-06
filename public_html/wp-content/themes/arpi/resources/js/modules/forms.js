@@ -1,10 +1,5 @@
-/**
- * Progressive-enhancement handler for the theme's AJAX forms
- * ([data-ajax-form]) — contact form + footer newsletter + whistleblower report.
- * Posts to the form's REST endpoint and reports success/error in its
- * [data-form-status] node. Forms marked [data-multipart] (file uploads) are sent
- * as FormData; the rest go as JSON.
- */
+// Progressive-enhancement handler for [data-ajax-form]: POSTs to the form's REST
+// endpoint. [data-multipart] forms send FormData; the rest send JSON.
 import { validateForm } from './validation';
 
 export default function initForms() {

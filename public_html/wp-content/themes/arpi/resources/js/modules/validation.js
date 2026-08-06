@@ -1,17 +1,5 @@
-/**
- * Reusable client-side validation for the theme's forms.
- *
- * Opt in by adding [data-validate] to a <form>. Each constrained control
- * (required / type=email / pattern / minlength, or [data-rte-required] for a
- * rich-text hidden input) gets a red border + a red message under it, shown on
- * blur and cleared live as the user fixes it. Messages are language-aware
- * (form[data-lang] or the hidden `lang` input) with an optional per-field
- * [data-error] override.
- *
- * `validateForm(form)` runs the whole form (used by forms.js before submit);
- * `initValidation()` wires the live blur/input behaviour.
- */
-
+// Client-side validation for [data-validate] forms. Errors show on blur and
+// clear live; messages are language-aware with an optional per-field [data-error].
 const MESSAGES = {
   pl: {
     required: 'To pole jest wymagane.',
@@ -48,7 +36,7 @@ function setup(form) {
     const events = control.type === 'checkbox' || control.tagName === 'SELECT' ? ['change'] : ['blur'];
     events.forEach((e) => control.addEventListener(e, revalidate));
 
-    // Once a field is showing an error, clear/refresh it live as the user edits.
+    // Only revalidate live once a field is already showing an error.
     const liveEvent = control.tagName === 'SELECT' || control.type === 'checkbox' ? 'change' : 'input';
     control.addEventListener(liveEvent, () => {
       if (control.getAttribute('aria-invalid') === 'true') renderControl(control, lang);
@@ -56,7 +44,6 @@ function setup(form) {
   });
 }
 
-/** Validate an entire form, render all errors, focus the first invalid. Returns bool. */
 export function validateForm(form) {
   const lang = formLang(form);
   let firstInvalid = null;
@@ -130,15 +117,13 @@ function clearError(control) {
   if (node) node.hidden = true;
 }
 
-/** Element that carries the red-border state — [data-invalid-target] (resolved
- *  within the field wrapper) lets a hidden control style a sibling (e.g. Trix). */
+// [data-invalid-target] lets a hidden control put the red-border state on a sibling (e.g. Trix).
 function styleTarget(control) {
   const sel = control.dataset.invalidTarget;
   if (sel) return control.parentElement?.querySelector(sel) || control;
   return control;
 }
 
-/** Where the error message is inserted — after the checkbox's label, else after the control. */
 function errorAnchor(control) {
   if (control.type === 'checkbox' || control.type === 'radio') {
     return control.closest('label') || control;

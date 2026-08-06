@@ -7,21 +7,16 @@ use WP_REST_Request;
 use WP_REST_Response;
 
 /**
- * Whistleblower ("Sygnalista") reporting channel.
+ * Whistleblower ("Sygnalista") reporting channel. Anonymous-capable public report
+ * form → private `zgloszenie` CPT + committee email + reporter acknowledgment
+ * (whistleblower law: confirm receipt within 7 days).
  *
- * Backs the public report form: a REST route accepts a title, message, optional
- * reporter contact and file attachments, then (1) stores the report in a private
- * `zgloszenie` register CPT, (2) emails the handling committee, and (3) sends an
- * acknowledgment to the reporter when they left a contact address (whistleblower
- * law: confirm receipt within 7 days). The channel is anonymous-capable — no
- * identifying field is required.
- *
- * Confidentiality: attachments are stored under uploads/zgloszenia/ with random
- * file names, a directory `.htaccess` deny (Apache/LiteSpeed — cyberFolks) plus a
- * matching nginx deny (dev, etc/nginx/default.conf). Direct web access is blocked;
- * the committee downloads them only through an authenticated admin endpoint.
- * NOTE for go-live: for extra defence in depth, consider moving the storage dir
- * outside the web root on production. Turnstile is planned across all site forms.
+ * Confidentiality: attachments stored under uploads/zgloszenia/ with random names,
+ * a directory `.htaccess` deny (Apache/LiteSpeed — cyberFolks) plus a matching
+ * nginx deny (dev, etc/nginx/default.conf). Direct web access is blocked; the
+ * committee downloads via an authenticated admin endpoint.
+ * TODO go-live: consider moving the storage dir outside the web root on prod;
+ * Turnstile is planned across all site forms.
  */
 class WhistleblowerServiceProvider extends ServiceProvider
 {
@@ -29,9 +24,9 @@ class WhistleblowerServiceProvider extends ServiceProvider
 
     private const MAX_FILES = 5;
 
-    private const MAX_BYTES = 10 * 1024 * 1024; // 10 MB per file
+    private const MAX_BYTES = 10 * 1024 * 1024;
 
-    /** Allowed attachment types (extension => mime), mirrors the legacy channel. */
+    // Allowed types (ext => mime), mirrors the legacy channel.
     private const ALLOWED = [
         'pdf'  => 'application/pdf',
         'doc'  => 'application/msword',
@@ -55,7 +50,6 @@ class WhistleblowerServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Admin: triage meta box, list columns, and the gated attachment download.
         add_action('add_meta_boxes', [$this, 'addMetaBox']);
         add_action('save_post_zgloszenie', [$this, 'saveStatus']);
         add_filter('manage_zgloszenie_posts_columns', [$this, 'columns']);
@@ -73,7 +67,7 @@ class WhistleblowerServiceProvider extends ServiceProvider
             'labels' => ['name' => 'Zgłoszenia (Sygnalista)', 'singular_name' => 'Zgłoszenie', 'menu_name' => 'Sygnalista'],
             'public' => false,
             'show_ui' => true,
-            'show_in_menu' => AdminMenuServiceProvider::SLUG,
+            'show_in_menu' => true,
             'exclude_from_search' => true,
             'publicly_queryable' => false,
             'has_archive' => false,
@@ -84,8 +78,6 @@ class WhistleblowerServiceProvider extends ServiceProvider
             'supports' => ['title', 'editor'],
         ]);
     }
-
-    // ---- Public submission ---------------------------------------------------
 
     public function handleReport(WP_REST_Request $request): WP_REST_Response
     {
@@ -105,7 +97,7 @@ class WhistleblowerServiceProvider extends ServiceProvider
 
         $files = $this->collectFiles($request);
         if ($files instanceof WP_REST_Response) {
-            return $files; // validation error
+            return $files;
         }
 
         $attachmentIds = $this->storeAttachments($files);
@@ -138,10 +130,7 @@ class WhistleblowerServiceProvider extends ServiceProvider
         return new WP_REST_Response(['ok' => true], 200);
     }
 
-    /**
-     * Shared spam guard. Honeypot hits get a fake 200 so bots don't learn they
-     * were caught; a missing/invalid nonce is rejected.
-     */
+    // Honeypot hits get a fake 200 so bots don't learn they were caught.
     private function guard(WP_REST_Request $request): ?WP_REST_Response
     {
         if (trim((string) $request->get_param('website')) !== '') {
@@ -156,14 +145,7 @@ class WhistleblowerServiceProvider extends ServiceProvider
         return null;
     }
 
-    // ---- Attachments ---------------------------------------------------------
-
-    /**
-     * Normalise + validate uploaded files into a list of single-file arrays.
-     * Returns a WP_REST_Response on validation failure.
-     *
-     * @return array<int,array>|WP_REST_Response
-     */
+    /** @return array<int,array>|WP_REST_Response WP_REST_Response on validation failure */
     private function collectFiles(WP_REST_Request $request)
     {
         $isEn = $request->get_param('lang') === 'en';
@@ -213,11 +195,8 @@ class WhistleblowerServiceProvider extends ServiceProvider
     }
 
     /**
-     * Store validated files under uploads/zgloszenia/ with random names, protect
-     * the directory, and create attachment posts. Returns the attachment IDs.
-     *
      * @param  array<int,array>  $files
-     * @return array<int,int>
+     * @return array<int,int>  attachment IDs
      */
     private function storeAttachments(array $files): array
     {
@@ -263,7 +242,7 @@ class WhistleblowerServiceProvider extends ServiceProvider
         return $ids;
     }
 
-    /** Route uploads to a protected sub-directory (created + hardened on demand). */
+    // Route uploads to a protected sub-directory (created + hardened on demand).
     private function privateUploadDir(array $dirs): array
     {
         $subdir = '/'.self::SUBDIR;
@@ -284,7 +263,7 @@ class WhistleblowerServiceProvider extends ServiceProvider
         return $dirs;
     }
 
-    /** Stream an attachment to an authorised admin (direct web access is denied). */
+    // Streams an attachment to an authorised admin (direct web access is denied).
     public function downloadAttachment(): void
     {
         $id = (int) ($_GET['id'] ?? 0);
@@ -312,8 +291,6 @@ class WhistleblowerServiceProvider extends ServiceProvider
         exit;
     }
 
-    // ---- Notifications -------------------------------------------------------
-
     private function notifyCommittee(int $postId, string $title, string $message, string $contact, array $attachmentIds, bool $isEn): void
     {
         $contactLabel = $contact ?: ($isEn ? '(anonymous)' : '(anonimowo)');
@@ -328,7 +305,6 @@ class WhistleblowerServiceProvider extends ServiceProvider
             .'<p><a href="'.esc_url(get_edit_post_link($postId, 'raw')).'">'
             .($isEn ? 'Open in the register' : 'Otwórz w rejestrze').'</a></p>';
 
-        // Attach the files directly for the (authorised) committee recipients.
         $attachments = array_filter(array_map('get_attached_file', $attachmentIds));
 
         $headers = ['Content-Type: text/html; charset=UTF-8'];
@@ -358,13 +334,6 @@ class WhistleblowerServiceProvider extends ServiceProvider
         wp_mail($to, $subject, $body, ['Content-Type: text/plain; charset=UTF-8']);
     }
 
-    /**
-     * Committee recipient(s), per environment (wp_get_environment_type()):
-     *  - production: the standing whistleblower committee;
-     *  - staging: test inbox + Michał Pudło;
-     *  - development/local: test inbox only;
-     *  - anything else: safe fallback (test inbox + Michał Pudło).
-     */
     private function recipients(): array
     {
         $list = match (wp_get_environment_type()) {
@@ -383,8 +352,6 @@ class WhistleblowerServiceProvider extends ServiceProvider
 
         return array_values(array_filter($list, 'is_email'));
     }
-
-    // ---- Admin register: triage meta box, columns ---------------------------
 
     public function addMetaBox(): void
     {
@@ -460,8 +427,6 @@ class WhistleblowerServiceProvider extends ServiceProvider
             echo (int) count((array) get_post_meta($postId, '_wb_attachments', true));
         }
     }
-
-    // ---- Helpers -------------------------------------------------------------
 
     private function truthy($value): bool
     {

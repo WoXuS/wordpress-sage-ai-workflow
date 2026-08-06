@@ -110,9 +110,7 @@
       }
     }
 
-    /* desktop (≥ md): 5 across, interlocked row. --hex-w tracks hex width so the
-       offsets scale with it — flex-item margin % resolves against the flex
-       container width, so the calc works. */
+    /* Flex-item margin % resolves against container width, so --hex-w offsets scale correctly. */
     @variant md {
       --hex-w: calc(100% / 5);
       display: flex;
@@ -141,7 +139,7 @@
     }
   }
 
-  /* --hex-w set per-instance (fluid); fallback keeps it usable standalone */
+  /* --hex-w is set per-instance (fluid); the fallback keeps it usable standalone. */
   .c-hex-triad {
     display: grid;
   }

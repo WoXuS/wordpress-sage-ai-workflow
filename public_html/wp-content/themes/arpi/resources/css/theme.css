@@ -7,25 +7,24 @@
   --color-white: #ffffff;
   --color-black: #19191c;
   --color-red: #942d58;
-  --color-red-dark: #7b2549;   /* hover — deepened plum, keeps white text ~7:1 */
-  --color-red-darker: #651f3c; /* active/press */
+  --color-red-dark: #7b2549;   /* hover — keeps white text ~7:1 */
+  --color-red-darker: #651f3c;
   --color-cream: #f5f4ee;
-  --color-success: #2e7d46;     /* form success / valid state — green on light bg */
-  --color-error: #c62828;       /* form error / invalid state — a clear red, distinct from brand plum */
+  --color-success: #2e7d46;
+  --color-error: #c62828;
 
   --font-sans: "Geomanist", ui-sans-serif, system-ui, sans-serif;
 
-  /* fluid type — endpoints 640→1280px, 1:1 with Figma; rem for font-size (a11y) */
-  --text-display: clamp(2.25rem, 0.4375rem + 4.531vw, 4.0625rem); /* H1 36→65 */
-  --text-h2: clamp(1.5rem, 0.75rem + 1.875vw, 2.25rem);   /* H2 24→36 */
-  --text-subtitle: clamp(1.5rem, 1rem + 1.1vw, 2rem); /* section subtitle 24→32 */
+  /* fluid type, 640→1280px, 1:1 with Figma; rem for a11y */
+  --text-display: clamp(2.25rem, 0.4375rem + 4.531vw, 4.0625rem);
+  --text-h2: clamp(1.5rem, 0.75rem + 1.875vw, 2.25rem);
+  --text-subtitle: clamp(1.5rem, 1rem + 1.1vw, 2rem);
   --text-subtitle--line-height: 1.25;
-  --text-h3: clamp(1rem, 0.5rem + 1.25vw, 1.5rem);    /* H3 16→24 */
-  --text-body-lg: clamp(1.25rem, 1rem + 0.625vw, 1.5rem);   /* 20→24 */
-  /*--text-body: clamp(1rem, 0.75rem + 0.625vw, 1.25rem);   !* 16→20 *!*/
-  --text-body: 1.25rem;   /* 20 */
-  --text-body-sm: 1rem;                                        /* 16 fixed */
-  /* layout: container horizontal padding, fluid 640→1280 (px — spacing, not type) */
+  --text-h3: clamp(1rem, 0.5rem + 1.25vw, 1.5rem);
+  --text-body-lg: clamp(1.25rem, 1rem + 0.625vw, 1.5rem);
+  --text-body: 1.25rem;
+  --text-body-sm: 1rem;
+  /* px not rem here — spacing, not type */
   --wrap-padding-inline: clamp(30px, -20px + 7.813vw, 80px);
 
   --breakpoint-xs: 30rem;

@@ -2,9 +2,7 @@
 @php
   $selected = collect($options)->firstWhere('value', $value) ?? ($options[0] ?? ['value' => '', 'label' => '']);
 @endphp
-{{-- Custom listbox (ARIA select-only combobox). Progressive-enhancement: the
-     hidden input carries the value so it posts like a native <select>; select.js
-     drives open/close + keyboard. --}}
+{{-- ARIA select-only combobox; hidden input posts the value like a native <select>. --}}
 <div {{ $attributes->merge(['class' => 'c-select group relative']) }} data-select>
   <input type="hidden" name="{{ $name }}" value="{{ $selected['value'] }}" data-select-input>
 

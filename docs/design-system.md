@@ -418,6 +418,9 @@ These are firm, user-confirmed rules for this repo:
     relevant § here (and as a memory when it's a firm preference), so this file stays the single
     reference future AI prompts read first. Don't ship undocumented conventions; a rule that only lives
     in code will be missed next time.
+12. **Element by semantics, not habit.** Block/visual container (icon badge, card box, wrapper) →
+    `<div>`; inline text/decoration inside a phrasing context → `<span>`. Don't default to `<span>` just
+    because it's phrasing-valid everywhere or because Tailwind sets `display` via a utility class.
 
 ---
 

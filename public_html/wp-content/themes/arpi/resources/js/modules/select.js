@@ -1,9 +1,5 @@
-/**
- * Custom accessible listbox for [data-select] (see components/select.blade.php).
- * Select-only combobox pattern: a button toggles a listbox, a hidden input holds
- * the value so the control posts like a native <select>. Open/close animation is
- * CSS (group-data-[open]); this drives state, keyboard nav and selection.
- */
+// Accessible select-only combobox for [data-select]: a hidden input holds the
+// value so the control posts like a native <select>. Open/close animation is CSS.
 export default function initSelect() {
   document.querySelectorAll('[data-select]').forEach(setup);
 }
@@ -116,7 +112,6 @@ function setup(root) {
     if (open && !root.contains(event.target)) closeList();
   });
 
-  // Close when focus leaves the whole control (e.g. clicking another field).
   root.addEventListener('focusout', (event) => {
     if (open && !root.contains(event.relatedTarget)) closeList();
   });

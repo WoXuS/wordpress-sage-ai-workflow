@@ -1,5 +1,4 @@
 @layer components {
-  /* Chapter-hero shapes (parallelogram number tab + slanted person photo) */
   .c-dbip-num {
     clip-path: polygon(0 0, 100% 0, calc(100% - 24px) 100%, 0 100%);
   }
@@ -10,7 +9,7 @@
     clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
   }
 
-  /* Article prose — mirrors the Gutenberg block classes authored on prod */
+  /* Class names must mirror the Gutenberg block classes authored on prod. */
   .dbip-content {
     font-size: var(--text-body-sm);
     line-height: 1.8;
@@ -48,14 +47,12 @@
 
     & mark { background: transparent; }
 
-    /* two-column group */
     & .double-column { column-gap: 4rem; }
     @media (min-width: 1024px) {
       & .double-column { columns: 2; }
     }
     & .double-column > * { break-inside: avoid; }
 
-    /* grey callout box */
     & .highlighted-paragraph {
       background: var(--color-cream);
       padding: 16px 25px;
@@ -65,10 +62,8 @@
       & ul { margin-bottom: 0; }
     }
 
-    /* spacing-only band */
     & .highlighted-section { padding: 24px 0; }
 
-    /* tables */
     & .wp-block-table {
       margin: 1.5em 0;
       overflow-x: auto;
@@ -95,7 +90,7 @@
       color: #fff;
     }
 
-    /* responsive table toggle: horizontal on desktop, transposed on mobile */
+    /* Table toggle: horizontal on desktop, transposed on mobile. */
     & .left-column-highlighted { display: none; }
     @media (max-width: 767px) {
       & .top-row-highlighted { display: none; }

@@ -28,8 +28,6 @@ class Dbip extends Composer
         return $shared + ['single' => $this->single()];
     }
 
-    // ---- Archive -----------------------------------------------------------
-
     private function archive(): array
     {
         $chapters = $this->orderedChapters();
@@ -48,8 +46,6 @@ class Dbip extends Composer
             'glossary' => $this->glossaryTile(),
         ];
     }
-
-    // ---- Taxonomy (chapter) ------------------------------------------------
 
     private function chapter(): array
     {
@@ -94,8 +90,6 @@ class Dbip extends Composer
             'locked' => post_password_required($p),
         ], $posts, array_keys($posts));
     }
-
-    // ---- Single ------------------------------------------------------------
 
     private function single(): array
     {
@@ -176,8 +170,6 @@ class Dbip extends Composer
             'is_chapter' => true,
         ];
     }
-
-    // ---- Shared helpers ----------------------------------------------------
 
     /** @return WP_Term[] ordered by dbip_chapter_order, no-chapter excluded */
     private function orderedChapters(): array

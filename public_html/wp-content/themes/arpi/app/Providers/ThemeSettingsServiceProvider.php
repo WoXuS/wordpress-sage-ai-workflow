@@ -7,10 +7,9 @@ use Illuminate\Support\ServiceProvider;
 class ThemeSettingsServiceProvider extends ServiceProvider
 {
     /**
-     * Base ACF post_id for the global theme settings (footer, offices, socials…).
-     * The validate_post_id filter below appends the current Polylang language so
-     * PL/EN each store their own values under `theme_settings_{lang}` — read with
-     * get_field('…', ThemeSettingsServiceProvider::OPTIONS_ID).
+     * Base ACF post_id for global theme settings. The validate_post_id filter below
+     * appends the Polylang language so PL/EN each store values under
+     * `theme_settings_{lang}` — read with get_field('…', self::OPTIONS_ID).
      */
     public const OPTIONS_ID = 'theme_settings';
 
@@ -34,12 +33,10 @@ class ThemeSettingsServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Make the theme-settings options page per-language. Scoped strictly to
-        // OPTIONS_ID so the DBiP options page (language-neutral 'options') and any
-        // post/term ids are untouched. In wp-admin, pll_current_language() follows
-        // the Polylang language switcher in the toolbar; on the front end it is the
-        // page language. Falls back to the default language when Polylang can't
-        // resolve one (e.g. plugin inactive → single shared set of values).
+        // Per-language theme settings, scoped strictly to OPTIONS_ID so the DBiP
+        // options page and post/term ids are untouched. pll_current_language()
+        // follows the toolbar switcher in wp-admin, the page language on the front
+        // end; falls back to the default language when Polylang can't resolve one.
         add_filter('acf/validate_post_id', function ($post_id, $original) {
             if ($original !== self::OPTIONS_ID) {
                 return $post_id;

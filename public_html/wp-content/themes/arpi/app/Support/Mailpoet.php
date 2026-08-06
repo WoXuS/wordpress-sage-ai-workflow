@@ -5,10 +5,8 @@ namespace App\Support;
 use MailPoet\API\API as MailPoetAPI;
 
 /**
- * Thin wrapper over MailPoet's public PHP API (MP v1).
- *
- * Degrades gracefully when the plugin is inactive (returns false / null) so the
- * theme never fatals on an environment without MailPoet (CLI, fresh staging).
+ * Wrapper over MailPoet's public PHP API (MP v1). Degrades to false/null when the
+ * plugin is inactive so the theme never fatals without MailPoet (CLI, fresh staging).
  */
 class Mailpoet
 {
@@ -22,9 +20,6 @@ class Mailpoet
         return MailPoetAPI::MP('v1');
     }
 
-    /**
-     * Resolve a list (segment) id by name, creating it if absent.
-     */
     public static function listId(string $name, string $description = ''): ?int
     {
         if (! self::available()) {
@@ -49,13 +44,9 @@ class Mailpoet
     }
 
     /**
-     * Upsert a subscriber and (re)subscribe them to the given lists (by name).
-     *
-     * MailPoet's API ignores an explicit `status`; the resulting status is driven
-     * by the signup-confirmation setting. Pass $confirm = true for genuine
-     * newsletter opt-ins (double opt-in — MailPoet sends the confirmation email in
-     * prod); pass false for plain contact leads (they land in the CRM list without
-     * an email and are never mailed until confirmed).
+     * MailPoet ignores an explicit `status`; status comes from the signup-confirmation
+     * setting. $confirm = true → double opt-in (sends confirmation email in prod);
+     * false → plain lead, lands in the list unconfirmed and is never mailed.
      *
      * @param  array<string,string>  $data   first_name / last_name
      * @param  string[]              $listNames

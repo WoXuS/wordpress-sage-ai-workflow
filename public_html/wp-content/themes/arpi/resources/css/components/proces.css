@@ -1,10 +1,6 @@
 @layer components {
-  /* "Proces ARPI" — three-stage process page. Each stage = a static hexagon
-     (icon + label) with process tags on one side, heading + prose on the other. */
-
-  /* Outline hexagons here are decorative, not links: keep the icon/label red at
-     rest (the component defaults content to white for the hover-fill state) and
-     suppress that hover fill so the icon never washes out. */
+  /* Hexagons here are decorative, not links: keep icon/label red at rest and
+     suppress the component's hover-fill so the icon never washes out. */
   .c-proces .c-hex--outline {
     color: var(--color-red);
   }
@@ -20,7 +16,6 @@
     margin: 0;
   }
 
-  /* Non-interactive process tags (steps), pill-shaped to echo the button system. */
   .c-proces__tag {
     display: block;
     text-align: center;
@@ -42,8 +37,7 @@
     color: var(--color-white);
   }
 
-  /* Benefit list: numbered, with a coloured lead in place of a bold weight
-     (the theme ships a single 400 weight). */
+  /* Coloured lead instead of bold: the theme ships a single 400 weight. */
   .c-proces__list {
     list-style: decimal;
     padding-left: 24px;

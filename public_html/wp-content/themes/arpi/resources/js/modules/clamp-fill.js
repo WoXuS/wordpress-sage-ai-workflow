@@ -1,15 +1,6 @@
-/**
- * Clamp excerpts to whole lines.
- *
- * The card CSS stretches every card in a row to the tallest one and lets the
- * excerpt box grow to fill the leftover space. That leftover is a fractional
- * number of lines, so plain `overflow: hidden` cuts the last line in half. Here
- * we snap the visible text down to whole lines: line-clamp = floor(box / line).
- *
- * `[data-clamp-fill]` is the flex item (grow/basis). The clamp is applied to its
- * inner `<p>`, because a flex item's `display` is blockified and would kill the
- * `-webkit-box` that `-webkit-line-clamp` needs.
- */
+// Snap flex-stretched excerpt boxes to whole lines (line-clamp = floor(box/line)),
+// else a fractional leftover height cuts the last line in half. Clamp goes on the
+// inner <p>: a flex item's display is blockified, killing the -webkit-box clamp needs.
 const MIN_LINES = 2;
 const MOBILE_MAX = 767; // excerpt is hidden below md
 

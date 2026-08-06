@@ -4,9 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {{-- Gate scroll-reveal before first paint so [data-reveal] is hidden from the
-         start, even when the JS module loads late (Vite dev). Failsafe removes the
-         gate if reveal.js never initialises, so content is never stuck hidden. --}}
+    {{-- Gate scroll-reveal before first paint (JS may load late); failsafe unhides if reveal.js never inits. --}}
     <script>
       (function () {
         if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;

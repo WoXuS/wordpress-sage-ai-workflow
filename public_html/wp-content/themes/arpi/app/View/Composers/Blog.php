@@ -19,8 +19,6 @@ class Blog extends Composer
             : $this->single();
     }
 
-    // ---- Archive (blog home, category / tag / author / date) ---------------
-
     private function archive(): array
     {
         $isEn = $this->isEn();
@@ -78,7 +76,6 @@ class Blog extends Composer
         return $categories;
     }
 
-    /** @return string[]|null paginate_links() anchors, styled via .c-pagination */
     private function pagination(): ?array
     {
         global $wp_query;
@@ -94,8 +91,6 @@ class Blog extends Composer
 
         return $links ?: null;
     }
-
-    // ---- Single post -------------------------------------------------------
 
     private function single(): array
     {
@@ -139,7 +134,7 @@ class Blog extends Composer
             'prefix' => $next
                 ? ($isEn ? 'Next article' : 'Następny artykuł')
                 : ($isEn ? 'Previous article' : 'Poprzedni artykuł'),
-            'is_chapter' => true, // renders the two-line label + title layout in x-dbip.nav-link
+            'is_chapter' => true, // two-line label+title layout in x-dbip.nav-link
         ];
     }
 
@@ -156,8 +151,6 @@ class Blog extends Composer
 
         return null;
     }
-
-    // ---- Shared helpers ----------------------------------------------------
 
     private function blogUrl(): string
     {

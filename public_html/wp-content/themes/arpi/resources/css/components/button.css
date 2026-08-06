@@ -9,7 +9,7 @@
     border: 2px solid transparent;
     border-radius: 30px;
 
-    font-size: var(--text-body-sm); /* 16px, fixed */
+    font-size: var(--text-body-sm);
     font-weight: 400; /* stay Regular while body copy is Light (300) */
     line-height: 1;
     letter-spacing: 0.5px;
@@ -30,8 +30,7 @@
     border-color: var(--color-white);
     color: var(--color-white);
 
-    /* deepen the plum on hover (keeps white text readable) instead of washing
-       it out to a transparent tint that killed contrast against light bg */
+    /* deepen the plum on hover; a transparent tint killed contrast on light bg */
     &:hover {
       background-color: var(--color-red-dark);
     }
@@ -63,16 +62,14 @@
     border-color: transparent;
     background-color: transparent;
     color: var(--color-red);
-    font-size: var(--text-body); /* 16→20 */
+    font-size: var(--text-body);
 
-    /* darken (not fade) on hover for stronger contrast; also reacts when an
-       enclosing card (.group/card) is hovered */
+    /* also reacts when an enclosing card (.group/card) is hovered */
     &:hover,
     .group\/card:hover & {
       color: var(--color-red-dark);
     }
 
-    /* nudge the trailing arrow to echo the service-tile micro-interaction */
     & svg {
       transition: transform 0.2s ease;
     }
@@ -88,7 +85,6 @@
     border-color: var(--color-white);
     color: var(--color-red);
 
-    /* warm cream shift reads better on dark/red backgrounds than an opacity fade */
     &:hover {
       background-color: var(--color-cream);
       border-color: var(--color-cream);

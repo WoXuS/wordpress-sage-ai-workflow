@@ -1,5 +1,5 @@
 @layer components {
-  /* Long-form article body (classic-editor blog posts) */
+  /* Long-form article body (classic-editor blog posts). */
   .c-prose {
     font-size: var(--text-body);
     line-height: 1.7;

@@ -39,9 +39,6 @@ class Contact extends Composer
         ];
     }
 
-    /**
-     * Firm-wide contact channel (shown above the office list).
-     */
     private function general(bool $isEn): array
     {
         return [
@@ -51,10 +48,7 @@ class Contact extends Composer
         ];
     }
 
-    /**
-     * Office locations. Mirrors Footer::offices() plus opening hours.
-     * TODO: swap to get_field(..., 'option') in the ACF phase.
-     */
+    // Mirrors Footer::offices() plus hours. TODO: swap to get_field(..., 'option') in the ACF phase.
     private function offices(bool $isEn): array
     {
         $hours = $isEn ? 'Mon–Fri, 8:00–16:00' : 'pon.–pt., 8:00–16:00';
@@ -87,10 +81,7 @@ class Contact extends Composer
         ];
     }
 
-    /**
-     * Contact form copy + field labels. Values feed the AJAX endpoint, so keep
-     * the option `value`s stable (language-independent) while labels branch.
-     */
+    // Topic option `value`s feed the AJAX endpoint — keep them language-independent while labels branch.
     private function form(bool $isEn): array
     {
         return [

@@ -6,10 +6,9 @@ use Illuminate\Support\ServiceProvider;
 
 class DbipServiceProvider extends ServiceProvider
 {
-    /** Top-level admin menu slug of the dbip-chapters CPT (parent for reorder + settings). */
     private const string CPT_MENU = 'edit.php?post_type=dbip-chapters';
 
-    /** Term meta holding each chapter's manual sort position (seeded from legacy term_order). */
+    // Sort position seeded from legacy term_order.
     private const string ORDER_META = 'dbip_chapter_order';
 
     public function boot(): void
@@ -29,9 +28,8 @@ class DbipServiceProvider extends ServiceProvider
             ]);
         });
 
-        // dbip-chapters is its own top-level menu, so WP shows the chapter-name
-        // taxonomy natively as a submenu. Only the custom reorder screen needs to be
-        // attached — nested under the DBiP CPT menu, alongside the ACF settings page.
+        // WP shows the chapter-name taxonomy natively; only the custom reorder
+        // screen needs attaching under the DBiP CPT menu.
         add_action('admin_menu', function () {
             add_submenu_page(
                 self::CPT_MENU,
@@ -43,7 +41,6 @@ class DbipServiceProvider extends ServiceProvider
             );
         });
 
-        // Drag-and-drop reorder saves via admin-ajax (replaces the legacy plugin).
         add_action('wp_ajax_dbip_reorder_chapters', [$this, 'ajaxReorderChapters']);
 
         // DBiP is English-only — drop WordPress's Polish "Zabezpieczone:" prefix
@@ -53,7 +50,6 @@ class DbipServiceProvider extends ServiceProvider
         }, 10, 2);
     }
 
-    /** Renders the drag-and-drop screen for ordering chapter (chapter-name) terms. */
     public function renderChapterOrderPage(): void
     {
         if (! current_user_can('manage_categories')) {
@@ -64,7 +60,7 @@ class DbipServiceProvider extends ServiceProvider
         $terms = is_array($terms)
             ? array_filter($terms, fn ($t) => $t->slug !== 'no-chapter')
             : [];
-        // Sort by the stored order; terms without a value fall to the top (position 0).
+        // Terms without a stored value fall to the top (position 0).
         usort($terms, fn ($a, $b) => (int) get_term_meta($a->term_id, self::ORDER_META, true)
             <=> (int) get_term_meta($b->term_id, self::ORDER_META, true));
 
@@ -108,7 +104,6 @@ class DbipServiceProvider extends ServiceProvider
         );
     }
 
-    /** Persists the new chapter order (term_id list) into ORDER_META, 1-based. */
     public function ajaxReorderChapters(): void
     {
         check_ajax_referer('dbip-reorder', 'nonce');

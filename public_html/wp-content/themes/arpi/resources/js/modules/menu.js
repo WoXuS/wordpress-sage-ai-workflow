@@ -1,6 +1,3 @@
-/**
- * Mobile menu: toggle a full-screen overlay via a `data-open` attribute.
- */
 export default function initMenu() {
   const toggle = document.querySelector('[data-menu-toggle]');
   const overlay = document.querySelector('[data-menu-overlay]');

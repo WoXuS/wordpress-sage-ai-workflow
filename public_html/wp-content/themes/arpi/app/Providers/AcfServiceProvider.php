@@ -9,20 +9,17 @@ class AcfServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        // Populate every `icon_name` select (hero + scope) from the theme's
-        // SVG icon folder, so the choice list tracks the files on disk.
+        // Choices track the SVG files on disk.
         add_filter('acf/load_field/name=icon_name', function (array $field): array {
             $field['choices'] = Icons::choices();
 
             return $field;
         });
 
-        // Show an SVG thumbnail next to each label in those selects by extending
-        // ACF's Select2 rendering (templateResult/Selection) via its JS filter.
         add_action('acf/input/admin_enqueue_scripts', [$this, 'iconSelectThumbnails']);
     }
 
-    /** Injects the Select2 renderer that prepends each icon's SVG thumbnail. */
+    // Extends ACF's Select2 rendering to prepend each icon's SVG thumbnail.
     public function iconSelectThumbnails(): void
     {
         $map = Icons::urlMap();

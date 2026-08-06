@@ -3,16 +3,16 @@
     width: 100%;
     max-width: 1440px;
     margin-inline: auto;
-    padding-inline: var(--wrap-padding-inline);    /* 30→80px */
+    padding-inline: var(--wrap-padding-inline);
   }
 
   .o-wrap--header {
-    --wrap-padding-inline: clamp(16px, -48px + 10vw, 80px);  /* 16→80px */
+    --wrap-padding-inline: clamp(16px, -48px + 10vw, 80px);
   }
 
-  /* Roomier variant — wider max + tighter gutters (DBiP archive). */
+  /* Wider variant used by the DBiP archive. */
   .o-wrap--wide {
     max-width: 1600px;
-    --wrap-padding-inline: clamp(20px, -24px + 6.9vw, 64px);  /* 20→64px */
+    --wrap-padding-inline: clamp(20px, -24px + 6.9vw, 64px);
   }
 }

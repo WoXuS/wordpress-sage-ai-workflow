@@ -8,24 +8,12 @@ use Roots\Acorn\View\Composer;
 
 class Footer extends Composer
 {
-    /**
-     * Views served by this composer.
-     *
-     * @var array
-     */
     protected static $views = [
         'sections.footer',
     ];
 
-    /**
-     * The data passed to the view before rendering.
-     *
-     * Acorn's Composer::merge() wraps zero-arg public methods in
-     * Illuminate\View\InvokableComponentVariable when left to auto-extract,
-     * which breaks direct array access (e.g. $company['name']) in Blade.
-     * Overriding with() resolves the methods eagerly so views receive
-     * plain arrays.
-     */
+    // Override with() so methods resolve eagerly: Acorn's Composer::merge() otherwise wraps
+    // zero-arg public methods in InvokableComponentVariable, breaking array access in Blade.
     protected function with(): array
     {
         $content = $this->fromAcf() ?? $this->fromHardcoded();
@@ -40,9 +28,6 @@ class Footer extends Composer
         ];
     }
 
-    /**
-     * Whistleblower page link, resolved to the current-language page.
-     */
     protected function whistleblower(): array
     {
         $isEn = (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
@@ -55,10 +40,7 @@ class Footer extends Composer
         ];
     }
 
-    // ---- Primary source: ACF (per-language theme-settings options page) -----
-    // Reads the global "Ustawienia motywu" options page. Returns null until the
-    // company name is filled in — then the hardcoded fallback renders instead.
-
+    // Reads the per-language theme-settings options page; null until company name filled, then hardcoded fallback renders.
     private function fromAcf(): ?array
     {
         if (! function_exists('get_field')) {
@@ -102,13 +84,10 @@ class Footer extends Composer
         ];
     }
 
-    // Split a textarea value into trimmed, non-empty lines.
     private function lines(string $value): array
     {
         return array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $value))));
     }
-
-    // ---- Fallback: hardcoded content (pre-ACF) ------------------------------
 
     private function fromHardcoded(): array
     {
@@ -121,9 +100,6 @@ class Footer extends Composer
         ];
     }
 
-    /**
-     * Company registration details.
-     */
     protected function company(): array
     {
         return [
@@ -134,9 +110,6 @@ class Footer extends Composer
         ];
     }
 
-    /**
-     * Office locations.
-     */
     protected function offices(): array
     {
         return [
@@ -157,11 +130,7 @@ class Footer extends Composer
         ];
     }
 
-    /**
-     * Newsletter block copy + AJAX endpoint (posts to ContactServiceProvider,
-     * subscribes to the Newsletter PL/EN MailPoet list). ACF copy overrides win
-     * when filled; the endpoint/nonce/status messages are always theme-owned.
-     */
+    // Posts to ContactServiceProvider → Newsletter PL/EN MailPoet list. ACF copy overrides win; endpoint/nonce/status stay theme-owned.
     protected function newsletter(array $acf = []): array
     {
         $isEn = (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
@@ -187,9 +156,6 @@ class Footer extends Composer
         ]);
     }
 
-    /**
-     * Social links.
-     */
     protected function socials(): array
     {
         return [
@@ -198,9 +164,6 @@ class Footer extends Composer
         ];
     }
 
-    /**
-     * Forbes badges.
-     */
     protected function badges(): array
     {
         return [

@@ -1,9 +1,5 @@
-/**
- * Custom file-input UI for [data-file-field] (whistleblower attachments).
- * Shows the chosen files with remove buttons and enforces the count/size limits
- * client-side (the server re-validates). Keeps input.files in sync via a
- * DataTransfer so removals actually update what gets submitted.
- */
+// Custom file-input UI for [data-file-field]. Rewrites input.files via a
+// DataTransfer so removals actually change what gets submitted; server re-validates.
 export default function initFileUpload() {
   document.querySelectorAll('[data-file-field]').forEach(setup);
 }
@@ -17,7 +13,6 @@ function setup(field) {
   const maxFiles = parseInt(field.dataset.maxFiles || '5', 10);
   const maxSize = parseInt(field.dataset.maxSize || '0', 10);
 
-  // Keep the chip list in sync when the form is reset after a successful submit.
   const form = field.closest('form');
   if (form) {
     form.addEventListener('reset', () => {

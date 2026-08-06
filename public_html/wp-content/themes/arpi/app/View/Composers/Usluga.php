@@ -23,8 +23,6 @@ class Usluga extends Composer
         ];
     }
 
-    // ---- Primary source: ACF (group_usluga_tresc) --------------------------
-
     private function fromAcf(): ?array
     {
         if (! function_exists('get_field')) {
@@ -34,7 +32,7 @@ class Usluga extends Composer
         $hero = get_field('hero');
 
         if (! $hero || empty($hero['lead'])) {
-            return null; // not filled in yet — fall back to hardcoded
+            return null;
         }
 
         $reports = get_field('reports') ?: [];
@@ -58,8 +56,7 @@ class Usluga extends Composer
         ];
     }
 
-    // Resolve the icon-picker sub-fields (source / name / file) into a shape
-    // the <x-dynamic-icon> component renders.
+    // Resolve the icon-picker sub-fields into the shape <x-dynamic-icon> renders.
     private function icon(array $data): array
     {
         if (($data['icon_source'] ?? 'library') === 'custom' && ! empty($data['icon_file'])) {
@@ -73,8 +70,6 @@ class Usluga extends Composer
 
         return ['type' => 'svg', 'name' => $data['icon_name'] ?? 'three-papers'];
     }
-
-    // ---- Fallback: hardcoded PL content (pre-ACF MVP) ----------------------
 
     private function fromHardcoded(): array
     {
@@ -147,9 +142,7 @@ class Usluga extends Composer
         ];
     }
 
-    // "Pozostałe usługi" grid: every other usluga in the current language,
-    // ordered by menu_order. Content comes from each sibling's ACF, so it is
-    // editable in wp-admin and follows the Polylang translation of that post.
+    // Every other usluga in the current language (Polylang), ordered by menu_order.
     private function others(): array
     {
         $posts = get_posts([
@@ -170,8 +163,7 @@ class Usluga extends Composer
         ], $posts);
     }
 
-    // WP titles come with HTML entities already encoded (e.g. "Payroll &amp; HR");
-    // decode so Blade's {{ }} escapes exactly once instead of double-encoding.
+    // WP titles arrive HTML-entity-encoded; decode so Blade's {{ }} escapes once, not twice.
     private function title(string $title): string
     {
         return html_entity_decode($title, ENT_QUOTES);

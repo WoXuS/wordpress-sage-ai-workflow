@@ -5,22 +5,15 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * "ARPI" is a lightweight hub at the top of the wp-admin sidebar. The custom
- * domains (dbip-chapters, usluga, zgloszenie) stay as their own top-level menus
- * — WP only supports two menu levels, so each domain keeps its full native
- * submenu (Add New, taxonomies, reorder, settings). This provider just clusters
- * ARPI + those domains together at the top and adds a subtle gap separating the
- * custom block from the rest of the admin menu.
+ * Custom domains (dbip-chapters, usluga, zgloszenie) stay as their own top-level
+ * menus because WP only supports two menu levels — each keeps its full native
+ * submenu. This provider just clusters them under an "ARPI" hub at the top.
  */
 class AdminMenuServiceProvider extends ServiceProvider
 {
     public const string SLUG = 'arpi-admin';
 
-    /**
-     * Top-level menu slugs that form the ARPI block, in display order. Kept
-     * contiguous right below the Dashboard; the last one that actually exists
-     * gets the separating margin. `theme-settings` only exists with ACF Pro.
-     */
+    // Slugs forming the ARPI block, in display order. `theme-settings` only exists with ACF Pro.
     private const array GROUP = [
         self::SLUG,
         'edit.php?post_type=dbip-chapters',
@@ -43,7 +36,6 @@ class AdminMenuServiceProvider extends ServiceProvider
             );
         }, 9);
 
-        // Force the ARPI block to sit together at the top of the menu.
         add_filter('custom_menu_order', '__return_true');
         add_filter('menu_order', [$this, 'clusterMenu']);
 
@@ -51,7 +43,6 @@ class AdminMenuServiceProvider extends ServiceProvider
         add_action('admin_head', [$this, 'groupStyle']);
     }
 
-    /** Reorders the top-level menu so the ARPI block is contiguous right after the Dashboard. */
     public function clusterMenu(array $order): array
     {
         $rest = array_values(array_diff($order, self::GROUP));
@@ -64,10 +55,9 @@ class AdminMenuServiceProvider extends ServiceProvider
     }
 
     /**
-     * Paints the "A" logo into the menu icon slot as a CSS mask filled with
-     * `currentColor`. Because wp-admin already sets that color on
-     * `div.wp-menu-image:before` per scheme and state, the icon inherits the
-     * exact resting/hover/current colors of native dashicons on every scheme.
+     * Paints the "A" logo as a CSS mask filled with `currentColor`. wp-admin
+     * already sets that color on `div.wp-menu-image:before` per scheme and state,
+     * so the icon inherits native dashicon resting/hover/current colors.
      */
     public function menuIcon(): void
     {
@@ -86,12 +76,9 @@ class AdminMenuServiceProvider extends ServiceProvider
     }
 
     /**
-     * Styles the ARPI block as one cohesive section: a brand-tinted background with
-     * a left accent bar (logo colour #952d58), rounded top/bottom to read as a card,
-     * and a margin below it separating the block from the standard WP menu. Each
-     * `<li>` id is read straight from $menu[$i][5] (whatever WP rendered), so it
-     * works for both the add_menu_page hub and the CPT menus, and only styles the
-     * items that actually exist (theme/dbip settings appear only with ACF Pro).
+     * Each `<li>` id is read straight from $menu[$i][5] (whatever WP rendered), so
+     * it works for both the hub and the CPT menus, and only styles items that
+     * actually exist (theme/dbip settings appear only with ACF Pro).
      */
     public function groupStyle(): void
     {
@@ -120,16 +107,14 @@ class AdminMenuServiceProvider extends ServiceProvider
         }
 
         $block = '#adminmenu #'.implode(',#adminmenu #', $ids);
-        // The top-level <a> and the expanded submenu each paint their own opaque
-        // background above the <li>, so repeat the accent bar on both to keep it
-        // continuous through every state and all the way down an open submenu.
+        // The <a> and expanded submenu each paint their own opaque background over
+        // the <li>, so repeat the accent bar on both to keep it continuous.
         $blockLinks = '#adminmenu #'.implode(' > a.menu-top,#adminmenu #', $ids).' > a.menu-top';
         $blockSub = '#adminmenu #'.implode(' .wp-submenu,#adminmenu #', $ids).' .wp-submenu';
         $first = $ids[0];
         $last = end($ids);
 
-        // Open item (WP marks it .wp-menu-open / .wp-has-current-submenu): same bar
-        // width, just a lighter accent so the currently expanded section stands out.
+        // WP marks the open item .wp-menu-open / .wp-has-current-submenu.
         $open = [];
         foreach ($ids as $id) {
             foreach (['.wp-menu-open', '.wp-has-current-submenu'] as $state) {
@@ -148,7 +133,6 @@ class AdminMenuServiceProvider extends ServiceProvider
             .'</style>';
     }
 
-    /** Hub shown when "ARPI" is clicked: brand-accented cards linking every custom section. */
     public function landing(): void
     {
         $sections = [

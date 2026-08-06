@@ -26,11 +26,7 @@ class Home extends Composer
         ];
     }
 
-    // ---- Primary source: ACF (group_home on the front page) ----------------
-    // Reads the current-language front page (Polylang serves the PL/EN page per
-    // request), so each language edits its own content in wp-admin. Returns null
-    // until the hero is filled in — then the hardcoded fallback renders instead.
-
+    // Polylang serves the current-language front page per request, so each language edits its own content; null until hero filled, then hardcoded fallback renders.
     private function fromAcf(): ?array
     {
         if (! function_exists('get_field')) {
@@ -102,8 +98,7 @@ class Home extends Composer
         ];
     }
 
-    // ACF image sub-field → URL, falling back to the bundled theme asset.
-    // A null fallback yields null (e.g. the EN hero has no separate mobile art).
+    // Null fallback yields null (e.g. the EN hero has no separate mobile art).
     private function imageUrl($image, ?string $fallback): ?string
     {
         if (is_array($image) && ! empty($image['url'])) {
@@ -113,9 +108,7 @@ class Home extends Composer
         return $fallback ? Vite::asset($fallback) : null;
     }
 
-    // The hero art differs per language: PL uses a two-part document-flow diagram
-    // (wide desktop SVG + tall mobile SVG); EN uses a single landscape shot of the
-    // "Doing business in Poland" publication (no separate mobile variant).
+    // Hero art differs per language: PL has separate desktop+mobile SVGs; EN uses one landscape image (no mobile variant).
     private function heroImages(bool $isEn): array
     {
         return $isEn
@@ -134,8 +127,6 @@ class Home extends Composer
     {
         return (function_exists('pll_current_language') ? pll_current_language() : null) === 'en';
     }
-
-    // ---- Fallback: hardcoded content (pre-ACF), branched PL/EN -------------
 
     private function fromHardcoded(): array
     {
@@ -297,8 +288,6 @@ class Home extends Composer
         ];
     }
 
-    // ---- Blog section: text (ACF-overridable) + auto-derived data ----------
-
     private function blogMeta(array $acf): array
     {
         $postsPage = (int) get_option('page_for_posts');
@@ -342,7 +331,6 @@ class Home extends Composer
 
         $categories = get_categories(['hide_empty' => false, 'exclude' => $excluded]);
 
-        // Show only the categories of the current language.
         if (function_exists('pll_current_language') && function_exists('pll_get_term_language')) {
             $lang = pll_current_language();
             $categories = array_values(array_filter(

@@ -4,10 +4,7 @@ namespace App\Support;
 
 class Icons
 {
-    /**
-     * SVG icons available in the theme, as ACF select choices
-     * (slug => human label). Source of truth is resources/icons/*.svg.
-     */
+    /** Icons as ACF select choices (slug => human label); source: resources/icons/*.svg. */
     public static function choices(): array
     {
         $choices = [];
@@ -20,10 +17,7 @@ class Icons
         return $choices;
     }
 
-    /**
-     * Same icons as choices(), mapped slug => public URL of the SVG. Used to show
-     * thumbnails next to the labels in the ACF `icon_name` select.
-     */
+    /** slug => SVG URL, for thumbnails beside the labels in the ACF `icon_name` select. */
     public static function urlMap(): array
     {
         $map = [];

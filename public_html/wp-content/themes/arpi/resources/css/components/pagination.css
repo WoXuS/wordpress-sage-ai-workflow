@@ -1,5 +1,5 @@
 @layer components {
-  /* WordPress paginate_links() output — styled to match the pill button system */
+  /* Styles WordPress paginate_links() output (hence the .page-numbers classes). */
   .c-pagination {
     display: flex;
     flex-wrap: wrap;

@@ -1,5 +1,4 @@
-/* Trix rich-text editor, themed to match .c-input--area. Imported from rte.js
-   AFTER trix.css, so these unlayered rules win over Trix defaults by source order. */
+/* Imported from rte.js AFTER trix.css, so these unlayered rules win by source order. */
 
 trix-editor {
   display: block;
@@ -24,7 +23,7 @@ trix-editor.is-invalid:focus {
   border-color: var(--color-error);
 }
 
-/* Toolbar — brand-aligned, wraps to multiple rows (no horizontal scroll). */
+/* Wrap to multiple rows so the toolbar never scrolls horizontally. */
 trix-toolbar {
   margin-bottom: 10px;
 }
@@ -53,7 +52,7 @@ trix-toolbar .trix-button.trix-active {
   color: var(--color-white);
 }
 
-/* We provide a dedicated attachments field — hide Trix's own file controls. */
+/* We provide a dedicated attachments field, so hide Trix's own file controls. */
 trix-toolbar .trix-button-group--file-tools {
   display: none;
 }
@@ -71,9 +70,8 @@ trix-toolbar .trix-button-group--file-tools {
   order: 3;
 }
 
-/* --- Editor content ---------------------------------------------------------
-   Trix stores content as semantic tags; the theme's reset strips their defaults
-   (and only ships weights 300/400), so restore readable formatting here. */
+/* The theme's reset strips defaults off Trix's semantic tags (and ships only
+   weights 300/400), so restore readable formatting here. */
 
 trix-editor > * {
   margin: 0;
@@ -83,7 +81,7 @@ trix-editor > * + * {
 }
 
 trix-editor strong {
-  font-weight: 700; /* faux-bold over Geomanist Regular — clearly heavier than 300 body */
+  font-weight: 700; /* faux-bold: theme ships no bold, this reads heavier than 300 body */
 }
 trix-editor em {
   font-style: italic;
@@ -94,7 +92,7 @@ trix-editor a {
 }
 
 trix-editor h1 {
-  font-size: var(--text-h3); /* ~16→24px, not the giant display heading */
+  font-size: var(--text-h3); /* not the giant display heading */
   line-height: 1.3;
   font-weight: 400;
 }

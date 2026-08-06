@@ -1,18 +1,9 @@
-/**
- * Smooth-scroll same-page anchor links and center the target in the viewport
- * (instead of the browser's default top-alignment). Honors prefers-reduced-motion
- * and re-centers on initial load when the URL already carries a hash.
- *
- * The theme sets `overflow: clip` on the root, which makes Chromium silently
- * no-op native smooth scrolling (`scrollIntoView`/`scrollTo` with
- * `behavior: 'smooth'`). So the animation is hand-rolled with requestAnimationFrame,
- * which scrolls reliably; reduced-motion falls back to an instant jump.
- */
+// Smooth-scroll same-page anchors, centering the target. The theme's root
+// `overflow: clip` makes Chromium silently no-op native `behavior: 'smooth'`,
+// so the animation is hand-rolled with rAF; reduced-motion jumps instantly.
 export default function initAnchorScroll() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  // Absolute scroll position that puts the element's center at the viewport
-  // center, clamped to the scrollable range.
   const centerY = (el) => {
     const rect = el.getBoundingClientRect();
     const y = window.scrollY + rect.top + rect.height / 2 - window.innerHeight / 2;
@@ -58,8 +49,7 @@ export default function initAnchorScroll() {
     const link = event.target.closest('a[href*="#"]');
     if (!link || link.target === '_blank') return;
 
-    // Only handle links pointing to the current document. Normalize trailing
-    // slashes so e.g. `/en#about-us` still matches when the page is at `/en/`.
+    // Normalize trailing slashes so `/en#about-us` matches when the page is `/en/`.
     const url = new URL(link.href, location.href);
     const samePath = url.pathname.replace(/\/+$/, '') === location.pathname.replace(/\/+$/, '');
     if (url.origin !== location.origin || !samePath || url.search !== location.search || !url.hash) return;

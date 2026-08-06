@@ -1,11 +1,5 @@
-/**
- * Scroll-reveal.
- *
- * Adds `.reveal-ready` to <html> so the CSS only hides elements when JS is present
- * (no-JS visitors see everything). Elements marked `[data-reveal]` fade+rise in when
- * they enter the viewport. A `[data-reveal-group]` container staggers its own
- * `[data-reveal]` descendants into a wave. Bails out on prefers-reduced-motion.
- */
+// Scroll-reveal. `.reveal-ready` on <html> gates the hide-until-revealed CSS to
+// JS-present visitors (no-JS sees everything). Bails out on prefers-reduced-motion.
 const STEP = 90; // ms between staggered items
 
 export default function initReveal() {
@@ -44,7 +38,6 @@ export default function initReveal() {
     { rootMargin: '0px 0px -25% 0px', threshold: 0.15 },
   );
 
-  // Observe group containers, plus standalone reveals not owned by a group.
   document.querySelectorAll('[data-reveal-group]').forEach((g) => io.observe(g));
   document.querySelectorAll('[data-reveal]').forEach((el) => {
     if (!el.closest('[data-reveal-group]')) io.observe(el);

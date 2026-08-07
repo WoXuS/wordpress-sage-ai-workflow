@@ -32,10 +32,13 @@ export default function initReveal() {
         }
       }
     },
-    // Fire later — element must reach ~75% of the viewport height before it
-    // animates, so on a slow scroll the motion lands where the eye already is
-    // instead of flashing near the bottom edge and finishing unseen.
-    { rootMargin: '0px 0px -25% 0px', threshold: 0.15 },
+    // Fire when the element/group crosses into the top ~85% of the viewport
+    // (rootMargin trims the bottom 15%) so it reveals soon after entering — a
+    // bigger trim felt laggy while scrolling on mobile. threshold stays 0 — a
+    // ratio threshold is unreachable once a target is taller than ~1/threshold
+    // viewports, which silently stranded long mobile lists (single-column blog
+    // grid, proces stages) whose group never hit the ratio.
+    { rootMargin: '0px 0px -15% 0px', threshold: 0 },
   );
 
   document.querySelectorAll('[data-reveal-group]').forEach((g) => io.observe(g));

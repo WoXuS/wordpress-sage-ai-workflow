@@ -151,10 +151,21 @@ Transparent brand tint via Tailwind opacity: `bg-red/30`, `text-red/60`; in CSS 
 `color-mix(in oklab, var(--color-red) 30%, transparent)`.
 
 ### Typography — Geomanist **Light 300** (body copy) + **Regular 400** (headings/UI)
-Two weights, one family. **Body copy is Light 300** (`body { font-weight: 300 }` → Body Big/Base/Small
-inherit it); **headings** (`h1/h2/h3/.h1`) and **buttons/inputs** (`.c-btn`, `.c-input`) pin **400** so
-they stay Regular. Both `@font-face`s live in `base/fonts.css` (`geomanist-light-webfont.*` weight 300,
-`geomanist-regular-webfont.*` weight 400). Fluid type, endpoints **640→1280px**, `rem` for font-size
+One family, five declared weights in `base/fonts.css`: **Light 300**, **Book 350**, **Regular 400**,
+**Bold 700**, **Black 900** (only Regular ships woff2 — `geomanist-regular-webfont.woff2/woff`; Book/Bold/Black
+are woff-only; Book is 350 to sit between Light and Regular without colliding at 400). **Body copy is
+`font-weight: 300`** (Body Big/Base/Small inherit it); **headings** (`h1/h2/h3/.h1`) and **buttons/inputs**
+(`.c-btn`, `.c-input`) pin **400** (Regular).
+
+> ⚠️ **Known font gotcha (kept intentionally — user-confirmed 2026-08-07). DON'T "fix" by deleting the 300
+> `@font-face`.** The Light source files (`geomanist-light-webfont.woff2/woff`) were **never committed**, so
+> the weight-300 `@font-face` **errors** (`document.fonts` → status `error`; the built CSS even leaves the url
+> un-fingerprinted). Result: **body copy (300) falls back to the system sans** (`ui-sans-serif, system-ui` —
+> San Francisco on macOS), **not** Geomanist Light. The user *wants* this visible body-vs-headings distinction
+> for now. To render body in true Geomanist Light instead, drop `geomanist-light-webfont.woff2/woff` into
+> `resources/fonts/` — the existing 300 rule then just works.
+
+Fluid type, endpoints **640→1280px**, `rem` for font-size
 (a11y). Font-size tokens carry **no** line-height (line-height is applied per element/component — the
 anti-boilerplate rule).
 
@@ -483,7 +494,8 @@ public_html/wp-content/themes/arpi/
     │   + components/{button,input,wrap,hexagon,dbip,prose,pagination}.css
     │   + utilities/{admin-bar,reveal}.css
     ├── js/{app,editor}.js + modules/{reveal,menu,header,clamp-fill}.js
-    ├── fonts/geomanist-{light,regular}-webfont.{woff2,woff}  # 300 body, 400 headings/UI
+    ├── fonts/  # Geomanist: regular-webfont.{woff2,woff} (400) + book/bold/black.woff (350/700/900);
+    │           # NO light file → 300 @font-face errors, body falls back to system sans (see §6 gotcha)
     ├── icons/*.svg               # 43 icons, kebab-case → @svg('icon-<slug>')
     ├── images/                   # Vite::asset(...) — logo, forbes, home, dbip/*
     ├── acf-json/*.json           # CPTs, taxonomy, field groups

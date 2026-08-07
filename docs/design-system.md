@@ -218,6 +218,7 @@ Ad-hoc fluid pairs use the `fl-` prefix directly: `fl-py-12/24`, `fl-gap-6/12`, 
 | `.c-dbip-num`, `.c-dbip-photo(--mobile)`, `.dbip-content` | `components/dbip.css` | DBiP: number-tab & slanted-photo clip-paths; `.dbip-content` = Gutenberg prose (red headings, red list markers, smooth-underline links, `.double-column` 2-col ≥1024, `.highlighted-paragraph` cream callout, responsive tables `.top-row-highlighted`/`.left-column-highlighted`). |
 | `.c-prose` | `components/prose.css` | Long-form article body for classic-editor **blog** posts: red h2/h3/h4, red list markers, animated-underline links, blockquote, rounded images, cream-header tables. Simpler than `.dbip-content` (no Gutenberg block variants). Used by `content-single-post` with a `max-w-[70ch]` measure. |
 | `.c-pagination` | `components/pagination.css` | Styles WordPress `paginate_links()` output (`.page-numbers`) as pill buttons matching the button system (red outline, solid = current, `.dots` = ellipsis). |
+| `#primary-nav …current-menu-*`, `[data-contact-highlight]` | `components/nav.css` | Two header-driven interactions. **Active nav state**: the current item's `<li>` (WP `current-menu-item`/`-ancestor`/`current_page_*`) gets a persistent underline; `> a:not([href*="#"])` skips in-page section anchors (O nas/Usługi/Kontakt → `/#…`) that WP falsely flags "current" on the home page they point to. Desktop hover itself is the ghost button's red→red-dark (see header note in §12). **Contact nudge**: `contact-nudge` keyframes scale/wiggle the footer phone+email links (`[data-contact-highlight]`, `inline-block`) when `.is-nudging` is toggled by JS; reduced-motion safe. |
 | `section-head` (`@utility`) | `app.css` | flex column, `gap: --fluid-spacing-head` — title+subtitle block. |
 | `top-admin-safe` (`@utility`) | `utilities/admin-bar.css` | pins sticky elements below the WP admin bar (≥601px). |
 | reveal | `utilities/reveal.css` | scroll-reveal + hero animation; **all gated by `.reveal-ready` + `prefers-reduced-motion: no-preference`**. `[data-reveal]` fades/rises in; `.c-hero` has a blurred plum glow + drift. **`.reveal-ready` is set by an inline `<head>` script _before first paint_** (see §12) — not by `reveal.js` — so above-the-fold `[data-reveal]` (blog archive/single) animates reliably even when the JS module loads late in Vite dev. A failsafe unhides everything if reveal JS never runs. |
@@ -311,7 +312,10 @@ Providers (`functions.php` → `Application::configure()->withProviders`): `Them
   `public/build/assets/theme.json`; editor.css/editor.js injection; `after_setup_theme` supports
   (title-tag, post-thumbnails, html5, …); registers `primary_navigation` menu + two sidebars.
 - **`app/filters.php`** — `excerpt_more`; `nav_menu_link_attributes` adds `c-btn c-btn--ghost uppercase …`
-  to primary-nav links; **`post_type_link`** replaces `%chapter-name%` in `dbip-chapters` permalinks
+  to primary-nav links (ghost = desktop red→red-dark hover) and, for MVP, rewrites any nav item whose
+  URL contains `#footer` (the **Contact** item) to a pure `#footer` hash + `data-contact-footer="true"`
+  so it same-page-scrolls to the footer contact block on every URL and triggers the `contact-highlight`
+  nudge; **`post_type_link`** replaces `%chapter-name%` in `dbip-chapters` permalinks
   with the assigned term slug (Yoast primary → first → `uncategorized`); `wp_robots` no-index off-prod.
 - **`app/Support/Icons.php`** — `Icons::choices()` globs `resources/icons/*.svg` → ACF select options.
 - **Assets**: `@vite(['resources/css/app.css','resources/js/app.js'])` in the layout;
@@ -332,6 +336,7 @@ initClampFill`. `editor.js` is a separate block-editor entry.
 | `header.js` | sticky shrink: `data-scrolled="true"` past 100px scroll | `data-header`, `data-scrolled` |
 | `clamp-fill.js` | snaps `[data-clamp-fill]` excerpts to whole lines (`-webkit-line-clamp`); off ≤767px | `data-clamp-fill` |
 | `forms.js` | progressive enhancement for `[data-ajax-form]` (contact + footer newsletter): posts the form as JSON to `data-endpoint` with the `X-WP-Nonce` header, then shows `data-success`/`data-error` (or the server message) in `[data-form-status]` and resets on success | `data-ajax-form`, `data-endpoint`, `data-nonce`, `data-success`, `data-error`, `data-form-status` |
+| `contact-highlight.js` | MVP has no contact page — the header **Contact** link scrolls to the footer (`anchor-scroll` handles the scroll); this nudges the footer phone/email (`[data-contact-highlight]`) ~550ms later by toggling `.is-nudging` (`contact-nudge` keyframes), clearing it on `animationend` so it replays | `data-contact-footer` (the link), `data-contact-highlight` (footer tel/mailto) |
 
 ---
 

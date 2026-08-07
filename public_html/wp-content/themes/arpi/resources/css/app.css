@@ -28,6 +28,7 @@
 @import "./components/dbip.css";
 @import "./components/prose.css";
 @import "./components/pagination.css";
+@import "./components/nav.css";
 @import "./utilities/reveal.css";
 
 @source "../../app/**/*.php";

@@ -263,6 +263,7 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 | `Careers` | `['template-careers']` | `hero, intro, mosaic, benefits, positions, cta`. `fromAcf()` (group_careers, located by page template so PL/EN each edit their own page) → fallback `fromHardcoded()` (EN/PL branched). Improvised page (no Figma): text block + photo/stat `mosaic` (dense-flow grid; tiles carry an optional advanced `span`, else a per-kind default), benefit cards, open-role list, red CTA. A single `recruitment_email` ACF field drives every `mailto:` (roles/open/CTA). |
 | `Proces` | `['template-proces']` | `hero, stages`. `fromAcf()` (group_proces, located by page template) → fallback `pl()`/`en()`. `stages` repeater carries `tone` (hex variant), icon, `hex_label`, optional `logo`, tags, paras, and an optional benefits `list` — the composer collapses the ACF `{lead,desc}` sub-fields into the `[$lead,$desc]` pairs the Blade destructures. |
 | `Usluga` | `['single-usluga']` | `hero, scope_intro, scope, body, reports, others, labels`. `fromAcf()` (icon-picker resolves source/name/file) → fallback `fromHardcoded()` (PL map keyed by slug). `others()` queries sibling `usluga` (current Polylang lang, `tile_excerpt`). `labels()` EN/PL branch. |
+| `Whistleblower` | `['template-sygnalista']` | `hero, info, form` for the "Sygnalista" page (PL slug `sygnalista`, EN `whistleblower`). Hardcoded, EN/PL branched; `form` posts to `arpi/v1/report` (`WhistleblowerServiceProvider` → private `zgloszenie` CPT). Code stem is English (`Whistleblower` composer, `partials/whistleblower/`); the `template-sygnalista` filename + `zgloszenie` CPT stay Polish (DB-coupled), the page slug/labels stay Polish (public). |
 | `Dbip` | `['archive-dbip-chapters','taxonomy-chapter-name','single-dbip-chapters']` | dispatches by `is_post_type_archive`/`is_tax`/single. Chapters ordered by termmeta `dbip_chapter_order` (excl. `no-chapter`); version/date from options; hardcoded EN CEO/About; prev/next crosses chapter boundaries; glossary = `no-chapter` term. |
 
 ---
@@ -426,6 +427,25 @@ These are firm, user-confirmed rules for this repo:
 12. **Element by semantics, not habit.** Block/visual container (icon badge, card box, wrapper) →
     `<div>`; inline text/decoration inside a phrasing context → `<span>`. Don't default to `<span>` just
     because it's phrasing-valid everywhere or because Tailwind sets `display` via a utility class.
+13. **Naming language — internal English, public = audience language.** Two buckets, decided by
+    visibility:
+    - **Public / user- or client-visible** (URL slugs & permalinks, wp-admin `Template Name` +
+      menu/section labels, CPT admin labels) → **the audience's language**: Polish for PL-default
+      content (`uslugi`, page slug `sygnalista`, menu "Sygnalista", "Usługi"), English for EN-only
+      content (DBiP). These are SEO/UX surface — do **not** anglicise them.
+    - **Internal code identifiers** (PHP classes — providers, composers, helpers; Blade partial
+      **directory** names; JS modules; CSS classes) → **always English** (`WhistleblowerServiceProvider`,
+      `Whistleblower` composer, `partials/whistleblower/`). Providers are the reference — they were
+      English from day one.
+    - **Grey zone — leave as-is, don't churn:** a CPT machine name (`usluga`, `zgloszenie`) is baked
+      into the DB `post_type` column + ACF JSON key; a `template-*.blade.php` filename is stored in
+      `_wp_page_template` postmeta. Renaming either silently breaks live content, so keep the existing
+      (Polish) name even though it's "code" — the coupling outweighs the cosmetics. The `Usluga`/`Proces`
+      composers keep their Polish stem to mirror their Polish-slug CPT/page; that's coherent, not a bug.
+    - **One feature, one code stem.** The whistleblower feature must not spread across three words
+      (was: `Whistleblower` provider + `Sygnalista` composer/partials + `zgloszenie` CPT). Code layer is
+      now uniformly `whistleblower`; only the DB-coupled CPT (`zgloszenie`) and public/label surface
+      (`sygnalista`) stay Polish, by the rule above.
 
 ---
 

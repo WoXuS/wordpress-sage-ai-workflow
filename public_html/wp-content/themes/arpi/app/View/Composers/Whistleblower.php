@@ -4,7 +4,7 @@ namespace App\View\Composers;
 
 use Roots\Acorn\View\Composer;
 
-class Sygnalista extends Composer
+class Whistleblower extends Composer
 {
     protected static $views = ['template-sygnalista'];
 

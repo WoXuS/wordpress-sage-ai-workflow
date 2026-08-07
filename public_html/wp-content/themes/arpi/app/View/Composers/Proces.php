@@ -2,6 +2,7 @@
 
 namespace App\View\Composers;
 
+use Illuminate\Support\Facades\Vite;
 use Roots\Acorn\View\Composer;
 
 class Proces extends Composer
@@ -99,9 +100,8 @@ class Proces extends Composer
                 ],
                 [
                     'tone'      => 'outline',
-                    'icon'      => 'phone',
+                    'icon'      => 'inflow',
                     'hex_label' => 'InFlow',
-                    'logo'      => ['symbol' => 'inflow', 'text' => 'InFlow'],
                     'heading'   => 'Etap II. Klienci ARPI Accounting otrzymują dostęp do programu InFlow',
                     'tags'      => ['Pracownik wprowadza dane do systemu InFlow'],
                     'paras'     => [
@@ -118,6 +118,7 @@ class Proces extends Composer
                     'tone'       => 'solid',
                     'icon'       => 'handshake',
                     'hex_label'  => 'ARPI',
+                    'logo'      => ['image' => Vite::asset('resources/images/logo.png'), 'alt' => 'ARPI Accounting'],
                     'heading'    => 'Etap III. ARPI dokonuje ostatecznego księgowania',
                     'tags'       => [
                         'ARPI weryfikuje aspekty podatkowe',
@@ -181,9 +182,8 @@ class Proces extends Composer
                 ],
                 [
                     'tone'      => 'outline',
-                    'icon'      => 'phone',
+                    'icon'      => 'inflow',
                     'hex_label' => 'InFlow',
-                    'logo'      => ['symbol' => 'inflow', 'text' => 'InFlow'],
                     'heading'   => 'Stage II. ARPI Accounting customers receive access to the InFlow program',
                     'tags'      => ['Employee enters the data into the InFlow system'],
                     'paras'     => [
@@ -199,6 +199,7 @@ class Proces extends Composer
                     'tone'       => 'solid',
                     'icon'       => 'handshake',
                     'hex_label'  => 'ARPI',
+                    'logo'      => ['image' => Vite::asset('resources/images/logo.png'), 'alt' => 'ARPI Accounting'],
                     'heading'    => 'Stage III. ARPI makes the final accounting',
                     'tags'       => [
                         'ARPI verifies the tax-related aspects',

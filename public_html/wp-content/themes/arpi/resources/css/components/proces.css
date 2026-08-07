@@ -11,17 +11,17 @@
 
   .c-proces__divider {
     border: 0;
-    border-top: 1px solid color-mix(in oklab, var(--color-red) 35%, transparent);
-    width: 100%;
-    margin: 0;
+    border-top: 2px solid var(--color-red);
+    width: 50%;
+    margin: 0 auto;
   }
 
   .c-proces__tag {
     display: block;
     text-align: center;
-    padding: 12px 20px;
+    padding: clamp(15px, 2vw, 25px);
     border: 2px solid transparent;
-    border-radius: 30px;
+    border-radius: 15px;
     font-size: var(--text-body-sm);
     line-height: 1.3;
   }

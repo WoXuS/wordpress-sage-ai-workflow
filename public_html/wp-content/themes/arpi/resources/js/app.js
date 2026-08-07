@@ -1,6 +1,7 @@
 import initMenu from './modules/menu';
 import initHeader from './modules/header';
 import initClampFill from './modules/clamp-fill';
+import initScopeFit from './modules/scope-fit';
 import initReveal from './modules/reveal';
 import initAnchorScroll from './modules/anchor-scroll';
 import initContactHighlight from './modules/contact-highlight';
@@ -14,6 +15,7 @@ initReveal();
 initMenu();
 initHeader();
 initClampFill();
+initScopeFit();
 initAnchorScroll();
 initContactHighlight();
 initSelect();

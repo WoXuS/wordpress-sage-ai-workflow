@@ -13,6 +13,15 @@ add_filter('nav_menu_link_attributes', function ($atts, $item, $args) {
     }
     $atts['class'] = trim(($atts['class'] ?? '')
         . ' c-btn c-btn--ghost uppercase max-lg:text-white max-lg:hover:text-white/70');
+
+    // MVP: no dedicated contact page yet — any item pointing at #footer scrolls to the
+    // footer contact block on the current page (pure hash → same-page on every URL) and
+    // is tagged so the JS can nudge the phone/email there.
+    if (str_contains($atts['href'] ?? '', '#footer')) {
+        $atts['href'] = '#footer';
+        $atts['data-contact-footer'] = 'true';
+    }
+
     return $atts;
 }, 10, 3);
 

@@ -376,8 +376,8 @@ initClampFill`. `editor.js` is a separate block-editor entry.
   `partials/usluga/{hero,scope,body,reports,others}`,
   `partials/dbip/{archive-hero,ceo,about,chapter-hero,chapters}`, plus `content-single-post` (styled
   blog single: breadcrumb + category pill + `.c-prose` body + prev/next via `<x-dbip.post-nav>`),
-  `page-header`, `content*` (stock, still used by `search`), `comments`, `entry-meta`, `newsletter`,
-  `footer-office`, `forms/search`.
+  `page-header`, `content*` (stock, still used by `search`), `comments`, `entry-meta`,
+  `partials/footer/{office,newsletter}` (footer section's own partials), `forms/search`.
 - Section conventions: one partial = one section; `front-page`/`single-*` just compose includes.
   Full-bleed sections (memberships, blog) put the background full-width but content in `<x-container>`.
 

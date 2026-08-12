@@ -275,7 +275,7 @@ Content hardcoded now, ACF-ready. Titles pass through `html_entity_decode(..., E
 | `Proces` | `['template-proces']` | `hero, stages`. `fromAcf()` (group_proces, located by page template) → fallback `pl()`/`en()`. `stages` repeater carries `tone` (hex variant), icon, `hex_label`, optional `logo`, tags, paras, and an optional benefits `list` — the composer collapses the ACF `{lead,desc}` sub-fields into the `[$lead,$desc]` pairs the Blade destructures. |
 | `Usluga` | `['single-usluga']` | `hero, scope_intro, scope, body, reports, others, labels`. `fromAcf()` (icon-picker resolves source/name/file) → fallback `fromHardcoded()` (PL map keyed by slug). `others()` queries sibling `usluga` (current Polylang lang, `tile_excerpt`). `labels()` EN/PL branch. |
 | `Whistleblower` | `['template-sygnalista']` | `hero, info, form` for the "Sygnalista" page (PL slug `sygnalista`, EN `whistleblower`). Hardcoded, EN/PL branched; `form` posts to `arpi/v1/report` (`WhistleblowerServiceProvider` → private `zgloszenie` CPT). Code stem is English (`Whistleblower` composer, `partials/whistleblower/`); the `template-sygnalista` filename + `zgloszenie` CPT stay Polish (DB-coupled), the page slug/labels stay Polish (public). |
-| `Dbip` | `['archive-dbip-chapters','taxonomy-chapter-name','single-dbip-chapters']` | dispatches by `is_post_type_archive`/`is_tax`/single. Chapters ordered by termmeta `dbip_chapter_order` (excl. `no-chapter`); version/date from options; hardcoded EN CEO/About; prev/next crosses chapter boundaries; glossary = `no-chapter` term. |
+| `Dbip` | `['archive-dbip-chapters','taxonomy-chapter-name','single-dbip-chapters']` | dispatches by `is_post_type_archive`/`is_tax`/single. Chapters ordered by termmeta `dbip_chapter_order` (excl. `no-chapter`); version/date from options; hardcoded EN CEO/About; prev/next crosses chapter boundaries; glossary = `no-chapter` term. On a **locked** chapter the single branch also exposes `access` (endpoint/nonce/`post` id/TOS/messages) for the "receive a password" request form. |
 
 ---
 
@@ -310,11 +310,14 @@ Providers (`functions.php` → `Application::configure()->withProviders`): `Them
   touching the DBiP options page or any post/term ids. Falls back to the default language (or no suffix
   if Polylang is inactive). Options-page + `group`/`repeater` fields are ACF **Pro**; on free ACF the
   page never registers and the Footer composer falls back to hardcoded.
-- **`ContactServiceProvider`** — registers two public REST routes under `arpi/v1` (`/contact`,
-  `/newsletter`) backing the front-end forms. Guarded by the `wp_rest` nonce + a `website` honeypot
-  (bots get a fake 200). Contact submissions email the office (`wp_mail`, best-effort) and push the
-  lead into MailPoet; the footer newsletter subscribes to Newsletter PL/EN. Lists resolved/created
-  by name via **`app/Support/Mailpoet.php`** (thin wrapper over MailPoet's `MP('v1')` API — no-ops
+- **`ContactServiceProvider`** — registers three public REST routes under `arpi/v1` (`/contact`,
+  `/newsletter`, `/dbip-access`) backing the front-end forms. Guarded by the `wp_rest` nonce + a
+  `website` honeypot (bots get a fake 200). Contact submissions email the office (`wp_mail`,
+  best-effort) and push the lead into MailPoet; the footer newsletter subscribes to Newsletter PL/EN.
+  **`/dbip-access`** is the DBiP "receive a password" form (replaces the legacy `[mailpoet_form id="7"]`):
+  it adds the requester to the *Dostęp do DBiP* + *Pomocnicza: Dostęp do DBiP* lists and `wp_mail`s them
+  the shared chapter post-password so they can unlock the (English-only) publication. Lists
+  resolved/created by name via **`app/Support/Mailpoet.php`** (thin wrapper over MailPoet's `MP('v1')` API — no-ops
   gracefully when the plugin is inactive). Newsletter opt-ins use double opt-in (`send_confirmation_email`);
   plain enquiries land in the Kontakt list without an email. The office recipient is env-based via
   `wp_get_environment_type()` — `contact@arpiaccounting.com` on production, else `dev@example.test`
@@ -506,6 +509,7 @@ scripts/                          # WP-CLI seed/import scripts (make wp ARGS="ev
   seed-careers-pages.php          #   creates PL Kariera + EN Careers pages (template-careers)
   extract-mailpoet-stage.py       #   stage MailPoet/CF7 tables from the prod dump → /tmp/mp-stage.sql
   migrate-mailpoet-leads.sql      #   import legacy subscribers/lists/CF7 leads into MailPoet (idempotent)
+  import-mailpoet-settings.php    #   import portable MailPoet settings from prod (skips secrets/version/prod page IDs)
 docs/design-tokens.md             # raw Figma token extraction
 docs/superpowers/{specs,plans,runbooks}/   # per-phase design + implementation docs
 ```
@@ -522,3 +526,13 @@ modules, or ACF, update the relevant section here so this stays the reliable sin
 > leads were migrated from `reference/prod-db.sql` via the two `scripts/` migration files (staging
 > tables `zimp_*` → live `wp_mailpoet_*`, matched by email/list-name, statuses preserved). MailPoet's
 > API ignores an explicit subscriber `status`; it's governed by the signup-confirmation setting.
+>
+> **Settings & forms migration (added 2026-08-07).** Portable MailPoet **settings** were then imported
+> from the same dump via `scripts/import-mailpoet-settings.php` (`sender`, `reply_to`, `bounce`,
+> `tracking`, `subscribe`, `signup_confirmation`) — deliberately **skipping** install-specific / secret
+> settings: the `mta` MailPoet-Sending-Service **API key**, prod `subscription` **page IDs**, and the
+> older `db_version`/`version` (dev's MailPoet is newer). Sending (Brevo) stays a wp-admin task for the
+> client. The legacy MailPoet **forms** were re-implemented as the theme's own custom forms rather than
+> imported as (orphaned) `wp_mailpoet_forms` records: the **newsletter** lives in the footer
+> (`/newsletter`), and the **DBiP "receive a password"** form (legacy `[mailpoet_form id="7"]`) is the
+> new `/dbip-access` endpoint + the locked-chapter form in `single-dbip-chapters`.

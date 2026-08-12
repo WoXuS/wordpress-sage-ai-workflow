@@ -34,6 +34,12 @@ class ContactServiceProvider extends ServiceProvider
                 'callback'            => [$this, 'handleNewsletter'],
                 'permission_callback' => '__return_true',
             ]);
+
+            register_rest_route('arpi/v1', '/dbip-access', [
+                'methods'             => 'POST',
+                'callback'            => [$this, 'handleDbipAccess'],
+                'permission_callback' => '__return_true',
+            ]);
         });
     }
 
@@ -89,6 +95,88 @@ class ContactServiceProvider extends ServiceProvider
         Mailpoet::subscribe($email, [], [$isEn ? 'Newsletter EN' : 'Newsletter PL'], true);
 
         return new WP_REST_Response(['ok' => true], 200);
+    }
+
+    /**
+     * DBiP "receive a password" form (English-only publication). Mirrors the legacy
+     * MailPoet form: adds the requester to the DBiP-access lists and emails them the
+     * shared chapter password so they can unlock the content.
+     */
+    public function handleDbipAccess(WP_REST_Request $request): WP_REST_Response
+    {
+        if ($drop = $this->guard($request)) {
+            return $drop;
+        }
+
+        $first  = sanitize_text_field((string) $request->get_param('first_name'));
+        $last   = sanitize_text_field((string) $request->get_param('last_name'));
+        $email  = sanitize_email((string) $request->get_param('email'));
+        $postId = (int) $request->get_param('post');
+
+        if ($first === '' || $last === '' || ! is_email($email)) {
+            return $this->error('Please fill in all the fields with a valid email address.');
+        }
+
+        $password = $this->dbipPassword($postId);
+        if ($password === '') {
+            return $this->error('Access is temporarily unavailable. Please try again later.', 500);
+        }
+
+        // CRM: add to the DBiP-access lists (matches the legacy MailPoet form 7).
+        Mailpoet::subscribe($email, ['first_name' => $first, 'last_name' => $last], [
+            'Dostęp do DBiP',
+            'Pomocnicza: Dostęp do DBiP',
+        ], false);
+
+        $this->sendDbipPassword($email, $first, $password, $postId);
+
+        return new WP_REST_Response([
+            'ok'      => true,
+            'message' => 'Your request has been processed. A message with your password has been sent to the email address you provided. If you do not see it, please check your spam folder.',
+        ], 200);
+    }
+
+    /**
+     * Every protected DBiP chapter shares one password. Read it from the requested
+     * chapter, falling back to any protected chapter.
+     */
+    private function dbipPassword(int $postId): string
+    {
+        $post = $postId ? get_post($postId) : null;
+        if ($post && $post->post_type === 'dbip-chapters' && $post->post_password !== '') {
+            return $post->post_password;
+        }
+
+        $ids = get_posts([
+            'post_type'    => 'dbip-chapters',
+            'numberposts'  => 1,
+            'has_password' => true,
+            'fields'       => 'ids',
+        ]);
+
+        return $ids ? (string) get_post($ids[0])->post_password : '';
+    }
+
+    private function sendDbipPassword(string $email, string $first, string $password, int $postId): void
+    {
+        $url = $postId ? get_permalink($postId) : get_post_type_archive_link('dbip-chapters');
+
+        $lines = [
+            'Hello '.($first !== '' ? $first : 'there').',',
+            '',
+            'Thank you for your interest in our "Doing Business in Poland" publication.',
+            '',
+            'Your access password is: '.$password,
+            '',
+            'Enter it on the publication page to unlock the content:',
+            $url,
+            '',
+            'Kind regards,',
+            'ARPI Accounting',
+        ];
+
+        $headers = ['Content-Type: text/plain; charset=UTF-8'];
+        wp_mail($email, 'Your access to Doing Business in Poland', implode("\n", $lines), $headers);
     }
 
     // Honeypot hits get a fake 200 so bots don't learn they were caught.

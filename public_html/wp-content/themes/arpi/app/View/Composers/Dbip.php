@@ -25,7 +25,26 @@ class Dbip extends Composer
             return $shared + ['chapter' => $this->chapter()];
         }
 
-        return $shared + ['single' => $this->single()];
+        return $shared + ['single' => $this->single(), 'access' => $this->access()];
+    }
+
+    // Config for the "receive a password" form shown on locked DBiP chapters.
+    private function access(): array
+    {
+        $post = get_post();
+
+        return [
+            'endpoint' => rest_url('arpi/v1/dbip-access'),
+            'nonce' => wp_create_nonce('wp_rest'),
+            'post' => $post->ID ?? 0,
+            'tos' => 'By requesting access to the “Doing Business in Poland” publication, you acknowledge '
+                .'that you will be added to ARPI Accounting’s newsletter list. You may receive regular updates, '
+                .'industry news, and insights from ARPI Accounting. You can unsubscribe at any time through the '
+                .'link provided in each email.',
+            'success' => 'Your request has been processed. A message with your password has been sent to the '
+                .'email address you provided. If you do not see it, please check your spam folder.',
+            'error' => 'Something went wrong. Please try again.',
+        ];
     }
 
     private function archive(): array

@@ -24,13 +24,12 @@ Thumbs.db
 /public_html/wp-content/themes/arpi/vendor/
 /public_html/wp-content/themes/arpi/public/
 
-# Legacy theme reference: real brand assets, kept on disk but not tracked
-/reference/legacy-theme/assets/images/
-/reference/legacy-theme/assets/font/
+# Legacy reference material (client's previous theme, prod DB dump): kept locally
+# for field-name auditing, excluded entirely from this public mirror.
+/reference/
 
 # Production DB dumps: contain subscriber PII, kept local only
 /docs/baza.sql
-/reference/prod-db.sql
 
 # Scratch screenshots dropped into the assistant workspace
 /.claude/img*.png

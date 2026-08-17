@@ -153,6 +153,3 @@ Commity dotykające wyłącznie usuniętych plików zniknęły przy przepisywani
 
 Same PR-y nie przeniosły się, bo to metadane GitHuba, a nie część repo — ich opisy
 wyeksportowałem do [`docs/pull-requests/`](docs/pull-requests/) przed przepisaniem historii.
-
-<!-- TODO PRZED UPUBLICZNIENIEM: potwierdź zgodę klienta na publikację tego wycinka
-     i wpisz tu jedno zdanie o podstawie publikacji — albo usuń ten komentarz. -->

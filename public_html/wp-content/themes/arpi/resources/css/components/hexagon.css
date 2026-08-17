@@ -53,6 +53,12 @@
     text-align: center;
     text-wrap: balance;
     overflow-wrap: break-word;
+
+    @media (max-width: 350px) {
+      p {
+        font-size: 9px !important;
+      }
+    }
   }
 
   .c-honeycomb {
@@ -67,6 +73,7 @@
     @variant max-md {
       --gap-k: 0.65;
       --hex-w: calc(100cqw / (2 + var(--gap-k)));
+      --hex-margin-factor: -0.4;
 
       display: grid;
       grid-template-areas:
@@ -87,12 +94,12 @@
 
       & > li:nth-child(2) {
         grid-area: top-l;
-        margin-bottom: calc(var(--hex-w) * -0.4);
+        margin-bottom: calc(var(--hex-w) * var(--hex-margin-factor));
       }
 
       & > li:nth-child(4) {
         grid-area: top-r;
-        margin-bottom: calc(var(--hex-w) * -0.4);
+        margin-bottom: calc(var(--hex-w) * var(--hex-margin-factor));
       }
 
       & > li:nth-child(3) {
@@ -101,12 +108,12 @@
 
       & > li:nth-child(1) {
         grid-area: bot-l;
-        margin-top: calc(var(--hex-w) * -0.4);
+        margin-top: calc(var(--hex-w) * var(--hex-margin-factor));
       }
 
       & > li:nth-child(5) {
         grid-area: bot-r;
-        margin-top: calc(var(--hex-w) * -0.4);
+        margin-top: calc(var(--hex-w) * var(--hex-margin-factor));
       }
     }
 

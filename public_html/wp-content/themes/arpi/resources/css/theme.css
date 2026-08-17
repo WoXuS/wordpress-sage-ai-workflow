@@ -21,7 +21,7 @@
   --text-subtitle: clamp(1.5rem, 1rem + 1.1vw, 2rem);
   --text-subtitle--line-height: 1.25;
   --text-h3: clamp(1.25rem, 1rem + 0.625vw, 1.5rem);
-  --text-body-lg: clamp(1.25rem, 1rem + 0.625vw, 1.5rem);
+  --text-body-lg: clamp(1rem, 1rem + 0.625vw, 1.5rem);
   --text-body: clamp(1rem, 0.75rem + 0.625vw, 1.25rem);
   --text-body-sm: 1rem;
   /* px not rem here — spacing, not type */

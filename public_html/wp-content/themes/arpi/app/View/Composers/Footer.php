@@ -36,7 +36,7 @@ class Footer extends Composer
 
         return [
             'url'   => $page ? get_permalink($page) : home_url('/'.$slug),
-            'label' => $isEn ? 'whistleblower form' : 'zgłoszenie anonimowe',
+            'label' => $isEn ? 'Whistleblower Form' : 'Zgłoszenie Anonimowe',
         ];
     }
 

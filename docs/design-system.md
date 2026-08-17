@@ -92,9 +92,14 @@ Figma at ~375px and ~1440px.**
 - Hardcoded-vs-ACF status today: **Home**, **Usluga**, **DBiP**, **Footer**, **Careers** & **Proces**
   composers read ACF with hardcoded fallbacks (`fromAcf() ?? fromHardcoded()`); each fallback branches
   PL/EN (or is per-language via Polylang) so every page renders even before ACF is filled. **Contact**
-  is the only composer still fully hardcoded (deferred to a dedicated future task). Because the dev box
-  runs **ACF free** (options pages, `group`/`repeater` fields are Pro-only), the ACF paths are inert
-  locally and every page falls back — the wiring is exercised on the client's Pro environment.
+  is the only composer still fully hardcoded (deferred to a dedicated future task). **Dev + staging now
+  run ACF PRO** (6.8.7 — swapped in 2026-08-12), so options pages (`theme-settings`, `dbip-settings`)
+  and `group`/`repeater` fields register and are editable; pages still fall back to hardcoded until the
+  fields are actually filled. The Pro **plugin files live in dev** and mirror to staging via
+  `sync-plugins-staging` (`rsync --delete`) — if dev ever reverts to free, the mirror clobbers Pro on
+  staging. The Pro **license key** is per-domain (updates only; features work unlicensed) → keep it out
+  of the DB (which `push-db-staging` overwrites) and define it via an `ACF_PRO_LICENSE` env constant on
+  the domain you activate (staging now / prod at cutover); local runs Pro unlicensed.
 - **Global theme settings** (footer company/offices/socials/badges/newsletter copy) live on a dedicated
   **"Ustawienia motywu" options page** (`ThemeSettingsServiceProvider`), made **per-language** by a
   filter that appends the current Polylang language to its option id (`theme_settings_{lang}`), scoped

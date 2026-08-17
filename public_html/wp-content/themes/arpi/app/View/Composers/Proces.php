@@ -55,8 +55,8 @@ class Proces extends Composer
             'icon'      => $row['icon_name'] ?? 'grouped-papers',
             'hex_label' => $row['hex_label'] ?? '',
             'heading'   => $row['heading'] ?? '',
-            'tags'      => array_map(fn ($r) => $r['text'] ?? '', $row['tags'] ?? []),
-            'paras'     => array_map(fn ($r) => $r['text'] ?? '', $row['paras'] ?? []),
+            'tags'      => array_map(fn ($r) => $r['text'] ?? '', ($row['tags'] ?? []) ?: []),
+            'paras'     => array_map(fn ($r) => $r['text'] ?? '', ($row['paras'] ?? []) ?: []),
         ];
 
         $logo = $row['logo'] ?? [];
@@ -64,7 +64,7 @@ class Proces extends Composer
             $stage['logo'] = ['symbol' => $logo['icon_name'] ?? '', 'text' => $logo['text']];
         }
 
-        $list = array_map(fn ($r) => [$r['lead'] ?? '', $r['desc'] ?? ''], $row['list'] ?? []);
+        $list = array_map(fn ($r) => [$r['lead'] ?? '', $r['desc'] ?? ''], ($row['list'] ?? []) ?: []);
         if ($list) {
             $stage['list_intro'] = $row['list_intro'] ?? '';
             $stage['list'] = $list;

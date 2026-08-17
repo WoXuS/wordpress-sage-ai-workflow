@@ -75,7 +75,7 @@ class Home extends Composer
             'why' => [
                 'heading'   => $why['heading'] ?? '',
                 'intro'     => $why['intro'] ?? '',
-                'hexes'     => array_map(fn ($row) => $row['label'] ?? '', $why['hexes'] ?? []),
+                'hexes'     => array_map(fn ($row) => $row['label'] ?? '', ($why['hexes'] ?? []) ?: []),
                 'statement' => $why['statement'] ?? '',
                 'caption'   => $why['caption'] ?? '',
             ],
@@ -85,11 +85,11 @@ class Home extends Composer
                     'name' => $row['name'] ?? '',
                     'icon' => $row['icon_name'] ?? 'three-papers',
                     'url'  => is_array($row['link'] ?? null) ? ($row['link']['url'] ?? '#') : '#',
-                ], $services['items'] ?? []),
+                ], ($services['items'] ?? []) ?: []),
             ],
             'dbip' => [
                 'heading'    => $dbip['heading'] ?? '',
-                'paragraphs' => array_map(fn ($row) => $row['text'] ?? '', $dbip['paragraphs'] ?? []),
+                'paragraphs' => array_map(fn ($row) => $row['text'] ?? '', ($dbip['paragraphs'] ?? []) ?: []),
                 'cta_label'  => is_array($dbip['cta'] ?? null) ? ($dbip['cta']['title'] ?? '') : '',
                 'cta_url'    => is_array($dbip['cta'] ?? null) ? ($dbip['cta']['url'] ?? '#') : '#',
             ],

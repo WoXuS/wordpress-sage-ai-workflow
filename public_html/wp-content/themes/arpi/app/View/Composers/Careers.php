@@ -56,11 +56,11 @@ class Careers extends Composer
             'intro' => [
                 'heading'    => $intro['heading'] ?? '',
                 'lead'       => $intro['lead'] ?? '',
-                'paragraphs' => array_map(fn ($row) => $row['text'] ?? '', $intro['paragraphs'] ?? []),
+                'paragraphs' => array_map(fn ($row) => $row['text'] ?? '', ($intro['paragraphs'] ?? []) ?: []),
             ],
             'mosaic' => [
                 'heading' => $mosaic['heading'] ?? '',
-                'tiles'   => array_map(fn ($tile) => $this->tile($tile), $mosaic['tiles'] ?? []),
+                'tiles'   => array_map(fn ($tile) => $this->tile($tile), ($mosaic['tiles'] ?? []) ?: []),
             ],
             'benefits' => [
                 'heading' => $benefits['heading'] ?? '',
@@ -69,7 +69,7 @@ class Careers extends Composer
                     'icon'  => $row['icon_name'] ?? 'handshake',
                     'title' => $row['title'] ?? '',
                     'text'  => $row['text'] ?? '',
-                ], $benefits['items'] ?? []),
+                ], ($benefits['items'] ?? []) ?: []),
             ],
             'positions' => $this->positionsFromAcf(get_field('positions') ?: [], $email),
             'cta' => [
@@ -122,7 +122,7 @@ class Careers extends Composer
                 'location'  => $role['location'] ?? '',
                 'type'      => $role['type'] ?? '',
                 'apply_url' => 'mailto:'.$email.'?subject='.rawurlencode($subject.' — '.($role['title'] ?? '')),
-            ], $positions['items'] ?? []),
+            ], ($positions['items'] ?? []) ?: []),
             'open' => [
                 'heading'   => $open['heading'] ?? '',
                 'text'      => $open['text'] ?? '',

@@ -51,7 +51,7 @@ class Usluga extends Composer
             'body' => get_field('body') ?: '',
             'reports' => [
                 'heading' => $reports['heading'] ?? '',
-                'items' => array_map(fn ($row) => $row['text'] ?? '', $reports['items'] ?? []),
+                'items' => array_map(fn ($row) => $row['text'] ?? '', ($reports['items'] ?? []) ?: []),
             ],
         ];
     }
